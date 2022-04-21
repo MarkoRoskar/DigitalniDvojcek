@@ -1,0 +1,47 @@
+PROGRAM ::= FUNCTIONS CITY
+FUNCTIONS ::= FUNCTION FUNCTIONS | epsilon
+CITY ::= city name { BLOCKS }
+BLOCKS ::= BLOCK MOREBLOCKS
+MOREBLOCKS ::= BLOCKS | epsilon
+BLOCK ::= ROAD | BUILDING | RIVER | PARK | MARKED | TREE
+ROAD ::= road name { COMMANDS }
+BUILDING ::= building name { COMMANDS }
+RIVER ::= river name { COMMANDS }
+PARK ::= park name { COMMANDS }
+MARKED ::= RESTAURANT | MUSEUM | CHURCH | STORE
+TREE ::= tree POINT
+RESTAURANT ::= restaurant name POINT
+COMMANDS ::= COMMAND MORECOMMANDS
+MORECOMMANDS ::= COMMANDS | epsilon
+COMMAND ::= LINE | BEND | BOX | CIRC | FOR | IF | VARIABLE | CONST
+LINE ::= line( POINT , POINT , WIDTH )
+BEND ::= bend( POINT , POINT , ANGLE )
+ANGLE ::= integer | VARIABLE    //integer ::= [0-9]+
+BOX ::= box( POINT , POINT )
+CIRC ::= circ( POINT , RADIUS )
+RADIUS ::= EXPR
+FOR ::= for SPR to SPR { COMMANDS }
+IF ::= if SPR OPERATOR SPR { COMMANDS } ELSEIFS ELSE
+ELSEIFS ::= ELSEIF ELSEIFS | epsilon
+ELSEIF ::= else if SPR OPERATOR SPR { COMMANDS }
+ELSE ::= { COMMANDS } | epsilon
+OPERATOR ::= > | => | <= | < | == | !=
+SPR ::= number | variable_name
+POINT ::= ( EXPR , EXPR )
+VARIABLE ::= var variable_name = VALUE ;  //variable_name = [a-zA-Z]+
+CONST ::= const variable_name = VALUE ;
+VALUE ::= number | variable_name | POINT | CALL
+CALL ::= call name ( CALLARGS )
+CALLARGS ::= VARIABLENAMEORNUMBER MOREVORN
+MOREVORN ::= , VARIABLENAMEORNUMBER | epsilon
+FUNC ::= func name ( ARGS ) { COMMANDS RETURN }
+ARGS ::= variable_name MOREVARS
+MOREVARS ::= , variable_name | epsilon
+RETURN ::= return RETURNVALUE
+RETURNVALUE ::= BLOCK | POINT | number| variable_name
+EXPR ::= E
+E ::= T EE
+EE ::= + T EE | epsilon
+T ::= F TT
+TT ::= * F TT | epsilon
+F ::= ( E ) | number | variable_name
