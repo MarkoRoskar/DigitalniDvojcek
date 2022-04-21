@@ -1,0 +1,2 @@
+# DigitalniDvojcek
+Projektna naloga FERI
