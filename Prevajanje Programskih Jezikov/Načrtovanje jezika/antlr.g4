@@ -4,9 +4,15 @@ program: func* city EOF;
 city: 'city ' name '{' blocks '}';
 
 blocks: block+;
-block: road | building | river | park | marked | tree;
+block: road | bikepath | tourpath | coridor | building | river | park | marked;
 
 road: 'road ' name '{' commands '}';
+
+bikepath: 'bikePath ' name '{' commands '}';
+
+tourpath: 'bikeTourPath ' name '{' commands '}';
+
+coridor: 'bikeCoridor ' name '{' commands '}';
 
 building: 'building ' name '{' commands '}';
 
@@ -14,12 +20,10 @@ river: 'river ' name '{' commands '}';
 
 park: 'park ' name '{' commands '}';
 
-marked: restaurant | museum | church | store;
-restaurant: 'restaurant ' name point;
-museum: 'museum ' name point;
-church: 'church ' name point;
-store: 'store ' name point;
-tree: 'tree ' circ;
+marked: bikestand | bikeshed | mbajk;
+bikestand: 'bikeStand ' name point;
+bikeshed: 'bikeShed ' name point;
+mbajk: 'mbajk ' name point;
 
 commands: command+;
 command: line | bend | box | circ | for | if | variable | const;
