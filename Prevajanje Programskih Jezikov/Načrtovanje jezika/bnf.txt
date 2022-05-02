@@ -2,21 +2,29 @@ PROGRAM ::= FUNCTIONS CITY
 FUNCTIONS ::= FUNCTION FUNCTIONS | epsilon
 CITY ::= city name { BLOCKS }
 BLOCKS ::= BLOCK MOREBLOCKS
-MOREBLOCKS ::= BLOCKS | epsilon
-BLOCK ::= ROAD | BUILDING | RIVER | PARK | MARKED | TREE
+MOREBLOCKS ::= BLOCK MOREBLOCKS | epsilon
+
+BLOCK ::= ROAD | BIKEPATH | TOURPATH | CORIDOR | BUILDING | RIVER | PARK | MARKPOINT
 ROAD ::= road name { COMMANDS }
+BIKEPATH ::= bikePath name { COMMANDS }
+TOURPATH ::= bikeTourPath name { COMMANDS }
+CORIDOR ::= bikeCoridor name { COMMANDS }
 BUILDING ::= building name { COMMANDS }
 RIVER ::= river name { COMMANDS }
 PARK ::= park name { COMMANDS }
-MARKED ::= RESTAURANT | MUSEUM | CHURCH | STORE
-TREE ::= tree POINT
-RESTAURANT ::= restaurant name POINT
+
+MARKPOINT ::= BIKESTAND | BIKESHED | MBAJK
+BIKESTAND ::= bikeStand name POINT
+BIKESHED ::= bikeShed name POINT
+MBAJK ::= mbajk name POINT
+
+
 COMMANDS ::= COMMAND MORECOMMANDS
-MORECOMMANDS ::= COMMANDS | epsilon
+MORECOMMANDS ::= COMMAND MORECOMMANDS | epsilon
 COMMAND ::= LINE | BEND | BOX | CIRC | FOR | IF | VARIABLE | CONST
 LINE ::= line( POINT , POINT , WIDTH )
 BEND ::= bend( POINT , POINT , ANGLE )
-ANGLE ::= integer | VARIABLE    //integer ::= [0-9]+
+ANGLE ::= integer | variable_name    //integer ::= [0-9]+
 BOX ::= box( POINT , POINT )
 CIRC ::= circ( POINT , RADIUS )
 RADIUS ::= EXPR
@@ -26,22 +34,22 @@ ELSEIFS ::= ELSEIF ELSEIFS | epsilon
 ELSEIF ::= else if SPR OPERATOR SPR { COMMANDS }
 ELSE ::= { COMMANDS } | epsilon
 OPERATOR ::= > | => | <= | < | == | !=
-SPR ::= number | variable_name
+SPR ::= float | variable_name | integer
 POINT ::= ( EXPR , EXPR )
 VARIABLE ::= var variable_name = VALUE ;  //variable_name = [a-zA-Z]+
 CONST ::= const variable_name = VALUE ;
-VALUE ::= number | variable_name | POINT | CALL
+VALUE ::= float | integer | variable_name | POINT | CALL
 CALL ::= call name ( CALLARGS )
 CALLARGS ::= VARIABLENAMEORNUMBER MOREVORN
-MOREVORN ::= , VARIABLENAMEORNUMBER | epsilon
+MOREVORN ::= , VARIABLENAMEORNUMBER MOREVORN | epsilon
 FUNC ::= func name ( ARGS ) { COMMANDS RETURN }
 ARGS ::= variable_name MOREVARS
-MOREVARS ::= , variable_name | epsilon
+MOREVARS ::= , variable_name MOREVARS | epsilon
 RETURN ::= return RETURNVALUE
-RETURNVALUE ::= BLOCK | POINT | number| variable_name
+RETURNVALUE ::= BLOCK | POINT | float | variable_name | integer
 EXPR ::= E
 E ::= T EE
 EE ::= + T EE | epsilon
 T ::= F TT
 TT ::= * F TT | epsilon
-F ::= ( E ) | number | variable_name
+F ::= ( E ) | float | variable_name | integer
