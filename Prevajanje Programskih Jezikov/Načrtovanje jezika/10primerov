@@ -1,19 +1,19 @@
 1. city Maribor{road PresernovaCesta{line((1,5), (1,5), 4)}}
 
-2. city Ptuj{building Banka{box((6,9), (2,4))}}
+2. city Ptuj{bikePath pot{line((6,9), (2,4), 5)}}
 
-3. city Velenje{restaurant Banka(22,9)}
+3. city Velenje{bikeTourPath turpot{bend((2,2), (3,2), 4)}}
 
-4. city Maribor{river Drava{bend((5,6), (1,4), 5)}road JazbecovaCesta{line((11,52), (43,15), 14)}}
+4. city Maribor{bikeCoridor koridor{box((5,6), (1,4))}road JazbecovaCesta{line((11,52), (43,15), 14)}}
 
-5. city Maribor{tree circ((4,2), (6+6))}
+5. city Maribor{bikeStand lopa(5,5)}
 
-6.  city Maribor{park Presernov{line((5,5), (6,6), 5)for 10 to 10{const a=20;}}}
+6.  city Maribor{park Presernov{box((5,5), (6,6))for 5 to 10{const a=20;}}}
 
-7. func test(t,d){if 10<50{line((1,5), (1,5), 4)}return (10,10)};city Maribor{road PresernovaCesta{line((1,5), (1,5), 4)}}
+7. func test(t,d){if 10<50{line((1,5), (1,5), 4)}return (10,10)};city Maribor{bikePath kolPot{line((1,5), (1,5), 4)}}
 
-8. func abc(a,b,c){if s>b{box((2,2), (1,1))}return s};city Ptuj{building Muzej{box((1,5), (1,5))}}
+8. func abc(a,b,c){if s>b{box((2,2), (1,1))}return s};city Maribor{mbajk mojbajk(6,9)}
 
-9. func funkcija(e){line((22,20), (1,5), (4*4))return (22,5)};city Postojna{building Muzej{box((100,20), (5,44))box((40,50), (30,20))}}
+9. func funkcija(e){line((22,20), (1,5), (4*4))return (22,5)};city Postojna{bikeCoridor kolKoridor{box((100,20), (5,44))box((40,50), (30,20))}}
 
 10. func funky(i,z){var i=5;for i to 10{box((i,5), (5,i))}return (i,i)};city Ptuj{building Most{box((i,5), (1,i))var res=call funky(i,1);}}
