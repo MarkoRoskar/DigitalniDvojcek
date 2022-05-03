@@ -13,10 +13,11 @@ BUILDING ::= building name { COMMANDS }
 RIVER ::= river name { COMMANDS }
 PARK ::= park name { COMMANDS }
 
-MARKPOINT ::= BIKESTAND | BIKESHED | MBAJK
+MARKPOINT ::= BIKESTAND | BIKESHED | MBAJK | RENTBIKE
 BIKESTAND ::= bikeStand name POINT
 BIKESHED ::= bikeShed name POINT
 MBAJK ::= mbajk name POINT
+RENTBIKE ::= rentBike name POINT
 
 
 COMMANDS ::= COMMAND MORECOMMANDS
