@@ -5,11 +5,10 @@
     "author": "Erik Lašič",
     "main": "server.js",
     "scripts": {
-      "start": "node server.js"
+        "start": "node server.js"
     },
     "dependencies": {
-      "express": "^4.16.1",
-      "mongoose": "^6.3.2"
+        "express": "^4.16.1",
+        "mongoose": "^6.3.2"
     }
-  }
-  
+}

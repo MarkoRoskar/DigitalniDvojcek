@@ -20,7 +20,7 @@ mongoose.connect(url,connectionParams)
 const express = require('express');
 
 // Constants
-const PORT = 3000;
+var PORT = process.env.PORT || 3000;
 const HOST = '0.0.0.0';
 
 // App
