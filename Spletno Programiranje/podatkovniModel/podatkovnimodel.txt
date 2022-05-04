@@ -1,0 +1,124 @@
+//https://api.jcdecaux.com/vls/v3/stations?apiKey=frifk0jbxfefqqniqez09tw4jvk37wyf823b5j1i
+//lineString, Point je v geoJson uporablen....idk če je treba to
+MBIKE_STATION{
+	-number	//id iz mbike APIja
+	-name
+	-address
+	-geometry: {
+		type: {
+			type: String,
+			enum: ['Point'],
+			default: 'Point',
+			required: true
+		},
+		coordinates:{
+			type:[Number],
+			index: "2dsphere",
+			required: true
+		}
+	}
+	-currentStatus // open/closed
+	-currentAvalibilites -> MBIKE_STAND_AVALIBILITIES //zadnji update
+	-historyAvalibilities -> [MBIKE_STAND_AVALIBILITIES]
+	-lastUpdateSensor	//string dateTime iz APIja, kdaj je bil API, ki ga uporabljamo nazadnje posodobljen, če se datuma ujemata ne spreminjamo freshAvalibilites ter ne vstavljamo v zgodovino...
+	-options{
+		-refresh_rate	//na koliko časa se updata
+	}
+}
+/*
+	??updateInfo	//klice API preveri ce so novi podatki, če so stare jih nastavi kot currentAvalibilites ter hkrati tudi skrani v historyAvalibilities
+	!!getCloseToMyLocation(myposition)	//geoprostorske poizvedbe
+*/
+
+MBIKE_STAND_AVALIBILITIES{
+	-bikesAvalivable	//število koles, ki si jih lahko trenutno tam izposodiš
+	-parkSpots	//koliko je tam vseh parkirišč	parkSpots - bikesAvalivable = parkSpotsAvalivable
+					//stands total sem dal kot spremenljivo vrednost, ker morda bo kdaj več parkirišč na tej točki....
+	-dateTimeCreated
+}
+
+
+STAND{
+	-name
+	-parkSpots	//koliko koles se lahko tu parkira
+	-geometry: {
+		type: {
+			type: String,
+			enum: ['Point'],
+			default: 'Point',
+			required: true
+		},
+		coordinates:{
+			type:[Number],
+			index: "2dsphere",
+			required: true
+		}
+	}
+	dateTimeCreated
+}
+
+
+BIKE_SHED{
+	-providerName
+	-providerLink	//link do spletnega mesta
+	-address	//address je imenovano lokacija v viru, ki ga uporabljamo
+	-quantity	//koliko koles si lahko izposodis
+	-geometry: {
+		type: {
+			type: String,
+			enum: ['Point'],
+			default: 'Point',
+			required: true
+		},
+		coordinates:{
+			type:[Number],
+			index: "2dsphere",
+			required: true
+		}
+	}
+}
+
+TOUR_PATH{
+	geometry: {
+		type: {
+			type: String,
+			enum: ['LineString'],
+			default: 'LineString',
+			required: true
+		},
+		coordinates:{
+			type:[[Number]],
+			required: true
+		}
+	}
+}
+
+CORIDOR{
+	geometry: {
+		type: {
+			type: String,
+			enum: ['LineString'],
+			default: 'LineString',
+			required: true
+		},
+		coordinates:{
+			type:[[Number]],
+			required: true
+		}
+	}
+}
+
+BIKE_PATH{
+	geometry: {
+		type: {
+			type: String,
+			enum: ['LineString'],
+			default: 'LineString',
+			required: true
+		},
+		coordinates:{
+			type:[[Number]],
+			required: true
+		}
+	}
+}
