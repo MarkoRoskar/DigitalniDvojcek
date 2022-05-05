@@ -8,18 +8,22 @@ SPLETNO PROGRAMIRANJE
 - izdelava spletne storitve
 - izdelava spletnega grafičnega vmesnika
 
+
 PREVAJANJE PROGRAMSKIH JEZIKOV
 - zasnova domensko specifičnega programskega jezika
 - implementacija zasnovanega jezika
+
 
 PRINCIPI PROGRAMSKIH JEZIKOV
 - razčlemba podatkov
 - shranjevanje razčlenjenih podatkov v podatkovno bazo
 - integriranje s spletno storitvijo
 
+
 SISTEMSKA ADMINISTRACIJA
 - vzpostavitev okolja Docker za zagon aplikacije
 - namestitev Docker aplikacije na spletno storitev Heroku
+
 
 PROJEKTNI PRAKTIKUM
 - vodenje poteka projekta z orodjem Jira
