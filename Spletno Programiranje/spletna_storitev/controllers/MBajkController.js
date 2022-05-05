@@ -1,45 +1,35 @@
 var MbajkModel = require('../models/MBajkModel.js');
 
-/**
- * MBajkController.js
- *
- * @description :: Server-side logic for managing MBajks.
- */
 module.exports = {
 
-    /**
-     * MBajkController.list()
-     */
     list: function (req, res) {
-        MbajkModel.find(function (err, MBajks) {
+        MbajkModel.find().select("-historyAvailabitilities").exec(function (err, MBajks) {
             if (err) {
                 return res.status(500).json({
-                    message: 'Error when getting MBajk.',
+                    success: false,
+                    message: "Error when getting MBikes",
                     error: err
                 });
             }
-
             return res.json(MBajks);
         });
     },
 
-    /**
-     * MBajkController.show()
-     */
     show: function (req, res) {
         var id = req.params.id;
-
         MbajkModel.findOne({_id: id}, function (err, MBajk) {
             if (err) {
                 return res.status(500).json({
-                    message: 'Error when getting MBajk.',
+                    success: false,
+                    message: "Error when getting MBike",
                     error: err
                 });
             }
 
             if (!MBajk) {
                 return res.status(404).json({
-                    message: 'No such MBajk'
+                    success: false,
+                    message: "Error no such MBajk"
                 });
             }
 
@@ -47,33 +37,92 @@ module.exports = {
         });
     },
 
-    /**
-     * MBajkController.create()
-     */
-    create: function (req, res) {
-        var MBajk = new MbajkModel({
-			number : req.body.number,
-			name : req.body.name,
-			address : req.body.address,
-			currentStatus : req.body.currentStatus,
-			number : req.body.number
-        });
-
-        MBajk.save(function (err, MBajk) {
+    insert: function (req, res) {
+        MbajkModel.findOne({number: parseInt(req.body.number)}, function (err, MBajk) {
             if (err) {
                 return res.status(500).json({
-                    message: 'Error when creating MBajk',
+                    success: false,
                     error: err
                 });
             }
-
-            return res.status(201).json(MBajk);
+            if(MBajk){
+                if(MBajk.lastUpdateSensor != req.body.lastUpdateSensor){
+                    var objCurrentAvail = {
+                        'bikesAvailable' : parseInt(req.body.bikes),
+                        'parkSpots' : parseInt(req.body.capacity),
+                        'dateTimeAdded' : Date.now()
+                    }
+                    MBajk.currentAvailabilities = objCurrentAvail;
+                    MBajk.lastUpdateSensor = req.body.lastUpdateSensor;
+                    MBajk.historyAvailabitilities.push(objCurrentAvail);
+                    MBajk.save(function (err, MBajk) {
+                        if (err) {
+                            return res.status(500).json({
+                                success: false,
+                                message: "Error when updating MBike",
+                                error: err
+                            });
+                        }
+                        return res.json({success: true, 
+                            inserted: false, 
+                            updated: true, 
+                            MBajk: MBajk
+                        })
+                    });
+                }else{
+                    return res.json({success: true, 
+                            inserted: false, 
+                            updated: false, 
+                            MBajk: MBajk
+                    })
+                }
+            }else{
+                var objGeometry = {
+                    type: 'Point', 
+                    coordinates: [parseFloat(req.body.longitude), parseFloat(req.body.latitude)]
+                }
+                var objCurrentAvail = {
+                    'bikesAvailable' : parseInt(req.body.bikes),
+                    'parkSpots' : parseInt(req.body.capacity)
+                }
+                var objHistoryAvailabitilities = [
+                    {
+                        'bikesAvailable' : parseInt(req.body.bikes),
+                        'parkSpots' : parseInt(req.body.capacity),
+                        'dateTimeAdded' : Date.now()
+                    }
+                ]
+                
+                var MBajk = new MbajkModel({
+                    number : parseInt(req.body.number),
+                    name : req.body.name,
+                    address : req.body.address,
+                    geometry : objGeometry,
+                    currentStatus : req.body.status,
+                    lastUpdateSensor : req.body.lastUpdateSensor,
+                    currentAvailabilities : objCurrentAvail,
+                    historyAvailabitilities : objHistoryAvailabitilities
+                });
+                
+                MBajk.save(function (err, MBajk) {
+                    if (err) {
+                        return res.status(500).json({
+                            success: false,
+                            message: "Error when saving MBike",
+                            error: err
+                        });
+                    }
+                    return res.json({success: true, 
+                        inserted: true, 
+                        updated: false, 
+                        MBajk: MBajk
+                    })
+                });
+            }
         });
     },
 
-    /**
-     * MBajkController.update()
-     */
+    /*
     update: function (req, res) {
         var id = req.params.id;
 
@@ -109,10 +158,6 @@ module.exports = {
             });
         });
     },
-
-    /**
-     * MBajkController.remove()
-     */
     remove: function (req, res) {
         var id = req.params.id;
 
@@ -127,4 +172,5 @@ module.exports = {
             return res.status(204).json();
         });
     }
+    */
 };

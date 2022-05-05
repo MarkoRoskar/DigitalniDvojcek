@@ -1,37 +1,28 @@
 var StandModel = require('../models/standModel.js');
 
-/**
- * standController.js
- *
- * @description :: Server-side logic for managing stands.
- */
-module.exports = {
 
-    /**
-     * standController.list()
-     */
+module.exports = {
     list: function (req, res) {
         StandModel.find(function (err, stands) {
             if (err) {
                 return res.status(500).json({
-                    message: 'Error when getting stand.',
+                    success: false,
+                    message: 'Error when getting stands.',
                     error: err
                 });
             }
 
-            return res.json(stands);
+            return res.json({success: ture, "Stands": stands});
         });
     },
 
-    /**
-     * standController.show()
-     */
     show: function (req, res) {
         var id = req.params.id;
 
         StandModel.findOne({_id: id}, function (err, stand) {
             if (err) {
                 return res.status(500).json({
+                    success: false,
                     message: 'Error when getting stand.',
                     error: err
                 });
@@ -39,38 +30,54 @@ module.exports = {
 
             if (!stand) {
                 return res.status(404).json({
+                    success: false,
                     message: 'No such stand'
                 });
             }
 
-            return res.json(stand);
+            return res.json({success: true, "Stand": stand});
         });
     },
 
-    /**
-     * standController.create()
-     */
     create: function (req, res) {
+        var objGeometry = {
+            type: 'Point', 
+            coordinates: [parseFloat(req.body.longitude), parseFloat(req.body.latitude)]
+        }
         var stand = new StandModel({
 			name : req.body.name,
-			parkSpots : req.body.parkSpots
+			parkSpots : req.body.parkSpots,
+            geometry: objGeometry
         });
 
         stand.save(function (err, stand) {
             if (err) {
                 return res.status(500).json({
+                    success: false,
                     message: 'Error when creating stand',
                     error: err
                 });
             }
 
-            return res.status(201).json(stand);
+            return res.status(201).json({success: true, "Stand": stand});
         });
     },
 
-    /**
-     * standController.update()
-     */
+    removeAll: function (req, res) {
+        StandModel.remove({}, function (err, stand) {
+            if (err) {
+                return res.status(500).json({
+                    success: false,
+                    message: 'Error when deleting the stand.',
+                    error: err
+                });
+            }
+
+            return res.status(204).json({success: true});
+        });
+    }
+
+    /*
     update: function (req, res) {
         var id = req.params.id;
 
@@ -103,22 +110,5 @@ module.exports = {
             });
         });
     },
-
-    /**
-     * standController.remove()
-     */
-    remove: function (req, res) {
-        var id = req.params.id;
-
-        StandModel.findByIdAndRemove(id, function (err, stand) {
-            if (err) {
-                return res.status(500).json({
-                    message: 'Error when deleting the stand.',
-                    error: err
-                });
-            }
-
-            return res.status(204).json();
-        });
-    }
+    */
 };

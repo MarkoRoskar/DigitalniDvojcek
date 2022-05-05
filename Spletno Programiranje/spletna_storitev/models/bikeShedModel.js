@@ -2,10 +2,22 @@ var mongoose = require('mongoose');
 var Schema   = mongoose.Schema;
 
 var bikeShedSchema = new Schema({
-	'providerName' : String,
-	'providerLink' : String,
-	'address' : String,
-	'quantity' : Number,
+	'providerName': {
+		type: String,
+		required: true
+	},
+	'providerLink': {
+		type: String,
+		required: true
+	},
+	'address': {
+		type: String,
+		required: true
+	},
+	'quantity' : {
+		type: Number,
+		required: true
+	},
 	'geometry': {
 		'type': {
 			type: String,
@@ -24,3 +36,14 @@ var bikeShedSchema = new Schema({
 });
 
 module.exports = mongoose.model('bikeShed', bikeShedSchema);
+
+/*
+	{
+		"providerName" : "Center mobilnosti Maribor",
+		"providerLink" : "https://mobilnost.si/storitve/kolesodvor/",
+		"address" : "Partizanska cesta 50, 2000 Maribor",
+		"quantity" : "20",
+		"longitude" : "15.657430340440774",
+		"latitude" : "46.56223243175121"
+	}
+*/

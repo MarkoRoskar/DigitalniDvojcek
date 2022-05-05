@@ -1,37 +1,28 @@
 var CoridorModel = require('../models/coridorModel.js');
 
-/**
- * coridorController.js
- *
- * @description :: Server-side logic for managing coridors.
- */
 module.exports = {
 
-    /**
-     * coridorController.list()
-     */
     list: function (req, res) {
         CoridorModel.find(function (err, coridors) {
             if (err) {
                 return res.status(500).json({
+                    success: false,
                     message: 'Error when getting coridor.',
                     error: err
                 });
             }
 
-            return res.json(coridors);
+            return res.json({success: true, "Coridors": coridors});
         });
     },
 
-    /**
-     * coridorController.show()
-     */
     show: function (req, res) {
         var id = req.params.id;
 
         CoridorModel.findOne({_id: id}, function (err, coridor) {
             if (err) {
                 return res.status(500).json({
+                    success: false,
                     message: 'Error when getting coridor.',
                     error: err
                 });
@@ -39,37 +30,60 @@ module.exports = {
 
             if (!coridor) {
                 return res.status(404).json({
+                    success: false,
                     message: 'No such coridor'
                 });
             }
 
-            return res.json(coridor);
+            return res.json({success: true, "Coridor": coridor});
         });
     },
 
-    /**
-     * coridorController.create()
-     */
     create: function (req, res) {
-        var coridor = new CoridorModel({
+        if(req.body.coordinates.length < 2){
+            return res.status(500).json({
+                success: false,
+                message: 'Coordinates must contain atleast 2 points',
+            });
+        }
 
+        var objGeometry = {
+            type: 'LineString', 
+            coordinates: req.body.coordinates
+        }
+
+        var coridor = new CoridorModel({
+            geometry: objGeometry
         });
 
         coridor.save(function (err, coridor) {
             if (err) {
                 return res.status(500).json({
+                    success: false,
                     message: 'Error when creating coridor',
                     error: err
                 });
             }
 
-            return res.status(201).json(coridor);
+            return res.status(201).json({success: true, "Coridor": coridor});
         });
     },
 
-    /**
-     * coridorController.update()
-     */
+    removeAll: function (req, res) {
+        CoridorModel.remove({}, function (err, coridors) {
+            if (err) {
+                return res.status(500).json({
+                    success: false,
+                    message: 'Error when deleting the coridors.',
+                    error: err
+                });
+            }
+
+            return res.status(204).json({success: true});
+        });
+    }
+
+    /*
     update: function (req, res) {
         var id = req.params.id;
 
@@ -100,22 +114,5 @@ module.exports = {
             });
         });
     },
-
-    /**
-     * coridorController.remove()
-     */
-    remove: function (req, res) {
-        var id = req.params.id;
-
-        CoridorModel.findByIdAndRemove(id, function (err, coridor) {
-            if (err) {
-                return res.status(500).json({
-                    message: 'Error when deleting the coridor.',
-                    error: err
-                });
-            }
-
-            return res.status(204).json();
-        });
-    }
+    */
 };

@@ -1,19 +1,12 @@
 var BikeshedModel = require('../models/bikeShedModel.js');
 
-/**
- * bikeShedController.js
- *
- * @description :: Server-side logic for managing bikeSheds.
- */
 module.exports = {
 
-    /**
-     * bikeShedController.list()
-     */
     list: function (req, res) {
         BikeshedModel.find(function (err, bikeSheds) {
             if (err) {
                 return res.status(500).json({
+                    success: false,
                     message: 'Error when getting bikeShed.',
                     error: err
                 });
@@ -23,15 +16,13 @@ module.exports = {
         });
     },
 
-    /**
-     * bikeShedController.show()
-     */
     show: function (req, res) {
         var id = req.params.id;
 
         BikeshedModel.findOne({_id: id}, function (err, bikeShed) {
             if (err) {
                 return res.status(500).json({
+                    success: false,
                     message: 'Error when getting bikeShed.',
                     error: err
                 });
@@ -39,6 +30,7 @@ module.exports = {
 
             if (!bikeShed) {
                 return res.status(404).json({
+                    success: false,
                     message: 'No such bikeShed'
                 });
             }
@@ -47,20 +39,23 @@ module.exports = {
         });
     },
 
-    /**
-     * bikeShedController.create()
-     */
     create: function (req, res) {
+        var objGeometry = {
+            type: 'Point', 
+            coordinates: [parseFloat(req.body.longitude), parseFloat(req.body.latitude)]
+        }
         var bikeShed = new BikeshedModel({
 			providerName : req.body.providerName,
 			providerLink : req.body.providerLink,
 			address : req.body.address,
-			quantity : req.body.quantity
+			quantity : req.body.quantity,
+            geometry : objGeometry
         });
 
         bikeShed.save(function (err, bikeShed) {
             if (err) {
                 return res.status(500).json({
+                    success: false,
                     message: 'Error when creating bikeShed',
                     error: err
                 });
@@ -70,10 +65,22 @@ module.exports = {
         });
     },
 
-    /**
-     * bikeShedController.update()
-     */
-    update: function (req, res) {
+    removeAll: function (req, res) {
+        BikeshedModel.remove({}, function (err, bikeShed) {
+            if (err) {
+                return res.status(500).json({
+                    success: false,
+                    message: 'Error when deleting the stand.',
+                    error: err
+                });
+            }
+
+            return res.status(204).json({success: true});
+        });
+    }
+
+    /*
+        update: function (req, res) {
         var id = req.params.id;
 
         BikeshedModel.findOne({_id: id}, function (err, bikeShed) {
@@ -107,22 +114,5 @@ module.exports = {
             });
         });
     },
-
-    /**
-     * bikeShedController.remove()
-     */
-    remove: function (req, res) {
-        var id = req.params.id;
-
-        BikeshedModel.findByIdAndRemove(id, function (err, bikeShed) {
-            if (err) {
-                return res.status(500).json({
-                    message: 'Error when deleting the bikeShed.',
-                    error: err
-                });
-            }
-
-            return res.status(204).json();
-        });
-    }
+    */
 };

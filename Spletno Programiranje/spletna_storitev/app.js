@@ -16,12 +16,7 @@ var db = mongoose.connection;
 // database error handling
 db.on("error", console.error.bind(console, "MongoDB connection error!"));
 
-
-//var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-
 var MBajkRouter = require('./routes/MBajkRoutes');
-var MBajkAvailabilitiesRouter = require('./routes/MBajkAvailabilitiesRoutes');
 var standRouter = require('./routes/standRoutes');
 var bikeShedRouter = require('./routes/bikeShedRoutes');
 var bikePathRouter = require('./routes/bikePathRoutes');
@@ -58,11 +53,7 @@ app.use(function(req, res, next) {
   next();
 });
 
-//app.use('/', indexRouter);
-app.use('/users', usersRouter);
-
 app.use('/mbajk', MBajkRouter);
-app.use('/mbajkavailable', MBajkAvailabilitiesRouter);
 app.use('/stand', standRouter);
 app.use('/bikeshed', bikeShedRouter);
 app.use('/bikepath', bikePathRouter);
