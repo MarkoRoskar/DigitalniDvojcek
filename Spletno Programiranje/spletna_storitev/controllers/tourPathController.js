@@ -74,7 +74,7 @@ module.exports = {
             if (err) {
                 return res.status(500).json({
                     success: false,
-                    message: 'Error when deleting the tourPaths.',
+                    message: 'Error when deleting tourPaths.',
                     error: err
                 });
             }

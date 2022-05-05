@@ -6,6 +6,8 @@ router.get('/', bikeShedController.list);
 
 router.get('/:id', bikeShedController.show);
 
+router.get('/closeTo', bikeShedController.near);
+
 
 router.post('/', bikeShedController.create);
 

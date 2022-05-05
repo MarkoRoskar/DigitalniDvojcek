@@ -91,4 +91,6 @@ module.exports = mongoose.model('MBajk', MBajkSchema);
     "capacity" : "20",
     "lastUpdateSensor" : "2022-05-05T10:23:54Z"
 }
+
+http://localhost:3000/mbajk/closeTo?longitude=15.646833&latitude=46.5577328
 */

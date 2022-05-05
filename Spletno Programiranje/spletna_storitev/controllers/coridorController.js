@@ -74,7 +74,7 @@ module.exports = {
             if (err) {
                 return res.status(500).json({
                     success: false,
-                    message: 'Error when deleting the coridors.',
+                    message: 'Error when deleting coridors.',
                     error: err
                 });
             }

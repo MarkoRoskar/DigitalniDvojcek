@@ -11,8 +11,39 @@ module.exports = {
                     error: err
                 });
             }
-            return res.json(MBajks);
+            return res.json({success: true, "Mbajks": MBajks});
         });
+    },
+
+    near: function(req, res){
+        //console.log(req.query.longitude)
+        //console.log(req.query.latitude)
+        if(!req.query.longitude || !req.query.latitude){
+            return res.status(500).json({
+                success: false,
+                message: "longitude or latitude not set",
+            });
+        }
+        MbajkModel.aggregate([{
+            $geoNear: {
+                near: {
+                    type: 'Point',
+                    coordinates: [parseFloat(req.query.longitude), parseFloat(req.query.latitude)]
+                },
+                distanceField: 'distance',
+                spherical: true
+            }
+        }])
+        .then(function(MBajk, error){
+            if(error){
+                return res.status(500).json({
+                    success: false,
+                    message: "Error when getting MBike",
+                    error: err
+                });
+            }
+            return res.json({success:true, "Mbajk": MBajk});
+        })
     },
 
     show: function (req, res) {
@@ -33,7 +64,7 @@ module.exports = {
                 });
             }
 
-            return res.json(MBajk);
+            return res.json({success:true, "Mbajk": MBajk});
         });
     },
 

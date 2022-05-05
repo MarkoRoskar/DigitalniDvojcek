@@ -39,6 +39,37 @@ module.exports = {
         });
     },
 
+    near: function(req, res){
+        //console.log(req.query.longitude)
+        //console.log(req.query.latitude)
+        if(!req.query.longitude || !req.query.latitude){
+            return res.status(500).json({
+                success: false,
+                message: "longitude or latitude not set",
+            });
+        }
+        StandModel.aggregate([{
+            $geoNear: {
+                near: {
+                    type: 'Point',
+                    coordinates: [parseFloat(req.query.longitude), parseFloat(req.query.latitude)]
+                },
+                distanceField: 'distance',
+                spherical: true
+            }
+        }])
+        .then(function(Stand, error){
+            if(error){
+                return res.status(500).json({
+                    success: false,
+                    message: "Error when getting Stand",
+                    error: err
+                });
+            }
+            return res.json({success:true, "Stand": Stand});
+        })
+    },
+
     create: function (req, res) {
         var objGeometry = {
             type: 'Point', 
@@ -68,7 +99,7 @@ module.exports = {
             if (err) {
                 return res.status(500).json({
                     success: false,
-                    message: 'Error when deleting the stand.',
+                    message: 'Error when deleting stand.',
                     error: err
                 });
             }

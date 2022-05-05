@@ -6,6 +6,8 @@ router.get('/', standController.list);
 
 router.get('/:id', standController.show);
 
+router.get('/closeTo', standController.near);
+
 
 router.post('/', standController.create);
 

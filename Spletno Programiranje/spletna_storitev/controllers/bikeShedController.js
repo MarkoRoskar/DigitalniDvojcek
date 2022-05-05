@@ -12,7 +12,7 @@ module.exports = {
                 });
             }
 
-            return res.json(bikeSheds);
+            return res.json({success: true, "BikeSheds": bikeSheds});
         });
     },
 
@@ -35,8 +35,39 @@ module.exports = {
                 });
             }
 
-            return res.json(bikeShed);
+            return res.status(201).json({success: true, "BikeShed": bikeShed});
         });
+    },
+
+    near: function(req, res){
+        //console.log(req.query.longitude)
+        //console.log(req.query.latitude)
+        if(!req.query.longitude || !req.query.latitude){
+            return res.status(500).json({
+                success: false,
+                message: "longitude or latitude not set",
+            });
+        }
+        BikeshedModel.aggregate([{
+            $geoNear: {
+                near: {
+                    type: 'Point',
+                    coordinates: [parseFloat(req.query.longitude), parseFloat(req.query.latitude)]
+                },
+                distanceField: 'distance',
+                spherical: true
+            }
+        }])
+        .then(function(BikeShed, error){
+            if(error){
+                return res.status(500).json({
+                    success: false,
+                    message: "Error when getting BikeShed",
+                    error: err
+                });
+            }
+            return res.json({success:true, "BikeShed": BikeShed});
+        })
     },
 
     create: function (req, res) {
@@ -61,7 +92,7 @@ module.exports = {
                 });
             }
 
-            return res.status(201).json(bikeShed);
+            return res.status(201).json({success: true, "BikeShed": bikeShed});
         });
     },
 
@@ -70,7 +101,7 @@ module.exports = {
             if (err) {
                 return res.status(500).json({
                     success: false,
-                    message: 'Error when deleting the stand.',
+                    message: 'Error when deleting bikeShed.',
                     error: err
                 });
             }
