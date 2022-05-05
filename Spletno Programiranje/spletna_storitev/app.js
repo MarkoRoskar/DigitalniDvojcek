@@ -16,6 +16,7 @@ var db = mongoose.connection;
 // database error handling
 db.on("error", console.error.bind(console, "MongoDB connection error!"));
 
+var usersRouter = require('./routes/userRoutes');
 var MBajkRouter = require('./routes/MBajkRoutes');
 var standRouter = require('./routes/standRoutes');
 var bikeShedRouter = require('./routes/bikeShedRoutes');
@@ -36,7 +37,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // adding session
-var session = require("express-session");
+/*var session = require("express-session");
 var MongoStore = require("connect-mongo");
 const exp = require('constants');
 app.use(session({
@@ -51,8 +52,9 @@ app.use(session({
 app.use(function(req, res, next) {
   res.locals.session = req.session;
   next();
-});
+});*/
 
+app.use('/users', usersRouter);
 app.use('/mbajk', MBajkRouter);
 app.use('/stand', standRouter);
 app.use('/bikeshed', bikeShedRouter);
