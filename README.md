@@ -22,6 +22,7 @@ PRINCIPI PROGRAMSKIH JEZIKOV
 
 SISTEMSKA ADMINISTRACIJA
 - vzpostavitev okolja Docker za zagon aplikacije
+- Vzpostavitev podatkovne baze
 - namestitev Docker aplikacije na spletno storitev Heroku
 
 
