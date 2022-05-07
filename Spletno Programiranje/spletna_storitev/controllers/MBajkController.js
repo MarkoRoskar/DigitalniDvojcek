@@ -11,7 +11,8 @@ module.exports = {
                     error: err
                 });
             }
-            return res.json({success: true, "Mbajks": MBajks});
+            return res.json({success: true, auth: "jwt", "Mbajks": MBajks});
+            //return res.json(MBajks.filter(mbajk => mbajk.number === req.body.number));
         });
     },
 

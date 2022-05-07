@@ -2,6 +2,7 @@ var UserModel = require('../models/userModel.js');
 
 require("dotenv").config();
 var jwt = require("jsonwebtoken");
+var bcrypt = require("bcrypt");
 const { use } = require('../app.js');
 
 /**
@@ -79,7 +80,9 @@ module.exports = {
     },
 
     /**
-     * userController.login()
+     * checks for correctness of user's username and password (comparing with values from database)
+     * generates JWT (JSON Web Token - long string based on user info) which serves much like a session
+     * updates user record in database by adding the JWT
      */
     login: function(req, res, next) {
         UserModel.authenticate(req.body.username, req.body.password, function(err, user) {
@@ -89,10 +92,64 @@ module.exports = {
                 return next(error);
             }
             else {
-                req.session.userId = user._id;
+                const accessToken = jwt.sign({ username: req.body.username, password: req.body.password, email: req.body.email }, process.env.ACCESS_TOKEN_SECRET);
+                res.json({
+                    username: req.body.username,
+                    email: req.body.email,
+                    accessToken: accessToken,
+                    message: "login successful"
+                });
 
-                return res.redirect('/');
+                user.token = accessToken;
+
+                user.save(function (err, user) {
+                    if (err) {
+                        return res.status(500).json({
+                            message: 'Error when adding token to user',
+                            error: err
+                        });
+                    }
+        
+                    //return res.status(201).json(user);
+                    //return res.redirect("/");
+                });
+
+                //req.session.userId = user._id;
+
+                /*return res.status(200).json({
+                    message: "login successful",
+                });*/
+                //return res.redirect('/');
             }
+        });
+    },
+
+    /**
+     * finds users whose JWT tokens aren't equal to null
+     * updates user record by setting the token to null again (user is logged out) - essentially deletes the JWT token
+     */
+    logout: function(req, res) {
+        // get user who is logged in (his token isn't set to null)
+        UserModel.findOne({"token": {$ne:null}}, function(err, logged_user) {
+            if (err) {
+                return res.status(500).json({
+                    message: 'Error when getting user.',
+                    error: err
+                });
+            }
+            logged_user.token = null;
+            logged_user.save(function (err, user) {
+                if (err) {
+                    return res.status(500).json({
+                        message: 'Error when updating user',
+                        error: err
+                    });
+                }
+    
+                return res.status(200).json({
+                    message: "successfully logged out"
+                });
+            });
         });
     },
 
@@ -114,36 +171,38 @@ module.exports = {
     },*/
 
     /**
-     * userController.create()
+     * creates new user
+     * hashes his password before saving to database
+     * sets JWT (token) to null by default (user is not automatically logged in after registering)
      */
     create: function (req, res) {
-        var user = new UserModel({
-			username : req.body.username,
-			password : req.body.password,
-			email : req.body.email,
-			admin : true
-        });
 
-        const accessToken = jwt.sign({ username: req.body.username, password: req.body.password, email: req.body.email }, process.env.ACCESS_TOKEN_SECRET);
-        res.json({
-            username: req.body.username,
-            email: req.body.email,
-            accessToken: accessToken
-        });
-
-        user.token = accessToken;
-
-        user.save(function (err, user) {
+        bcrypt.hash(req.body.password, 10, function(err, hash) {	// salt - 10
             if (err) {
-                return res.status(500).json({
-                    message: 'Error when creating user',
-                    error: err
-                });
+                return res.json(401).json({"message": "error hashing"});
             }
 
-            //return res.status(201).json(user);
-            //return res.redirect("/");
+            var user = new UserModel({
+                username : req.body.username,
+                password : hash,
+                email : req.body.email,
+                admin : true,
+                token : null
+            });
+    
+            user.save(function (err, user) {
+                if (err) {
+                    return res.status(500).json({
+                        message: 'Error when creating user',
+                        error: err
+                    });
+                }
+    
+                return res.status(201).json(user);
+                //return res.redirect("/");
+            });
         });
+
     },
 
     /**

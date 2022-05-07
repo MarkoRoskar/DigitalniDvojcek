@@ -1,14 +1,13 @@
 var express = require('express');
-const { JsonWebTokenError } = require('jsonwebtoken');
 var router = express.Router();
 var userController = require('../controllers/userController.js');
 var jwt = require("jsonwebtoken");
 
 
 function authenticateToken(req, res, next) {
-    // get authentication header from response
+    // get authentication header from HTTP request
     const authHeader = req.headers['authorization'];
-    console.log("authHeader: " + authHeader)
+    console.log("authHeader: " + authHeader);
     var token;
     if (authHeader) {
         // get the token portion from the header (after 1st space)
@@ -31,6 +30,7 @@ function authenticateToken(req, res, next) {
             }
             // valid and accessible token
             req.user = user;
+            console.log("token authentication successful")
             next();
         });
     }
@@ -40,11 +40,11 @@ function authenticateToken(req, res, next) {
 /*
  * GET
  */
-router.get('/getByToken', authenticateToken, userController.listByToken);
+router.get('/getByToken', authenticateToken, userController.listByToken);   // user needs to have a JWT
 router.get('/getAll', userController.list);
 router.get('/login', userController.showLogin);
 router.get('/register', userController.showRegister);
-//router.get('/logout', userController.logout);
+router.get('/logout', userController.logout);
 
 /*
  * GET
