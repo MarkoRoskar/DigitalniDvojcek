@@ -1,5 +1,6 @@
 # DIGITALNI DVOJČEK KOLESARSTVA V MARIBORU - projekt FERI 4. semester
 
+<p>
 Projekt izvajamo v okviru 5 predmetov 4. semestra. Pri vsakem od predmetov zasnujemo in implementiramo del končnega rezultata.
 Razdelitev obveznosti po predmetih:
 
@@ -26,3 +27,4 @@ Razdelitev obveznosti po predmetih:
 - vodenje poteka projekta z orodjem Jira
 - uporaba tehnologije za verzioniranje kode GitHub
 - sestanki ekipe z uporabo aplikacije Discord
+</p>
