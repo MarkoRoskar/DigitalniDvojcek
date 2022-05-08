@@ -104,104 +104,17 @@ module.exports = {
                         message: "login successful"
                     });
                 });
-
-                // check if anyone else is currently logged in
-                /*UserModel.find({"token": {$ne:null}}, function(err, users) {
-                    if (err) {
-                        return res.status(500).json({
-                            message: 'Error when getting user.',
-                            error: err
-                        });
-                    }
-                    if (users.length > 0) {
-                        return res.status(401).json({
-                            message: "Another user is currently logged in.",
-                            error: err
-                        })
-                    }
-                    // if no one else is currently logged in, then you can login
-                    else {
-                        user.save(function (err, user) {
-                            if (err) {
-                                return res.status(500).json({
-                                    message: 'Error when adding token to user',
-                                    error: err
-                                });
-                            }
-        
-                            return res.status(200).json({
-                                username: req.body.username,
-                                accessToken: accessToken,
-                                message: "login successful"
-                            });
-                        });
-                    }
-                });*/
             }
         });
     },
 
     /**
      * userController.logout()
-     * finds users whose JWT tokens aren't equal to null
+     * finds user by username given in the URL
      * updates user record by setting the token to null again (user is logged out) - essentially deletes the JWT token
      * @returns returns message of (un)successful logout
      */
     logout: function(req, res) {
-        // get user who is logged in (his token isn't set to null)
-        /*UserModel.findOne({"token": {$ne:null}}, function(err, logged_user) {
-            if (err) {
-                return res.status(500).json({
-                    message: 'Error when getting user.',
-                    error: err
-                });
-            }
-            logged_user.token = null;
-            logged_user.save(function (err, user) {
-                if (err) {
-                    return res.status(500).json({
-                        message: 'Error when updating user',
-                        error: err
-                    });
-                }
-    
-                return res.status(200).json({
-                    message: "successfully logged out"
-                });
-            });
-        });*/
-
-        /*UserModel.find({"token": {$ne:null}}, function(err, logged_users) {
-            if (err) {
-                return res.status(500).json({
-                    message: 'Error when getting user.',
-                    error: err
-                });
-            };
-            for (var user in logged_users) {
-                UserModel.findOne({"id": req.params.username}, function(err, user) {
-                    if (err) {
-                        return res.status(500).json({
-                            message: 'Error when getting user.',
-                            error: err
-                        });
-                    };
-                    user.token = null;
-                    user.save(function(err, user) {
-                        if (err) {
-                            return res.status(500).json({
-                                message: 'Error when updating user',
-                                error: err
-                            });
-                        }
-                        return res.status(200).json({
-                            message: "successfully logged out"
-                        });
-                    });
-                });
-            }
-        });*/
-
         UserModel.findOne({"username": req.params.username}, function(err, user) {
             if (err) {
                 return res.status(500).json({
@@ -241,7 +154,6 @@ module.exports = {
                 username : req.body.username,
                 password : hash,    // hashed password
                 email : req.body.email,
-                admin : true,
                 token : null
             });
     
@@ -263,10 +175,10 @@ module.exports = {
      * userController.remove()
      * removes user from the database based on ID
      */
-     remove: function (req, res) {
-        var id = req.params.id;
+    remove: function (req, res) {
+        var username = req.params.username;
 
-        UserModel.findByIdAndRemove(id, function (err, user) {
+        UserModel.findOneAndDelete(username, function (err, user) {
             if (err) {
                 return res.status(500).json({
                     message: 'Error when deleting the user.',

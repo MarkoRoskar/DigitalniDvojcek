@@ -10,24 +10,23 @@ Content-Type: application/json
 {
 	"username" : "Jakob",
 	"password" : "jakob123",
-	"email" : "jakob.opresnik@student.um.si",
-	"admin" : false
+	"email" : "jakob.opresnik@student.um.si"
 }
 
-###
+### get user by JWT in Authorization header
 
 GET http://localhost:3000/users/getByToken
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpha29iIiwicGFzc3dvcmQiOiJqYWtvYjEyMyIsImlhdCI6MTY1MjAyMDgzMn0.G45kKShICGQJfOTYVsmU6n1dex9b2kPUtkUX721Hlh8
 
-###
+### get all users
 
 GET http://localhost:3000/users/getAll
 
-###
+### get user by JWT in URL
 
 GET http://localhost:3000/users/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpha29iIiwicGFzc3dvcmQiOiJqYWtvYjEyMyIsImlhdCI6MTY1MjAyMDgzMn0.G45kKShICGQJfOTYVsmU6n1dex9b2kPUtkUX721Hlh8
 
-###
+### login user
 
 POST http://localhost:3000/users/login
 Content-Type: application/json
@@ -37,9 +36,13 @@ Content-Type: application/json
     "password": "jakob123"
 }
 
-###
+### logout user
 
 GET http://localhost:3000/users/logout/Jakob
+
+### delete user
+
+DELETE http://localhost:3000/users/Jakob
 
 
 ### show all mbajk locations
