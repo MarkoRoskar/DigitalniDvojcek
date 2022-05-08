@@ -11,7 +11,7 @@ Content-Type: application/json
 	"username" : "Jakob",
 	"password" : "jakob123",
 	"email" : "jakob.opresnik@student.um.si",
-	"admin" : true
+	"admin" : false
 }
 
 ###
@@ -39,7 +39,7 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:3000/users/logout
+GET http://localhost:3000/users/logout/Jakob
 
 
 ### show all mbajk locations

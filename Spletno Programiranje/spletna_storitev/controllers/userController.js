@@ -90,8 +90,23 @@ module.exports = {
                 const accessToken = jwt.sign({ username: req.body.username, password: req.body.password, email: req.body.email }, process.env.ACCESS_TOKEN_SECRET);
                 user.token = accessToken;
 
+                user.save(function (err, user) {
+                    if (err) {
+                        return res.status(500).json({
+                            message: 'Error when adding token to user',
+                            error: err
+                        });
+                    }
+
+                    return res.status(200).json({
+                        username: req.body.username,
+                        accessToken: accessToken,
+                        message: "login successful"
+                    });
+                });
+
                 // check if anyone else is currently logged in
-                UserModel.find({"token": {$ne:null}}, function(err, users) {
+                /*UserModel.find({"token": {$ne:null}}, function(err, users) {
                     if (err) {
                         return res.status(500).json({
                             message: 'Error when getting user.',
@@ -121,7 +136,7 @@ module.exports = {
                             });
                         });
                     }
-                });
+                });*/
             }
         });
     },
@@ -134,7 +149,7 @@ module.exports = {
      */
     logout: function(req, res) {
         // get user who is logged in (his token isn't set to null)
-        UserModel.findOne({"token": {$ne:null}}, function(err, logged_user) {
+        /*UserModel.findOne({"token": {$ne:null}}, function(err, logged_user) {
             if (err) {
                 return res.status(500).json({
                     message: 'Error when getting user.',
@@ -150,6 +165,58 @@ module.exports = {
                     });
                 }
     
+                return res.status(200).json({
+                    message: "successfully logged out"
+                });
+            });
+        });*/
+
+        /*UserModel.find({"token": {$ne:null}}, function(err, logged_users) {
+            if (err) {
+                return res.status(500).json({
+                    message: 'Error when getting user.',
+                    error: err
+                });
+            };
+            for (var user in logged_users) {
+                UserModel.findOne({"id": req.params.username}, function(err, user) {
+                    if (err) {
+                        return res.status(500).json({
+                            message: 'Error when getting user.',
+                            error: err
+                        });
+                    };
+                    user.token = null;
+                    user.save(function(err, user) {
+                        if (err) {
+                            return res.status(500).json({
+                                message: 'Error when updating user',
+                                error: err
+                            });
+                        }
+                        return res.status(200).json({
+                            message: "successfully logged out"
+                        });
+                    });
+                });
+            }
+        });*/
+
+        UserModel.findOne({"username": req.params.username}, function(err, user) {
+            if (err) {
+                return res.status(500).json({
+                    message: 'Error when getting user.',
+                    error: err
+                });
+            };
+            user.token = null;
+            user.save(function(err, user) {
+                if (err) {
+                    return res.status(500).json({
+                        message: 'Error when updating user',
+                        error: err
+                    });
+                }
                 return res.status(200).json({
                     message: "successfully logged out"
                 });

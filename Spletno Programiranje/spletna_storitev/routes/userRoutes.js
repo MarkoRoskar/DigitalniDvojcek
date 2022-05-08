@@ -52,7 +52,7 @@ function authenticateToken(req, res, next) {
  */
 router.get('/getByToken', authenticateToken, userController.listByToken);   // user needs to have a JWT
 router.get('/getAll', userController.list);
-router.get('/logout', userController.logout);
+router.get('/logout/:username', userController.logout);
 router.get('/:token', userController.show);
 
 /*
