@@ -2,14 +2,24 @@ var express = require('express');
 var router = express.Router();
 var bikePathController = require('../controllers/bikePathController.js');
 
+// authenticateToken function
+const jwtAuth = require('../authenticateJWT.js');
 
+/**
+ * GET
+ */
 router.get('/', bikePathController.list);
-
 router.get('/:id', bikePathController.show);
 
-router.post('/', bikePathController.create);
+/**
+ * POST
+ */
+router.post('/', jwtAuth.authenticateToken, bikePathController.create);
 
-router.delete('/', bikePathController.removeAll);
+/**
+ * DELETE
+ */
+router.delete('/', jwtAuth.authenticateToken, bikePathController.removeAll);
 
 
 module.exports = router;

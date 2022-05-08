@@ -2,6 +2,10 @@ var BikeshedModel = require('../models/bikeShedModel.js');
 
 module.exports = {
 
+    /**
+     * bikeShedController.list()
+     * @returns returns all bike sheds
+     */
     list: function (req, res) {
         BikeshedModel.find(function (err, bikeSheds) {
             if (err) {
@@ -16,6 +20,10 @@ module.exports = {
         });
     },
 
+    /**
+     * bikeShedController.show()
+     * @returns returns bike shed based on ID
+     */
     show: function (req, res) {
         var id = req.params.id;
 
@@ -39,6 +47,10 @@ module.exports = {
         });
     },
 
+    /**
+     * bikeShedController.near()
+     * @returns returns nearest bike shed location based on given coordinates or error message
+     */
     near: function(req, res){
         //console.log(req.query.longitude)
         //console.log(req.query.latitude)
@@ -48,6 +60,7 @@ module.exports = {
                 message: "longitude or latitude not set",
             });
         }
+        // geospatial query
         BikeshedModel.aggregate([{
             $geoNear: {
                 near: {
@@ -70,6 +83,10 @@ module.exports = {
         })
     },
 
+    /**
+     * bikeShedController.create()
+     * inserts new bike shed into the database
+     */
     create: function (req, res) {
         var objGeometry = {
             type: 'Point', 
@@ -96,6 +113,10 @@ module.exports = {
         });
     },
 
+    /**
+     * bikeShedController.removeAll()
+     * deletes all bike sheds from the database
+     */
     removeAll: function (req, res) {
         BikeshedModel.remove({}, function (err, bikeShed) {
             if (err) {

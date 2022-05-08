@@ -2,6 +2,10 @@ var TourpathModel = require('../models/tourPathModel.js');
 
 module.exports = {
 
+    /**
+     * tourPathController.list()
+     * @returns returns all bike tour paths
+     */
     list: function (req, res) {
         TourpathModel.find(function (err, tourPaths) {
             if (err) {
@@ -16,6 +20,10 @@ module.exports = {
         });
     },
 
+    /**
+     * tourPathController.show()
+     * @returns returns bike tour path based on ID
+     */
     show: function (req, res) {
         var id = req.params.id;
 
@@ -39,6 +47,10 @@ module.exports = {
         });
     },
 
+    /**
+     * tourPathController.create()
+     * inserts a new bike tour path into the database
+     */
     create: function (req, res) {
         if(req.body.coordinates.length < 2){
             return res.status(500).json({
@@ -69,6 +81,10 @@ module.exports = {
         });
     },
 
+    /**
+     * tourPathController.removeAll()
+     * removes all bike tour paths from the database
+     */
     removeAll: function (req, res) {
         TourpathModel.remove({}, function (err, TourhPaths) {
             if (err) {

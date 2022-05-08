@@ -1,7 +1,12 @@
+const bikePathModel = require('../models/bikePathModel.js');
 var BikepathModel = require('../models/bikePathModel.js');
 
 module.exports = {
 
+    /**
+     * bikePathController.list()
+     * @returns returns all bike paths
+     */
     list: function (req, res) {
         BikepathModel.find(function (err, bikePaths) {
             if (err) {
@@ -16,6 +21,10 @@ module.exports = {
         });
     },
 
+    /**
+     * bikePathController.show()
+     * @returns returns bike path based on ID
+     */
     show: function (req, res) {
         var id = req.params.id;
 
@@ -39,14 +48,17 @@ module.exports = {
         });
     },
 
+    /**
+     * bikePathController.create()
+     * inserts new bike path into the database
+     */
     create: function (req, res) {
         var objGeometry = {
             type: 'LineString', 
-            coordinates: [parseFloat(req.body.longitude), parseFloat(req.body.latitude)]
+            coordinates: req.body.coordinates
         }
+
         var bikePath = new BikepathModel({
-			name : req.body.name,
-			parkSpots : req.body.parkSpots,
             geometry: objGeometry
         });
 
@@ -54,7 +66,7 @@ module.exports = {
             if (err) {
                 return res.status(500).json({
                     success: false,
-                    message: 'Error when creating bikePath',
+                    message: 'Error when creating coridor',
                     error: err
                 });
             }
@@ -63,8 +75,12 @@ module.exports = {
         });
     },
 
+    /**
+     * bikePathController.removeAll()
+     * deletes all bike paths from the database
+     */
     removeAll: function (req, res) {
-        StandModel.remove({}, function (err, BikePaths) {
+        bikePathModel.remove({}, function (err, BikePaths) {
             if (err) {
                 return res.status(500).json({
                     success: false,

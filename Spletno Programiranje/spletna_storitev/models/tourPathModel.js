@@ -1,17 +1,20 @@
 var mongoose = require('mongoose');
 var Schema   = mongoose.Schema;
 
+/**
+ * definition of tourPathSchema attributes
+ */
 var tourPathSchema = new Schema({
-    'geometry': {
-		'type': {
-			type: String,
-			enum: ['LineString'],
-			default: 'LineString',
-			required: true
+    'geometry' : {
+		'type' : {
+			type : String,
+			enum : ['LineString'],
+			default : 'LineString',
+			required : true
 		},
-		'coordinates':{
-			type:[[Number]],
-			required: true
+		'coordinates' : {
+			type : [[Number]],
+			required : true
 		}
 	}
 }, {

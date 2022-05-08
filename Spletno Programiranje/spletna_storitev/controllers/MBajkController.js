@@ -2,6 +2,10 @@ var MbajkModel = require('../models/MBajkModel.js');
 
 module.exports = {
 
+    /**
+     * MBajkController.list()
+     * @returns returns message of success and listed MBajk locations or error message
+     */
     list: function (req, res) {
         MbajkModel.find().select("-historyAvailabitilities").exec(function (err, MBajks) {
             if (err) {
@@ -16,6 +20,10 @@ module.exports = {
         });
     },
 
+    /**
+     * MBajkController.near()
+     * @returns returns nearest MBajk location based on given coordinates or error message
+     */
     near: function(req, res){
         //console.log(req.query.longitude)
         //console.log(req.query.latitude)
@@ -25,6 +33,7 @@ module.exports = {
                 message: "longitude or latitude not set",
             });
         }
+        // geospatial query
         MbajkModel.aggregate([{
             $geoNear: {
                 near: {
@@ -47,6 +56,10 @@ module.exports = {
         })
     },
 
+    /**
+     * MBajkController.show()
+     * @returns returns an MBajk location based on its ID
+     */
     show: function (req, res) {
         var id = req.params.id;
         MbajkModel.findOne({_id: id}, function (err, MBajk) {
@@ -69,6 +82,12 @@ module.exports = {
         });
     },
 
+    /**
+     * MBajkController.insert()
+     * adds an MBajk location to the database
+     * adds past measurements to the history array if the last sensor update doesn't match given location's last sensor update
+     * @returns returns success message and the inserted MBajk location or error message 
+     */
     insert: function (req, res) {
         MbajkModel.findOne({number: parseInt(req.body.number)}, function (err, MBajk) {
             if (err) {

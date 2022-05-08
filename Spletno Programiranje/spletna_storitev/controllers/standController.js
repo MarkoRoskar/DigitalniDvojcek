@@ -2,6 +2,11 @@ var StandModel = require('../models/standModel.js');
 
 
 module.exports = {
+
+    /**
+     * standController.list()
+     * @returns returns all bike stands
+     */
     list: function (req, res) {
         StandModel.find(function (err, stands) {
             if (err) {
@@ -16,6 +21,10 @@ module.exports = {
         });
     },
 
+    /**
+     * standController.show()
+     * @returns returns bike stand based on ID
+     */
     show: function (req, res) {
         var id = req.params.id;
 
@@ -39,6 +48,10 @@ module.exports = {
         });
     },
 
+    /**
+     * standController.near()
+     * @returns returns nearest bike stand location based on given coordinates or error message
+     */
     near: function(req, res){
         //console.log(req.query.longitude)
         //console.log(req.query.latitude)
@@ -48,6 +61,7 @@ module.exports = {
                 message: "longitude or latitude not set",
             });
         }
+        // geospatial query
         StandModel.aggregate([{
             $geoNear: {
                 near: {
@@ -70,6 +84,10 @@ module.exports = {
         })
     },
 
+    /**
+     * standController.create()
+     * inserts a new bike stand into the database
+     */
     create: function (req, res) {
         var objGeometry = {
             type: 'Point', 
@@ -94,6 +112,10 @@ module.exports = {
         });
     },
 
+    /**
+     * standController.removeAll()
+     * removes all bike stands from the database
+     */
     removeAll: function (req, res) {
         StandModel.remove({}, function (err, stand) {
             if (err) {

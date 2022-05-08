@@ -1,18 +1,21 @@
 var mongoose = require('mongoose');
 var Schema   = mongoose.Schema;
 
+/**
+ * definition of MBajkSchema attributes
+ */
 var MBajkSchema = new Schema({
 	'number' : {
-		type: Number,
-		required: true
+		type : Number,
+		required : true
 	},
 	'name' : {
-		type: String,
-		required: true
+		type : String,
+		required : true
 	},
 	'address' : {
-		type: String,
-		required: true
+		type : String,
+		required : true
 	},
 	'geometry': {
 		'type' : {
@@ -28,38 +31,38 @@ var MBajkSchema = new Schema({
 		}
 	},
 	'currentStatus' : {
-		type: String,
-		required: true
+		type : String,
+		required : true
 	},
 	'currentAvailabilities' : {
 		'bikesAvailable' : {
-			type: Number,
-			required: true
+			type : Number,
+			required : true
 		},
 		'parkSpots' : {
-			type: Number,
-			required: true
+			type : Number,
+			required : true
 		}
 	},
 	'historyAvailabitilities' : [
 		{
 			'bikesAvailable' : {
-				type: Number,
-				required: true
+				type : Number,
+				required : true
 			},
 			'parkSpots' : {
-				type: Number,
-				required: true
+				type : Number,
+				required : true
 			},
 			'dateTimeAdded' : {
-				type: Date,
-				required: true
+				type : Date,
+				required : true
 			}
 		}
 	],
 	'lastUpdateSensor' : {
-		type: String,
-		required: true
+		type : String,
+		required : true
 	}
 }, {
 	timestamps : true

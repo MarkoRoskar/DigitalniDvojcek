@@ -1,3 +1,4 @@
 .idea/
 node_modules/
-Spletno Programiranje/spletna_storitev/.env
+.env
+user/

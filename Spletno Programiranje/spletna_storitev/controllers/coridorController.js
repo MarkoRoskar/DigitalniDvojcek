@@ -2,6 +2,10 @@ var CoridorModel = require('../models/coridorModel.js');
 
 module.exports = {
 
+    /**
+     * coridorController.list()
+     * @returns returns all coridors
+     */
     list: function (req, res) {
         CoridorModel.find(function (err, coridors) {
             if (err) {
@@ -16,6 +20,10 @@ module.exports = {
         });
     },
 
+    /**
+     * coridorController.show()
+     * @returns returns coridor based on ID
+     */
     show: function (req, res) {
         var id = req.params.id;
 
@@ -39,6 +47,10 @@ module.exports = {
         });
     },
 
+    /**
+     * coridorController.create()
+     * inserts new coridor into the database
+     */
     create: function (req, res) {
         if(req.body.coordinates.length < 2){
             return res.status(500).json({
@@ -69,6 +81,10 @@ module.exports = {
         });
     },
 
+    /**
+     * coridorController.removeAll()
+     * deletes all coridors from the database
+     */
     removeAll: function (req, res) {
         CoridorModel.remove({}, function (err, coridors) {
             if (err) {

@@ -1,26 +1,29 @@
 var mongoose = require('mongoose');
 var Schema   = mongoose.Schema;
 
+/**
+ * definition of standSchema attributes
+ */
 var standSchema = new Schema({
 	'name' : {
-		type: String,
-		required: true
+		type : String,
+		required : true
 	},
 	'parkSpots' : {
-		type: Number,
-		required: true
+		type : Number,
+		required : true
 	},
-	'geometry': {
-		'type': {
-			type: String,
-			enum: ['Point'],
-			default: 'Point',
-			required: true
+	'geometry' : {
+		'type' : {
+			type : String,
+			enum : ['Point'],
+			default : 'Point',
+			required : true
 		},
-		'coordinates':{
-			type: [Number],
-			index: "2dsphere",
-			required: true
+		'coordinates' : {
+			type : [Number],
+			index : "2dsphere",
+			required : true
 		}
 	}
 }, {

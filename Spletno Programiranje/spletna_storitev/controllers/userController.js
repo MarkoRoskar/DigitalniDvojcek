@@ -3,7 +3,7 @@ var UserModel = require('../models/userModel.js');
 require("dotenv").config();
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcrypt");
-const { use } = require('../app.js');
+const { use, resource } = require('../app.js');
 
 /**
  * userController.js
@@ -13,7 +13,8 @@ const { use } = require('../app.js');
 module.exports = {
 
     /**
-     * userController.list()
+     * userController.listByToken()
+     * @returns returns user with matching JWT compared to the JWT in authorization header
      */
     listByToken: function (req, res) {
         UserModel.find(function (err, users) {
@@ -28,6 +29,10 @@ module.exports = {
         });
     },
 
+    /**
+     * userController.list()+
+     * @returns returns all existing users
+     */
     list: function(req, res) {
         UserModel.find(function (err, users) {
             if (err) {
@@ -43,6 +48,7 @@ module.exports = {
 
     /**
      * userController.show()
+     * @returns returns user with token given in the URL
      */
     show: function (req, res) {
         var token = req.params.token;
@@ -66,23 +72,11 @@ module.exports = {
     },
 
     /**
-     * userController.showLogin()
-     */
-    showLogin: function(req, res) {
-        res.render("user/login");   // displays user/login.hbs view
-    },
-
-    /**
-     * userController.showRegister()
-     */
-    showRegister: function(req, res) {
-        res.render("user/register");    // displays user/register.hbs view
-    },
-
-    /**
+     * userController.login()
      * checks for correctness of user's username and password (comparing with values from database)
      * generates JWT (JSON Web Token - long string based on user info) which serves much like a session
      * updates user record in database by adding the JWT
+     * @returns returns message of successful login or error
      */
     login: function(req, res, next) {
         UserModel.authenticate(req.body.username, req.body.password, function(err, user) {
@@ -92,41 +86,51 @@ module.exports = {
                 return next(error);
             }
             else {
+                // create JWT token using the user's username, password and email address
                 const accessToken = jwt.sign({ username: req.body.username, password: req.body.password, email: req.body.email }, process.env.ACCESS_TOKEN_SECRET);
-                res.json({
-                    username: req.body.username,
-                    email: req.body.email,
-                    accessToken: accessToken,
-                    message: "login successful"
-                });
-
                 user.token = accessToken;
 
-                user.save(function (err, user) {
+                // check if anyone else is currently logged in
+                UserModel.find({"token": {$ne:null}}, function(err, users) {
                     if (err) {
                         return res.status(500).json({
-                            message: 'Error when adding token to user',
+                            message: 'Error when getting user.',
                             error: err
                         });
                     }
+                    if (users.length > 0) {
+                        return res.status(401).json({
+                            message: "Another user is currently logged in.",
+                            error: err
+                        })
+                    }
+                    // if no one else is currently logged in, then you can login
+                    else {
+                        user.save(function (err, user) {
+                            if (err) {
+                                return res.status(500).json({
+                                    message: 'Error when adding token to user',
+                                    error: err
+                                });
+                            }
         
-                    //return res.status(201).json(user);
-                    //return res.redirect("/");
+                            return res.status(200).json({
+                                username: req.body.username,
+                                accessToken: accessToken,
+                                message: "login successful"
+                            });
+                        });
+                    }
                 });
-
-                //req.session.userId = user._id;
-
-                /*return res.status(200).json({
-                    message: "login successful",
-                });*/
-                //return res.redirect('/');
             }
         });
     },
 
     /**
+     * userController.logout()
      * finds users whose JWT tokens aren't equal to null
      * updates user record by setting the token to null again (user is logged out) - essentially deletes the JWT token
+     * @returns returns message of (un)successful logout
      */
     logout: function(req, res) {
         // get user who is logged in (his token isn't set to null)
@@ -154,29 +158,13 @@ module.exports = {
     },
 
     /**
-     * destroys session if it exists
-     * if no error occur during session destruction, we are redirected to home page
-     */
-    /*logout: function(req, res, next) {
-        if (req.session) {
-            req.session.destroy(function(err) {
-                if (err) {
-                    return next(err);
-                }
-                else {
-                    return res.redirect('/');
-                }
-            });
-        }
-    },*/
-
-    /**
+     * userController.register()
      * creates new user
      * hashes his password before saving to database
      * sets JWT (token) to null by default (user is not automatically logged in after registering)
+     * @returns returns registered user
      */
-    create: function (req, res) {
-
+    register: function (req, res) {
         bcrypt.hash(req.body.password, 10, function(err, hash) {	// salt - 10
             if (err) {
                 return res.json(401).json({"message": "error hashing"});
@@ -184,7 +172,7 @@ module.exports = {
 
             var user = new UserModel({
                 username : req.body.username,
-                password : hash,
+                password : hash,    // hashed password
                 email : req.body.email,
                 admin : true,
                 token : null
@@ -199,16 +187,34 @@ module.exports = {
                 }
     
                 return res.status(201).json(user);
-                //return res.redirect("/");
             });
         });
 
     },
 
     /**
+     * userController.remove()
+     * removes user from the database based on ID
+     */
+     remove: function (req, res) {
+        var id = req.params.id;
+
+        UserModel.findByIdAndRemove(id, function (err, user) {
+            if (err) {
+                return res.status(500).json({
+                    message: 'Error when deleting the user.',
+                    error: err
+                });
+            }
+
+            return res.status(204).json();
+        });
+    },
+
+    /**
      * userController.update()
      */
-    update: function (req, res) {
+    /*update: function (req, res) {
         var id = req.params.id;
 
         UserModel.findOne({_id: id}, function (err, user) {
@@ -241,23 +247,6 @@ module.exports = {
                 return res.json(user);
             });
         });
-    },
+    }*/
 
-    /**
-     * userController.remove()
-     */
-    remove: function (req, res) {
-        var id = req.params.id;
-
-        UserModel.findByIdAndRemove(id, function (err, user) {
-            if (err) {
-                return res.status(500).json({
-                    message: 'Error when deleting the user.',
-                    error: err
-                });
-            }
-
-            return res.status(204).json();
-        });
-    }
 };

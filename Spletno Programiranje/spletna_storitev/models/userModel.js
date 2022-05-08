@@ -4,17 +4,43 @@ var Schema   = mongoose.Schema;
 var bcrypt = require("bcrypt");
 const { use } = require('../app');
 
+/**
+ * definiton of userSchema attributes
+ */
 var userSchema = new Schema({
-	'username' : String,
-	'password' : String,
-	'email' : String,
-	'admin' : Boolean,
-	'token' : String
+	'username' : {
+		type : String,
+		required : true
+	},
+	'password' : {
+		type : String,
+		required : true
+	},
+	'email' : {
+		type : String,
+		required : true
+	},
+	'admin' : {
+		type : Boolean,
+		required : true
+	},
+	'token' : {
+		type : String,
+		default : null,
+		required : false
+	}
+}, {
+	timestamps : true
 });
 
+
 /**
+ * @param username username of the user we're authenticating
+ * @param password password of the user we're authenticating
+ * 
  * checks if there is a user with such a username in the database
  * afterwards it checks if the password is correct
+ * @returns returns callback function with or without an error
  */
 userSchema.statics.authenticate = function(username, password, callback) {
 	User.findOne({username: username})
@@ -43,19 +69,28 @@ userSchema.statics.authenticate = function(username, password, callback) {
 	});
 };
 
-/**
- * hashing user password before saving user to database
- */
-/*userSchema.pre("save", function(next) {
-	var user = this;	// getting user that is being saved into the database
-	bcrypt.hash(user.password, 10, function(err, hash) {	// salt - 10
-		if (err) {
-			return next(err);
-		}
-		user.password = hash;
-		next();
-	});
-});*/
-
 var User = mongoose.model("user", userSchema);
 module.exports = mongoose.model('user', userSchema);
+
+/*
+{
+	"username" : "Jakob",
+	"password" : "jakob123",
+	"email" : "jakob.opresnik@student.um.si",
+	"admin" : true
+}
+
+{
+	"username" : "Marko",
+	"password" : "marko123",
+	"email" : "marko.roskar@student.um.si",
+	"admin" : true
+}
+
+{
+	"username" : "Erik",
+	"password" : "erik123",
+	"email" : "erik.lasic@student.um.si",
+	"admin" : true
+}
+*/

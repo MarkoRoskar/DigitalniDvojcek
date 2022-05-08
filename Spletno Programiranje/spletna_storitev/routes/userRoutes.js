@@ -3,7 +3,17 @@ var router = express.Router();
 var userController = require('../controllers/userController.js');
 var jwt = require("jsonwebtoken");
 
-
+/**
+ * @param req HTTP request
+ * @param res HTTP response
+ * @param next next function call
+ * 
+ * retrieves JWT token from the authorization header from the HTTP request
+ * authorization header structure: Bearer token (split on first space)
+ * if token is not null it is verified using the ACCESS_TOKEN_SECRET string
+ * 
+ * @returns error status code or the next function call
+ */
 function authenticateToken(req, res, next) {
     // get authentication header from HTTP request
     const authHeader = req.headers['authorization'];
@@ -42,25 +52,14 @@ function authenticateToken(req, res, next) {
  */
 router.get('/getByToken', authenticateToken, userController.listByToken);   // user needs to have a JWT
 router.get('/getAll', userController.list);
-router.get('/login', userController.showLogin);
-router.get('/register', userController.showRegister);
 router.get('/logout', userController.logout);
-
-/*
- * GET
- */
 router.get('/:token', userController.show);
 
 /*
  * POST
  */
-router.post('/', userController.create);
+router.post('/', userController.register);
 router.post('/login', userController.login);
-
-/*
- * PUT
- */
-router.put('/:id', userController.update);
 
 /*
  * DELETE
