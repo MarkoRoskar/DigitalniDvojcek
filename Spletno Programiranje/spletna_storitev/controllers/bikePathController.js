@@ -66,7 +66,7 @@ module.exports = {
             if (err) {
                 return res.status(500).json({
                     success: false,
-                    message: 'Error when creating coridor',
+                    message: 'Error when creating bikePath',
                     error: err
                 });
             }
