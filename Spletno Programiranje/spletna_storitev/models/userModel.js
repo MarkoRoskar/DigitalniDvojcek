@@ -22,7 +22,8 @@ var userSchema = new Schema({
 	},
 	'admin' : {
 		type : Boolean,
-		required : true
+		default : false,
+		required : false
 	},
 	'token' : {
 		type : String,
