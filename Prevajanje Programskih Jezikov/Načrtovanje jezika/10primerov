@@ -12,7 +12,7 @@
 
 7. func test(t,d){if 10<50{line((1,5), (1,5), 4)}return (10,10)};city Maribor{bikePath kolPot{line((1,5), (1,5), 4)}}
 
-8. func abc(a,b,c){if s>b{box((2,2), (1,1))}return s};city Maribor{mbajk mojbajk(6,9)}
+8. func abc(a,b,c){if s>b{box((2,2), (1,1))}return s};city Maribor{mBajk mojbajk(6,9)}
 
 9. func funkcija(e){line((22,20), (1,5), (4*4))return (22,5)};city Postojna{bikeCoridor kolKoridor{box((100,20), (5,44))box((40,50), (30,20))}}
 

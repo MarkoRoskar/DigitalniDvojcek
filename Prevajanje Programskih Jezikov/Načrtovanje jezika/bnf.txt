@@ -14,15 +14,15 @@ RIVER ::= river name { COMMANDS }
 PARK ::= park name { COMMANDS }
 
 MARKPOINT ::= BIKESTAND | BIKESHED | MBAJK | RENTBIKE
-BIKESTAND ::= bikeStand name POINT
+BIKESTAND ::= bikeStand(integer) name POINT
 BIKESHED ::= bikeShed name POINT
-MBAJK ::= mbajk name POINT
+MBAJK ::= mBajk name POINT
 RENTBIKE ::= rentBike name POINT
 
 
 COMMANDS ::= COMMAND MORECOMMANDS
 MORECOMMANDS ::= COMMAND MORECOMMANDS | epsilon
-COMMAND ::= LINE | BEND | BOX | CIRC | FOR | IF | VARIABLE | CONST
+COMMAND ::= LINE | BEND | BOX | FOR | IF | VARIABLE | CONST
 LINE ::= line( POINT , POINT , WIDTH )
 BEND ::= bend( POINT , POINT , ANGLE )
 ANGLE ::= integer | variable_name    //integer ::= [0-9]+
@@ -32,8 +32,8 @@ RADIUS ::= EXPR
 FOR ::= for SPR to SPR { COMMANDS }
 IF ::= if SPR OPERATOR SPR { COMMANDS } ELSEIFS ELSE
 ELSEIFS ::= ELSEIF ELSEIFS | epsilon
-ELSEIF ::= else if SPR OPERATOR SPR { COMMANDS }
-ELSE ::= { COMMANDS } | epsilon
+ELSEIF ::= elseif SPR OPERATOR SPR { COMMANDS }
+ELSE ::= else { COMMANDS } | epsilon
 OPERATOR ::= > | => | <= | < | == | !=
 SPR ::= float | variable_name | integer
 POINT ::= ( EXPR , EXPR )
@@ -43,6 +43,7 @@ VALUE ::= float | integer | variable_name | POINT | CALL
 CALL ::= call name ( CALLARGS )
 CALLARGS ::= VARIABLENAMEORNUMBER MOREVORN
 MOREVORN ::= , VARIABLENAMEORNUMBER MOREVORN | epsilon
+VARIABLENAMEORNUMBER ::= variable_name | integer | float
 FUNCTION ::= func name ( ARGS ) { COMMANDS RETURN }
 ARGS ::= variable_name MOREVARS
 MOREVARS ::= , variable_name MOREVARS | epsilon
@@ -50,7 +51,10 @@ RETURN ::= return RETURNVALUE
 RETURNVALUE ::= POINT | float | variable_name | integer
 EXPR ::= E
 E ::= T EE
-EE ::= + T EE | epsilon
-T ::= F TT
-TT ::= * F TT | epsilon
+EE ::= + T EE | - T EE | epsilon
+T ::= X TT
+TT ::= * X TT | / X TT | epsilon
+X ::= Y XX
+XX ::= ^ X | epsilon
+Y ::= - F | + F | F
 F ::= ( E ) | float | variable_name | integer
