@@ -3,7 +3,7 @@ digraph G {
 	node [fontname="Helvetica,Arial,sans-serif"]
 	edge [fontname="Helvetica,Arial,sans-serif"]
 	rankdir=LR;
-	node [shape = doublecircle]; 1 2 4 5 6 7 8 9 10 11 12 13 14 15 16 17 19 20 21 22 23 24 26;
+	node [shape = doublecircle]; 1 2 4 5 6 7 8 9 10 11 12 13 14 15 16 17 19 20 21 22 23 24 26 29;
 	node [shape = circle];
 	1 -> 2 [label = "[0-9]"]
 	2 -> 2 [label = "[0-9]"]
@@ -41,6 +41,7 @@ digraph G {
 	28 -> 27 [label = "everthing - /"]
 	28 -> 26 [label = "/"]
 	1 -> 26 [label = "' '   \\n    \\t    \\r"]
+	1 -> 29 [label = ";"]
 }
 	/*
 	https://dreampuf.github.io/GraphvizOnline
@@ -93,6 +94,7 @@ digraph G {
 	    23-times
 	    24-divide
 	    26-SKIP_VALUE
+	    29-semi
 	    24-49 RESERVED WORDS
 	*/
 }

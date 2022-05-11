@@ -1,0 +1,62 @@
+FIRST:
+    F : { (, float, identifier, integer }
+    Y : { -, +, (, float, identifier, integer }
+    XX : { ^, epsilon }
+    X : { -, +, float, identifier, integer }
+    TT : { *, /, epsilon }
+    T : { -, +, float, identifier, integer }
+    EE : { +, -, epsilon }
+    E : { -, +, float, identifier, integer }
+    EXPR : { -, +, float, identifier, integer }
+    RETURNVALUE : { (, float, identifier, integer }
+    RETURN : { return }
+    MOREVARS : { ',' , epsilon }
+    ARGS : { identifier, epsilon }
+    FUNCTION : { func }
+    VARIABLENAMEORNUBMER : { identifier, integer, float }
+    MOREVORN : { ',', epsilon }
+    CALLARGS : { identifier, integer, float }
+    CALL : { call }
+    VALUE : { float, integer, identifer, (, call }
+    ASSIGNMENT : { identifier }
+    CONST : { const }
+    VARIABLE : { var }
+    POINT : { ( }
+    SPR : { float, identifier, integer }
+    OPERATOR : { >, =>, <, ==, != }
+    ELSE : { else }
+    ELSEIF : { elseif }
+    MOREELSEIFS : { elseif, epsilon }
+    ELSEIFS : { elseif }
+    ELSEIFSELSE : { elseif }
+    ELSEORELSEIFSELSE : { else, elseif, epsilon }
+    IF : { if }
+    FOR : { for }
+    POINTORVAR : { (, identifier }
+    BOX : { box }
+    WIDTH : { integer | identifier }
+    ANGLE : { integer | identifier }
+    BEND : { bend }
+    LINE : { line }
+    COMMAND : { line, bend, box, for, if, var, const, identifier }
+    MORECOMMANDS : { line, bend, box, for, if, var, const, identifier, epsilon }
+    COMMANDS : { line, bend, box, for, if, var, const, identifier }
+
+    RENTBIKE : { rentBike }
+    MBAJK: { mBajk }
+    BIKESHED : { bikeShed }
+    BIKESTAND : { bikeStand }
+    MARKPOINT : { bikeStand, bikeShed, mBajk, rentBike }
+    PARK : { park }
+    RIVER : { river }
+    BUILDING : { building }
+    CORRIDOR : { bikeCorridor }
+    TOURPATH : { bikeTourPath }
+    BIKEPATH : { bikePath }
+    ROAD : { road }
+    BLOCK : { road, bikePath, tourPath, corridor, building, river, park, bikeStand, bikeShed, mBajk, rentBike }
+    MOREBLOCKS : { road, bikePath, tourPath, corridor, building, river, park, bikeStand, bikeShed, mBajk, rentBike, epsilon }
+    BLOCKS : { road, bikePath, tourPath, corridor, building, river, park, bikeStand, bikeShed, mBajk, rentBike }
+    CITY : { city }
+    FUNCTIONS : { func, epsilon }
+    PROGRAM : { func, epsilon, city }

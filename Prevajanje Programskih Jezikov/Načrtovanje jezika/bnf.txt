@@ -4,48 +4,52 @@ CITY ::= city name { BLOCKS }
 BLOCKS ::= BLOCK MOREBLOCKS
 MOREBLOCKS ::= BLOCK MOREBLOCKS | epsilon
 
-BLOCK ::= ROAD | BIKEPATH | TOURPATH | CORIDOR | BUILDING | RIVER | PARK | MARKPOINT
+BLOCK ::= ROAD | BIKEPATH | TOURPATH | CORRIDOR | BUILDING | RIVER | PARK | MARKPOINT
 ROAD ::= road name { COMMANDS }
 BIKEPATH ::= bikePath name { COMMANDS }
 TOURPATH ::= bikeTourPath name { COMMANDS }
-CORIDOR ::= bikeCoridor name { COMMANDS }
+CORRIDOR ::= bikeCorridor name { COMMANDS }
 BUILDING ::= building name { COMMANDS }
 RIVER ::= river name { COMMANDS }
 PARK ::= park name { COMMANDS }
 
 MARKPOINT ::= BIKESTAND | BIKESHED | MBAJK | RENTBIKE
-BIKESTAND ::= bikeStand(integer) name POINT
-BIKESHED ::= bikeShed name POINT
-MBAJK ::= mBajk name POINT
-RENTBIKE ::= rentBike name POINT
+BIKESTAND ::= bikeStand(integer) name { POINTORVAR }
+BIKESHED ::= bikeShed name { POINTORVAR }
+MBAJK ::= mBajk name { POINTORVAR }
+RENTBIKE ::= rentBike name { POINTORVAR }
 
 
 COMMANDS ::= COMMAND MORECOMMANDS
 MORECOMMANDS ::= COMMAND MORECOMMANDS | epsilon
-COMMAND ::= LINE | BEND | BOX | FOR | IF | VARIABLE | CONST
-LINE ::= line( POINT , POINT , WIDTH )
-BEND ::= bend( POINT , POINT , ANGLE )
+COMMAND ::= LINE | BEND | BOX | FOR | IF | VARIABLE | CONST | ASSIGNMENT
+LINE ::= line( POINTORVAR , POINTORVAR , WIDTH )
+BEND ::= bend( POINTORVAR , POINTORVAR , ANGLE )
 ANGLE ::= integer | variable_name    //integer ::= [0-9]+
-BOX ::= box( POINT , POINT )
-CIRC ::= circ( POINT , RADIUS )
-RADIUS ::= EXPR
-FOR ::= for SPR to SPR { COMMANDS }
-IF ::= if SPR OPERATOR SPR { COMMANDS } ELSEIFS ELSE
-ELSEIFS ::= ELSEIF ELSEIFS | epsilon
-ELSEIF ::= elseif SPR OPERATOR SPR { COMMANDS }
-ELSE ::= else { COMMANDS } | epsilon
+WIDTH ::= integer | variable_name
+BOX ::= box( POINTORVAR , POINTORVAR )
+POINTORVAR ::= POINT | identifier
+FOR ::= for ( SPR to SPR ) { COMMANDS }
+IF ::= if ( SPR OPERATOR SPR ) { COMMANDS } ELSEORELSEIFSELSE
+ELSEORELSEIFSELSE :: = ELSE | ELSEIFSELSE | epsilon
+ELSEIFSELSE ::= ELSEIFS ELSE
+ELSEIFS ::= ELSEIF MOREELSEIFS
+MOREELSEIFS ::= ELSEIF MOREELSEIFS | epsilon
+ELSEIF ::= elseif ( SPR OPERATOR SPR ) { COMMANDS }
+ELSE ::= else { COMMANDS }
 OPERATOR ::= > | => | <= | < | == | !=
 SPR ::= float | variable_name | integer
 POINT ::= ( EXPR , EXPR )
-VARIABLE ::= var variable_name = VALUE ;  //variable_name = [a-zA-Z]+
-CONST ::= const variable_name = VALUE ;
+VARIABLE ::= var variable_name = VALUE  //variable_name = [a-zA-Z]+
+CONST ::= const variable_name = VALUE
+ASSIGNMENT ::= variable_name = VALUE
 VALUE ::= float | integer | variable_name | POINT | CALL
 CALL ::= call name ( CALLARGS )
 CALLARGS ::= VARIABLENAMEORNUMBER MOREVORN
 MOREVORN ::= , VARIABLENAMEORNUMBER MOREVORN | epsilon
 VARIABLENAMEORNUMBER ::= variable_name | integer | float
 FUNCTION ::= func name ( ARGS ) { COMMANDS RETURN }
-ARGS ::= variable_name MOREVARS
+ARGS ::= variable_name MOREVARS | epsilon
 MOREVARS ::= , variable_name MOREVARS | epsilon
 RETURN ::= return RETURNVALUE
 RETURNVALUE ::= POINT | float | variable_name | integer

@@ -1,0 +1,64 @@
+FOLLOW:
+    PROGRAM : { EOF }
+    FUNCTIONS : { city }
+    CITY : { EOF }
+    BLOCKS : { '}' }
+    MORE_BLOCKS : { '}' }
+    BLOCK : FIRST(MOREBLOCKS) + FOLLOW(MOREBLOCKS) U FIRST(MOREBLOCKS) + FOLLOW(BOLCKS) =
+    = { road, bikePath, tourPath, corridor, building, river, park, rentBike, bikeStand, bikeShed, mBajk, rentBike, epsilon } + { '}' } U
+    + { road, bikePath, tourPath, corridor, building, river, park, rentBike, bikeStand, bikeShed, mBajk, rentBike, epsilon } + { '}' } =
+    = { road, bikePath, tourPath, corridor, building, river, park, rentBike, bikeStand, bikeShed, mBajk, rentBike, '}' }
+    ROAD : { road, bikePath, tourPath, corridor, building, river, park, rentBike, bikeStand, bikeShed, mBajk, rentBike, '}' }
+    BIKEPATH : { road, bikePath, tourPath, corridor, building, river, park, rentBike, bikeStand, bikeShed, mBajk, rentBike, '}' }
+    TOURPATH : { road, bikePath, tourPath, corridor, building, river, park, rentBike, bikeStand, bikeShed, mBajk, rentBike, '}' }
+    CORRIDOR : { road, bikePath, tourPath, corridor, building, river, park, rentBike, bikeStand, bikeShed, mBajk, rentBike, '}' }
+    BUILDING : { road, bikePath, tourPath, corridor, building, river, park, rentBike, bikeStand, bikeShed, mBajk, rentBike, '}' }
+    RIVER : { road, bikePath, tourPath, corridor, building, river, park, rentBike, bikeStand, bikeShed, mBajk, rentBike, '}' }
+    PARK : { road, bikePath, tourPath, corridor, building, river, park, rentBike, bikeStand, bikeShed, mBajk, rentBike, '}' }
+    MARKPOINT : { road, bikePath, tourPath, corridor, building, river, park, rentBike, bikeStand, bikeShed, mBajk, rentBike, '}' }
+    BIKESTAND : { road, bikePath, tourPath, corridor, building, river, park, rentBike, bikeStand, bikeShed, mBajk, rentBike, '}' }
+    BIKESHED : { road, bikePath, tourPath, corridor, building, river, park, rentBike, bikeStand, bikeShed, mBajk, rentBike, '}' }
+    MBAJK : { road, bikePath, tourPath, corridor, building, river, park, rentBike, bikeStand, bikeShed, mBajk, rentBike, '}' }
+    RENTBIKE : { road, bikePath, tourPath, corridor, building, river, park, rentBike, bikeStand, bikeShed, mBajk, rentBike, '}' }
+    COMMANDS : { '}', return }
+    MORECOMMANDS : { '}', return}
+    COMMAND : { line, bend, box, for, if, var, const, identifier, '}', return }
+    LINE : { line, bend, box, for, if, var, const, identifier, '}', return }
+    BEND : { line, bend, box, for, if, var, const, identifier, '}', return }
+    BOX : { line, bend, box, for, if, var, const, identifier, '}', return }
+    FOR : { line, bend, box, for, if, var, const, identifier, '}', return }
+    IF : { line, bend, box, for, if, var, const, identifier, '}', return }
+    VARIABLE : { line, bend, box, for, if, var, const, identifier, '}', return }
+    CONST : { line, bend, box, for, if, var, const, identifier, '}', return }
+    ASSIGNMENT : { line, bend, box, for, if, var, const, identifier, '}', return }
+    ANGLE : { ')' }
+    WIDTH : { ')' }
+    POINTORVAR : { ',', ), } }
+    ELSEORELSEIFSELSE : { line, bend, box, for, if, var, const, identifier, '}' }
+    ELSEIFSELSE : { line, bend, box, for, if, var, const, identifier, '}' }
+    ELSEIFS : { else }
+    MOREELSEIFS : { else }
+    ELSEIF : { elseif, epsilon }
+    ELSE : { line, bend, box, for, if, var, const, identifier, '}' }
+    OPERATOR : { float, identifier, integer }
+    SPR : { 'to', '{', >, =>, <, ==, != }
+    POINT : { line, bend, box, for, if, var, const, identifier, '}',
+    VALUE : { line, bend, box, for, if, var, const, identifier, '}' }
+    CALL : { line, bend, box, for, if, var, const, identifier, '}', ',', ) }
+    CALLARGS : { ) }
+    MOREVORN : { ) }
+    VARIABLENAMEORNUMBER : { ',', ) }
+    FUNCTION : { func, city }
+    ARGS : { ')' }
+    MOREVARS : { ')' }
+    RETURN : { '}' }
+    RETURNVALUE : { '}' }
+    EXPR : { ')', ',' }
+    E : { ), ',' }
+    EE : { ), ',' }
+    T : { +, -, ), ',' }
+    TT : { +, -, ), ',' }
+    XX : { *, /, +, -, ) ',' }
+    X : { *, /, +, -, ), ',' }
+    Y : { ^, /, +, -, *, ',' }
+    F : { ^, +, -, *, /, ',' }
