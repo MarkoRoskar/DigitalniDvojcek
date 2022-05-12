@@ -34,12 +34,12 @@ FOLLOW:
     ANGLE : { ')' }
     WIDTH : { ')' }
     POINTORVAR : { ',', ), } }
-    ELSEORELSEIFSELSE : { line, bend, box, for, if, var, const, identifier, '}' }
-    ELSEIFSELSE : { line, bend, box, for, if, var, const, identifier, '}' }
+    ELSEORELSEIFSELSE : { line, bend, box, for, if, var, const, identifier, '}', return }
+    ELSEIFSELSE : { line, bend, box, for, if, var, const, identifier, '}', return }
     ELSEIFS : { else }
     MOREELSEIFS : { else }
     ELSEIF : { elseif, epsilon }
-    ELSE : { line, bend, box, for, if, var, const, identifier, '}' }
+    ELSE : { line, bend, box, for, if, var, const, identifier, '}', return }
     OPERATOR : { float, identifier, integer }
     SPR : { 'to', '{', >, =>, <, ==, != }
     POINT : { line, bend, box, for, if, var, const, identifier, '}',

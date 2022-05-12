@@ -496,7 +496,7 @@ class TaskParser(private val scanner: Scanner) {
                 && recognizeTerminal(RB_PAREN)
 
     private fun recognizeIF(): Boolean =
-        recognizeTerminal(IF) && recognizeTerminal(L_PAREN) && recognizeOPERATOR() && recognizeSPR()
+        recognizeTerminal(IF) && recognizeTerminal(L_PAREN) && recognizeSPR() && recognizeOPERATOR() && recognizeSPR()
                 && recognizeTerminal(R_PAREN) && recognizeTerminal(LB_PAREN) && recognizeCOMMANDS()
                 && recognizeTerminal(RB_PAREN) && recognizeELSEORELSEIFSELSE()
 
@@ -504,7 +504,7 @@ class TaskParser(private val scanner: Scanner) {
         when (last!!.value) {
             ELSE -> recognizeELSE()
             ELSE_IF -> recognizeELSEIFSELSE()
-            LINE, BEND, BOX, FOR, IF, VAR, CONST, IDENTIFIER, RB_PAREN -> true
+            LINE, BEND, BOX, FOR, IF, VAR, CONST, IDENTIFIER, RB_PAREN, RETURN -> true
             else -> false
         }
 
@@ -593,9 +593,8 @@ class TaskParser(private val scanner: Scanner) {
 
     private fun recognizeFUNCTION(): Boolean =
         recognizeTerminal(FUNC) && recognizeTerminal(IDENTIFIER) && recognizeTerminal(L_PAREN) && recognizeARGS() &&
-                recognizeTerminal(R_PAREN) && recognizeTerminal(LB_PAREN) && recognizeCOMMANDS() && recognizeRETURN() && recognizeTerminal(
-            LB_PAREN
-        )
+                recognizeTerminal(R_PAREN) && recognizeTerminal(LB_PAREN) && recognizeCOMMANDS() && recognizeRETURN()
+                && recognizeTerminal(RB_PAREN)
 
     private fun recognizeARGS(): Boolean =
         when (last!!.value) {
@@ -678,10 +677,10 @@ class TaskParser(private val scanner: Scanner) {
         } else false
 }
 
-fun main(args: Array<String>) {
-    val scanner = StreamScanner(
-        Example,
-        "bend ; , bikeCoridor, bikeShed, bikeStand, bikeTourPath, box, building, call, const, circ, city, else, elseif, for, func, if, line, mBajk, park, rentBike, return, river, road, to, var".byteInputStream()
-    )
-    printTokens(scanner)
+fun main() {
+    if (TaskParser(StreamScanner(Example, "city Velenje{bikeTourPath turpot{bend((2,2), (3,2), 4)}}".byteInputStream())).recognize()) {
+        print("accept")
+    } else {
+        print("reject")
+    }
 }
