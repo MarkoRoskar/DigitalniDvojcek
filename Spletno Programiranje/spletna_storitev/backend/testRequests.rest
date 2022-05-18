@@ -4,7 +4,7 @@
 // TESTING ROUTES
 //
 
-POST http://localhost:3000/users
+POST http://localhost:3001/users
 Content-Type: application/json
 
 {
@@ -15,20 +15,20 @@ Content-Type: application/json
 
 ### get user by JWT in Authorization header
 
-GET http://localhost:3000/users/getByToken
+GET http://localhost:3001/users/getByToken
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpha29iIiwicGFzc3dvcmQiOiJqYWtvYjEyMyIsImlhdCI6MTY1MjAyMDgzMn0.G45kKShICGQJfOTYVsmU6n1dex9b2kPUtkUX721Hlh8
 
 ### get all users
 
-GET http://localhost:3000/users/getAll
+GET http://localhost:3001/users/getAll
 
 ### get user by JWT in URL
 
-GET http://localhost:3000/users/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpha29iIiwicGFzc3dvcmQiOiJqYWtvYjEyMyIsImlhdCI6MTY1MjAyMDgzMn0.G45kKShICGQJfOTYVsmU6n1dex9b2kPUtkUX721Hlh8
+GET http://localhost:3001/users/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpha29iIiwicGFzc3dvcmQiOiJqYWtvYjEyMyIsImlhdCI6MTY1MjAyMDgzMn0.G45kKShICGQJfOTYVsmU6n1dex9b2kPUtkUX721Hlh8
 
 ### login user
 
-POST http://localhost:3000/users/login
+POST http://localhost:3001/users/login
 Content-Type: application/json
 
 {
@@ -38,26 +38,31 @@ Content-Type: application/json
 
 ### logout user
 
-GET http://localhost:3000/users/logout/Jakob
+GET http://localhost:3001/users/logout/Jakob
 
 ### delete user
 
-DELETE http://localhost:3000/users/Jakob
+DELETE http://localhost:3001/users/Jakob
 
 
 ### show all mbajk locations
 
-GET http://localhost:3000/mbajk
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpha29iIiwicGFzc3dvcmQiOiJqYWtvYjEyMyIsImlhdCI6MTY1MjAyMDgzMn0.G45kKShICGQJfOTYVsmU6n1dex9b2kPUtkUX721Hlh8
+GET http://localhost:3001/mbajk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpha29iIiwicGFzc3dvcmQiOiJqYWtvYjEyMyIsImlhdCI6MTY1MjkwMzQ5OX0.YJldE82UUzcOQGA4rtNkkSGjUI1fvSXzrRTlkMPtYD4
+
+### show mbajk location based on ID
+
+GET http://localhost:3001/mbajk/62854ebbe3b7fbccd638d97f
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpha29iIiwicGFzc3dvcmQiOiJqYWtvYjEyMyIsImlhdCI6MTY1MjkwMzQ5OX0.YJldE82UUzcOQGA4rtNkkSGjUI1fvSXzrRTlkMPtYD4
 
 ### insert mbajk location
 
-POST http://localhost:3000/mbajk
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpha29iIiwicGFzc3dvcmQiOiJqYWtvYjEyMyIsImlhdCI6MTY1MjAyMDgzMn0.G45kKShICGQJfOTYVsmU6n1dex9b2kPUtkUX721Hlh8
+POST http://localhost:3001/mbajk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpha29iIiwicGFzc3dvcmQiOiJqYWtvYjEyMyIsImlhdCI6MTY1MjkwMzQ5OX0.YJldE82UUzcOQGA4rtNkkSGjUI1fvSXzrRTlkMPtYD4
 Content-Type: application/json
 
 {
-	"number" : "13",
+	"number" : "10",
     "name" : "TELEMACH - GLAVNI TRG - STARI PERON",
     "address" : "Glavni trg 20",
     "longitude" : "15.646833",
@@ -71,8 +76,8 @@ Content-Type: application/json
 
 ### insert bike path
 
-POST http://localhost:3000/bikepath
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpha29iIiwicGFzc3dvcmQiOiJqYWtvYjEyMyIsImlhdCI6MTY1MjAyMDgzMn0.G45kKShICGQJfOTYVsmU6n1dex9b2kPUtkUX721Hlh8
+POST http://localhost:3001/bikepath
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpha29iIiwicGFzc3dvcmQiOiJqYWtvYjEyMyIsImlhdCI6MTY1MjkwMzQ5OX0.YJldE82UUzcOQGA4rtNkkSGjUI1fvSXzrRTlkMPtYD4
 Content-Type: application/json
 
 {
@@ -94,13 +99,13 @@ Content-Type: application/json
 
 ### delete bike path
 
-DELETE http://localhost:3000/bikepath
+DELETE http://localhost:3001/bikepath
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpha29iIiwicGFzc3dvcmQiOiJqYWtvYjEyMyIsImlhdCI6MTY1MjAyMDgzMn0.G45kKShICGQJfOTYVsmU6n1dex9b2kPUtkUX721Hlh8
 
 
 ### insert bike shed
 
-POST http://localhost:3000/bikeshed
+POST http://localhost:3001/bikeshed
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpha29iIiwicGFzc3dvcmQiOiJqYWtvYjEyMyIsImlhdCI6MTY1MjAyMDgzMn0.G45kKShICGQJfOTYVsmU6n1dex9b2kPUtkUX721Hlh8
 Content-Type: application/json
 
@@ -115,13 +120,13 @@ Content-Type: application/json
 
 ### delete bike shed
 
-DELETE http://localhost:3000/bikeshed
+DELETE http://localhost:3001/bikeshed
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpha29iIiwicGFzc3dvcmQiOiJqYWtvYjEyMyIsImlhdCI6MTY1MjAyMDgzMn0.G45kKShICGQJfOTYVsmU6n1dex9b2kPUtkUX721Hlh8
 
 
 ### insert coridor
 
-POST http://localhost:3000/coridor
+POST http://localhost:3001/coridor
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpha29iIiwicGFzc3dvcmQiOiJqYWtvYjEyMyIsImlhdCI6MTY1MjAyMDgzMn0.G45kKShICGQJfOTYVsmU6n1dex9b2kPUtkUX721Hlh8
 Content-Type: application/json
 
@@ -144,13 +149,13 @@ Content-Type: application/json
 
 ### delete coridor
 
-DELETE http://localhost:3000/coridor
+DELETE http://localhost:3001/coridor
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpha29iIiwicGFzc3dvcmQiOiJqYWtvYjEyMyIsImlhdCI6MTY1MjAyMDgzMn0.G45kKShICGQJfOTYVsmU6n1dex9b2kPUtkUX721Hlh8
 
 
 ### insert bike stand
 
-POST http://localhost:3000/stand
+POST http://localhost:3001/stand
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpha29iIiwicGFzc3dvcmQiOiJqYWtvYjEyMyIsImlhdCI6MTY1MjAyMDgzMn0.G45kKShICGQJfOTYVsmU6n1dex9b2kPUtkUX721Hlh8
 Content-Type: application/json
 
@@ -163,13 +168,13 @@ Content-Type: application/json
 
 ### delete bike stand
 
-DELETE http://localhost:3000/stand
+DELETE http://localhost:3001/stand
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpha29iIiwicGFzc3dvcmQiOiJqYWtvYjEyMyIsImlhdCI6MTY1MjAyMDgzMn0.G45kKShICGQJfOTYVsmU6n1dex9b2kPUtkUX721Hlh8
 
 
 ### insert bike tour path
 
-POST http://localhost:3000/tourpath
+POST http://localhost:3001/tourpath
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpha29iIiwicGFzc3dvcmQiOiJqYWtvYjEyMyIsImlhdCI6MTY1MjAyMDgzMn0.G45kKShICGQJfOTYVsmU6n1dex9b2kPUtkUX721Hlh8
 Content-Type: application/json
 
@@ -192,5 +197,5 @@ Content-Type: application/json
 
 ### delete bike tour path
 
-DELETE http://localhost:3000/tourpath
+DELETE http://localhost:3001/tourpath
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpha29iIiwicGFzc3dvcmQiOiJqYWtvYjEyMyIsImlhdCI6MTY1MjAyMDgzMn0.G45kKShICGQJfOTYVsmU6n1dex9b2kPUtkUX721Hlh8
