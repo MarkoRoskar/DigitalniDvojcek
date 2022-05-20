@@ -8,9 +8,25 @@
 }
 
 .leaflet-container {
-  width: 100%;
+  width: 75%;
   height: 100vh;
+  position: absolute;
 }
+
+#button {
+  position: relative;
+  border: 1px solid black;
+  float: right;
+  z-index: -1;
+}
+
+#filter-form {
+  position: relative;
+  float: right;
+  margin-right: 300px;
+  margin-top: 20px;
+}
+
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
