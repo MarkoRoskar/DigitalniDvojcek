@@ -17,7 +17,7 @@ module.exports = {
                 });
             }
 
-            return res.json({success: ture, "Stands": stands});
+            return res.json({success: true, "Stands": stands});
         });
     },
 

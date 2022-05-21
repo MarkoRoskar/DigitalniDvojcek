@@ -106,7 +106,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpha
 ### insert bike shed
 
 POST http://localhost:3001/bikeshed
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpha29iIiwicGFzc3dvcmQiOiJqYWtvYjEyMyIsImlhdCI6MTY1MjAyMDgzMn0.G45kKShICGQJfOTYVsmU6n1dex9b2kPUtkUX721Hlh8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpha29iIiwicGFzc3dvcmQiOiJqYWtvYjEyMyIsImlhdCI6MTY1MzE0MDQ0OX0.pDu_FtkHCsvYMxNEmw2ze3gOfkCHfLg_Jya7ZHntVVc
 Content-Type: application/json
 
 {
@@ -117,6 +117,12 @@ Content-Type: application/json
 	"longitude" : "15.657430340440774",
 	"latitude" : "46.56223243175121"
 }
+
+###  get all bike sheds
+
+GET http://localhost:3001/bikeshed
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpha29iIiwicGFzc3dvcmQiOiJqYWtvYjEyMyIsImlhdCI6MTY1MzE0MDQ0OX0.pDu_FtkHCsvYMxNEmw2ze3gOfkCHfLg_Jya7ZHntVVc
+
 
 ### delete bike shed
 
@@ -156,15 +162,20 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpha
 ### insert bike stand
 
 POST http://localhost:3001/stand
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpha29iIiwicGFzc3dvcmQiOiJqYWtvYjEyMyIsImlhdCI6MTY1MjAyMDgzMn0.G45kKShICGQJfOTYVsmU6n1dex9b2kPUtkUX721Hlh8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpha29iIiwicGFzc3dvcmQiOiJqYWtvYjEyMyIsImlhdCI6MTY1MzE0MDQ0OX0.pDu_FtkHCsvYMxNEmw2ze3gOfkCHfLg_Jya7ZHntVVc
 Content-Type: application/json
 
 {
-    "name": "53 - Želežniška postaja Tabor",
-    "parkSpots": "6",
-    "longitude": "15.64577618045837",
-    "latitude": "46.55169014946587"
+  "name": "28- Trg Leona Štuklja",
+  "parkSpots": "3",
+  "longitude": "15.648152440083422",
+  "latitude": "46.55925299049638"
 }
+
+###  get all bike stands
+
+GET http://localhost:3001/stand
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpha29iIiwicGFzc3dvcmQiOiJqYWtvYjEyMyIsImlhdCI6MTY1MzE0MDQ0OX0.pDu_FtkHCsvYMxNEmw2ze3gOfkCHfLg_Jya7ZHntVVc
 
 ### delete bike stand
 

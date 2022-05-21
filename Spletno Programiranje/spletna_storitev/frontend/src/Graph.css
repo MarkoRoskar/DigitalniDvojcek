@@ -1,0 +1,62 @@
+#d3-graph {
+    width: 80vw;
+    height: 60vh;
+}
+
+.area {
+    fill: blue;
+    stroke-width: 0;
+}
+
+#legend-title, #color-legend {
+    margin: 30px 0px 30px 35px;
+}
+
+#location {
+    margin: 20px;
+}
+
+#loc-1, #loc-2 {
+    display: inline-block;
+    margin-left: 25px;
+}
+
+path {
+    opacity: 0.3;
+}
+
+#legend-1 {
+    display: inline-block;
+}
+
+#legend-2 {
+    display: inline-block;
+}
+
+#graph-legend-red {
+    width: 40px;
+    height: 20px;
+    background: #ff6262;
+    margin-right: 10px;
+    border: 2px solid black;
+}
+
+#graph-legend-yellow {
+    width: 40px;
+    height: 20px;
+    background: #ffe699;
+    margin-right: 10px;
+    border: 2px solid black;
+}
+
+line {
+    opacity: 0.2;
+}
+
+h3 {
+    margin: 0px 0px 15px 35px;
+}
+
+h5 {
+    font-size: 18px;
+}
