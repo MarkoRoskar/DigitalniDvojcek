@@ -93,7 +93,6 @@ function PieChart() {
                         toolDiv.style("visibility", "hidden")
                     })
 
-
         })
     }, [])
 
