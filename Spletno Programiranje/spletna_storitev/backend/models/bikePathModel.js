@@ -16,7 +16,7 @@ var bikePathSchema = new Schema({
         type : [[Number]],
         required : true
       }
-	  }
+	}
 }, {
     timestamps : true
 });

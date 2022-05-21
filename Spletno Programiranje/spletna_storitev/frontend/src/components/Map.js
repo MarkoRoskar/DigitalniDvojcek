@@ -29,7 +29,7 @@ const bikestandIcon = new Icon({
 const bikeShedIcon = new Icon({
 	iconUrl: "/bike_shed_icon.jpg",
 	iconSize: [45, 45]
-})
+});
 
 const fetcher = (...args) => fetch(...args).then(response => response.json());
 
@@ -82,8 +82,29 @@ function Map() {
 	console.log(bikeSheds);
 	const bikeShedsLocations = [];
 	for (let i in bikeSheds.BikeSheds) {
-		bikeShedsLocations.push(bikeSheds.BikeSheds[i])
+		bikeShedsLocations.push(bikeSheds.BikeSheds[i]);
 	}
+
+
+	const [bikePath, setBikePath] = useState([]);
+	// getting a part of a bike path from database
+	useEffect(function() {
+		const getBikePath = async function() {
+			const res = await fetch("http://localhost:3001/bikepath");
+			const data = await res.json();
+			setBikePath(data);
+		}
+		getBikePath();
+	}, [])
+
+	console.log(bikePath.BikePaths)
+	const bikePathLocation = [];
+	for (let i in bikePath.BikePaths) {
+		bikePathLocation.push(bikePath.BikePaths[i].geometry.coordinates)
+		//bikePathLocation.push(bikePath.BikePaths[i]);
+	}
+	console.log(bikePathLocation);
+
 
 	return (
 
@@ -113,6 +134,10 @@ function Map() {
 			<tr>
 				<td><input type="checkbox" id="coridor" name="coridor" value="coridor"></input></td>
 				<td><label>CORIDORS</label></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><input class="btn btn-primary" id="submit-button" type="submit" name="filter" value="FILTRIRAJ PODATKE"/></td>
 			</tr>
 			</table>
 		</form>

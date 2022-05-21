@@ -58,7 +58,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpha
 ### insert mbajk location
 
 POST http://localhost:3001/mbajk
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpha29iIiwicGFzc3dvcmQiOiJqYWtvYjEyMyIsImlhdCI6MTY1MjkwMzQ5OX0.YJldE82UUzcOQGA4rtNkkSGjUI1fvSXzrRTlkMPtYD4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpha29iIiwicGFzc3dvcmQiOiJqYWtvYjEyMyIsImlhdCI6MTY1MzE2Nzk2MH0.KbAikUQBx6IOABmuxOdNV0ijkbamskJwOSoTJQSfPsg
 Content-Type: application/json
 
 {
@@ -77,7 +77,7 @@ Content-Type: application/json
 ### insert bike path
 
 POST http://localhost:3001/bikepath
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpha29iIiwicGFzc3dvcmQiOiJqYWtvYjEyMyIsImlhdCI6MTY1MjkwMzQ5OX0.YJldE82UUzcOQGA4rtNkkSGjUI1fvSXzrRTlkMPtYD4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpha29iIiwicGFzc3dvcmQiOiJqYWtvYjEyMyIsImlhdCI6MTY1MzE2Nzk2MH0.KbAikUQBx6IOABmuxOdNV0ijkbamskJwOSoTJQSfPsg
 Content-Type: application/json
 
 {
@@ -133,7 +133,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpha
 ### insert coridor
 
 POST http://localhost:3001/coridor
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpha29iIiwicGFzc3dvcmQiOiJqYWtvYjEyMyIsImlhdCI6MTY1MjAyMDgzMn0.G45kKShICGQJfOTYVsmU6n1dex9b2kPUtkUX721Hlh8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpha29iIiwicGFzc3dvcmQiOiJqYWtvYjEyMyIsImlhdCI6MTY1MzE2Nzc0MX0.xUKf2G6tby4OIkm_STRmufZPEBNMrWjyDe71iJWPuL
 Content-Type: application/json
 
 {
