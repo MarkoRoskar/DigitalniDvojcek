@@ -46,7 +46,7 @@ function Map() {
 
 	const center = [51.505, -0.09];
 
-	const filteredMBajkLocations = mbajk_locations.filter(location => location.totalStands.availabilities.bikes === 3)
+	//const filteredMBajkLocations = mbajk_locations.filter(location => location.totalStands.availabilities.bikes === 3)
 
 	
 	const [bikeStands, setBikeStands] = useState([]);
@@ -87,7 +87,7 @@ function Map() {
 
 
 	const [bikePath, setBikePath] = useState([]);
-	// getting a part of a bike path from database
+	// getting bike path from database
 	useEffect(function() {
 		const getBikePath = async function() {
 			const res = await fetch("http://localhost:3001/bikepath");
@@ -106,21 +106,39 @@ function Map() {
 	console.log(bikePathLocation);
 
 
+
+	// setting data when checking the checkboxes
+	const [ MBajkChecked, setMBajkChecked ] = useState(false);
+	const MBajkFilter = () => {
+		setMBajkChecked(!MBajkChecked);
+	}
+
+	const [ bikeStandChecked, setBikeStandChecked ] = useState(false);
+	const bikeStandFilter = () => {
+		setBikeStandChecked(!bikeStandChecked);
+	}
+
+	const [ bikeShedChecked, setBikeShedChecked ] = useState(false);
+	const bikeShedFilter = () => {
+		setBikeShedChecked(!bikeShedChecked);
+	}
+
+
 	return (
 
 		<div>
 		<form id="filter-form">
 			<table>
 			<tr>
-				<td><input type="checkbox" id="mbajk" name="mbajk" value="mbajk"></input></td>
+				<td><input type="checkbox" id="mbajk" name="mbajk" value="mbajk" checked={MBajkChecked} onChange={MBajkFilter}></input></td>
 				<td><label>MBAJK LOCATIONS</label></td>
 			</tr>
 			<tr>
-				<td><input type="checkbox" id="bike-stand" name="bike-stand" value="bike-stand"></input></td>
+				<td><input type="checkbox" id="bike-stand" name="bike-stand" value="bike-stand" checked={bikeStandChecked} onChange={bikeStandFilter}></input></td>
 				<td><label>BIKE STANDS</label></td>
 			</tr>
 			<tr>
-				<td><input type="checkbox" id="bike-shed" name="bike-shed" value="bike-shed"></input></td>
+				<td><input type="checkbox" id="bike-shed" name="bike-shed" value="bike-shed" checked={bikeShedChecked} onChange={bikeShedFilter}></input></td>
 				<td><label>BIKE SHEDS</label></td>
 			</tr>
 			<tr>
@@ -134,10 +152,6 @@ function Map() {
 			<tr>
 				<td><input type="checkbox" id="coridor" name="coridor" value="coridor"></input></td>
 				<td><label>CORIDORS</label></td>
-			</tr>
-			<tr>
-				<td></td>
-				<td><input class="btn btn-primary" id="submit-button" type="submit" name="filter" value="FILTRIRAJ PODATKE"/></td>
 			</tr>
 			</table>
 		</form>
@@ -158,46 +172,59 @@ function Map() {
 			</LayersControl>
 
 
-			{mbajk_locations.map(location => (
-				<Marker
-					key={location.number} 
-					position={[location.position.latitude, location.position.longitude]}
-					icon={mbajkIcon}>
-					<Popup>
-						<h2>{location.name}</h2>
-						<h3>{location.address}</h3>
-						<h3>št. koles: {location.totalStands.availabilities.bikes}</h3>
-						<h3>št. stojal: {location.totalStands.availabilities.stands}</h3>
-						<h3>{location.status}</h3>
-					</Popup>
-				</Marker>
-			))}
+			{MBajkChecked ?
+				mbajk_locations.map(location => (
+					<Marker
+						key={location.number} 
+						position={[location.position.latitude, location.position.longitude]}
+						icon={mbajkIcon}>
+						<Popup>
+							<h2>{location.name}</h2>
+							<h3>{location.address}</h3>
+							<h3>št. koles: {location.totalStands.availabilities.bikes}</h3>
+							<h3>št. stojal: {location.totalStands.availabilities.stands}</h3>
+							<h3>{location.status}</h3>
+						</Popup>
+					</Marker>				
+				))
+			:
+				<></>
+			}
 
-			{bikeStandLocations.map(location => (
-				<Marker
-					key={location._id}
-					position={[location.geometry.coordinates[1], location.geometry.coordinates[0]]}
-					icon={bikestandIcon}>
-					<Popup>
-						<h2>{location.name}</h2>
-						<h3>kapacitete: {location.parkSpots}</h3>
-					</Popup>
-				</Marker>
-			))}
+			{bikeStandChecked ? 
+				bikeStandLocations.map(location => (
+					<Marker
+						key={location._id}
+						position={[location.geometry.coordinates[1], location.geometry.coordinates[0]]}
+						icon={bikestandIcon}>
+						<Popup>
+							<h2>{location.name}</h2>
+							<h3>kapacitete: {location.parkSpots}</h3>
+						</Popup>
+					</Marker>
+				))
+			:
+				<></>
+			}
+			
 
-			{bikeShedsLocations.map(location => (
-				<Marker
-					key={location._id}
-					position={[location.geometry.coordinates[1], location.geometry.coordinates[0]]}
-					icon={bikeShedIcon}>
-					<Popup>
-						<h2>{location.providerName}</h2>
-						<h3><a href={location.providerLink}>Ponudnikova spletna stran</a></h3>
-						<h3>{location.address}</h3>
-						<h3>kapacitete: {location.quantity}</h3>
-					</Popup>
-				</Marker>
-			))}
+			{bikeShedChecked ?
+				bikeShedsLocations.map(location => (
+					<Marker
+						key={location._id}
+						position={[location.geometry.coordinates[1], location.geometry.coordinates[0]]}
+						icon={bikeShedIcon}>
+						<Popup>
+							<h2>{location.providerName}</h2>
+							<h3><a href={location.providerLink}>Ponudnikova spletna stran</a></h3>
+							<h3>{location.address}</h3>
+							<h3>kapacitete: {location.quantity}</h3>
+						</Popup>
+					</Marker>
+				))
+			:
+				<></>
+			}
 			
 
 		</MapContainer>

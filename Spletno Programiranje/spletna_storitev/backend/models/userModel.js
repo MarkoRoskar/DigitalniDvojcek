@@ -2,7 +2,6 @@ var mongoose = require('mongoose');
 var Schema   = mongoose.Schema;
 
 var bcrypt = require("bcrypt");
-const { use } = require('../app');
 
 /**
  * definiton of userSchema attributes
@@ -57,8 +56,6 @@ userSchema.statics.authenticate = function(username, password, callback) {
 		// if user is found in the database, we compare his password & the parameter password
 		else {
 			bcrypt.compare(password, user.password, function(err, result) {
-				console.log("password: " + password)
-				console.log("user.password: " + user.password)
 				if (result == true) {
 					return callback(null, user);	// error is null
 				}

@@ -20,6 +20,13 @@ li, a {
   text-decoration: none;
 }
 
+#logged-username {
+  display: block;
+  float: right;
+  margin-top: 10px;
+  font-size: 25px;
+}
+
 .App {
   text-align: center;
 }

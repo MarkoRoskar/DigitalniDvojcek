@@ -16,20 +16,37 @@ import Header from './components/Header';
 import HomePage from './components/HomePage';
 import Graphs from './components/Graphs';
 import PieChart from './components/PieChart';
-
+import Register from './components/Register';
+import Login from './components/Login';
+import Logout from './components/Logout';
+import { UserContext } from "./userContext";
 
 
 function App() {
 
+  const [user, setUser] = useState(localStorage.user ? JSON.parse(localStorage.user) : null);
+  const updateUserData = (userInfo) => {
+    localStorage.setItem("user", JSON.stringify(userInfo));
+    setUser(userInfo);
+  }
+
   return (
     <BrowserRouter>
-      <Header/>
-      <Routes>
-        <Route path="/" element={<HomePage/>}/>
-        <Route path="/map" element={<Map/>}/>
-        <Route path="/graphs" element={<Graphs/>}/>
-        <Route path="/pie_charts" element={<PieChart/>}/>
-      </Routes>
+      <UserContext.Provider value={{
+        user: user,
+        setUserContext: updateUserData
+      }}>
+        <Header/>
+        <Routes>
+          <Route path="/" element={<HomePage/>}/>
+          <Route path="/map" element={<Map/>}/>
+          <Route path="/graphs" element={<Graphs/>}/>
+          <Route path="/pie_charts" element={<PieChart/>}/>
+          <Route path="/register" element={<Register/>}/>
+          <Route path="/login" element={<Login/>}/>
+          <Route path="/logout/:username" element={<Logout/>}/>
+        </Routes>
+      </UserContext.Provider>
     </BrowserRouter>
   );
 
