@@ -1489,7 +1489,7 @@ class TaskParser(private val scanner: Scanner) {
             when (last!!.value) {
                 LINE, BEND, BOX, FOR, IF, VAR, CONST, IDENTIFIER -> {
                     val nextCommand = parseCOMMAND(functionEnv)
-                    return if (lastCommand is If) {
+                    return if (nextCommand is If) {
                         var command = lastCommand
                         while (command.next != End && command.next != Null) {
                             command = command.next
@@ -1502,6 +1502,9 @@ class TaskParser(private val scanner: Scanner) {
                     }
                 }
                 RB_PAREN, RETURN -> {
+                    if (lastCommand is If) {
+                        return fullCommand
+                    }
                     lastCommand.next = End
                     return fullCommand
                 }
