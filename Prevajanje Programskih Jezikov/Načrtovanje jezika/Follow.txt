@@ -53,12 +53,12 @@ FOLLOW:
     MOREVARS : { ')' }
     RETURN : { '}' }
     RETURNVALUE : { '}' }
-    EXPR : { ')', ',' }
-    E : { ), ',' }
-    EE : { ), ',' }
-    T : { +, -, ), ',' }
-    TT : { +, -, ), ',' }
-    XX : { *, /, +, -, ) ',' }
-    X : { *, /, +, -, ), ',' }
-    Y : { ^, /, +, -, *, ',' }
-    F : { ^, +, -, *, /, ',' }
+    EXPR : { ')', ',', line, bend, box, for, if, var, const, identifier, '}', return }
+    E : { ), ',', line, bend, box, for, if, var, const, identifier, '}', return }
+    EE : { ), ',', line, bend, box, for, if, var, const, identifier, '}', return }
+    T : { +, -, ), ',', line, bend, box, for, if, var, const, identifier, '}', return }
+    TT : { +, -, ), ',', line, bend, box, for, if, var, const, identifier, '}', return }
+    XX : { *, /, +, -, ) ',', line, bend, box, for, if, var, const, identifier, '}', return}
+    X : { *, /, +, -, ), ',', line, bend, box, for, if, var, const, identifier, '}', return }
+    Y : { ^, /, +, -, *, ',', line, bend, box, for, if, var, const, identifier, '}', return}
+    F : { ^, +, -, *, /, ',' line, bend, box, for, if, var, const, identifier, '}', return}

@@ -1,5 +1,6 @@
 import java.io.InputStream
 import java.util.*
+import java.io.File
 
 const val EOF_SYMBOL = -1
 const val ERROR_STATE = 0
@@ -336,351 +337,1633 @@ fun printTokens(scanner: Scanner) {
     }
 }
 
+interface Expr {
+    fun evalPartial(env: Map<String, Expr>): Expr
+
+    // Privzete implementacije, tako se lahko izognemo preverjanju tipov, če funkcija ni implementirana pomeni, da ni podprta in se proži izjema
+    fun add(other: Expr): Expr =
+        throw TypeException
+
+    fun sub(other: Expr): Expr =
+        throw TypeException
+
+    fun unaryMinus(): Expr =
+        throw TypeException
+
+    fun unaryPlus(): Expr =
+        throw TypeException
+
+    fun mul(other: Expr): Expr =
+        throw TypeException
+
+    fun div(other: Expr): Expr =
+        throw TypeException
+
+    // Namesto, da vrnete string lahko uporabite knjižnico za JSON in tukaj vrnete JSON objekt
+    // Druga opcija pa je, da naredite objektni model za GEOJSON in nato ta objektni model pretvorite v JSON objekte
+    fun toGeoJSON(): String =
+        throw TypeException
+}
+
+var currentBlock="null"
+var blockColor=mapOf("road" to "#555555", "bikePath" to "#63475c", "bikeTourPath" to "#6d307a", "corridor" to "#881199", "building" to "#545655",
+    "river" to "#096ca2", "park" to "#447238", "bikeStand" to "#aa0004", "bikeShed" to "#716c39", "mBajk" to "#0317a7", "rentBike" to "#ff8000"
+)
+
+class Function(private var params: MutableList<String>, private var body: Stmt, private var closureEnv: Map<String, Expr> = emptyMap(), override var next:Stmt): Stmt {
+    override fun toString(): String {
+        return "{($params) ->\n $body)}"
+    }
+
+    override fun evalPartial(env: Map<String, Expr>): Stmt {
+        return Function(params, body, closureEnv, next)
+    }
+
+    fun apply(args: MutableList<Expr>): Expr {
+        if(params.size != args.size){
+            throw Exception("Function params != call args")
+        }else{
+            for(i in params.indices){
+                closureEnv=closureEnv+(params[i] to args[i])
+            }
+            val result = body.evalPartial(closureEnv)
+            var itResult=result
+            while(itResult.next!=End && itResult.next!=Null){
+                itResult=itResult.next
+            }
+            if(itResult is Return && itResult.next is End){
+                if(itResult.value is Point || itResult.value is Num) {
+                    return itResult.value
+                }else{
+                    throw TypeException
+                }
+            }else{
+                throw Exception("Function must end with return")
+            }
+        }
+    }
+}
+
+class Call(private val func: Stmt, private val args: MutableList<Expr>) : Expr {
+
+    override fun toString(): String =
+        "$func($args)"
+
+    // Ovredonti argumente in pokliče apply
+    override fun evalPartial(env: Map<String, Expr>): Expr =
+        when (val f = func.evalPartial(env)) {
+            is Function -> {
+                val resultArgs: MutableList<Expr> = mutableListOf()
+                for(arg in args){
+                    resultArgs.add(arg.evalPartial(env))
+                }
+                f.apply(resultArgs)
+            }
+            else -> throw TypeException
+        }
+}
+
+class Point(val longitude: Expr, val latitude: Expr): Expr {
+    override fun toString(): String =
+        "($longitude,$latitude)"
+
+    override fun evalPartial(env: Map<String, Expr>): Expr =
+        Point(longitude.evalPartial(env), latitude.evalPartial(env))
+
+    override fun toGeoJSON(): String =
+        when {
+            longitude is Num && latitude is Num -> "[" + longitude.toGeoJSON() + ", " + latitude.toGeoJSON() + "]"
+            else -> throw TypeException
+        }
+}
+
+class Add(private val left: Expr, private val  right: Expr): Expr{
+    override fun toString(): String =
+        "($left + $right)"
+
+    override fun evalPartial(env: Map<String, Expr>): Expr =
+        left.evalPartial(env).add(right.evalPartial(env))
+}
+
+class Sub(private val left: Expr, private val  right: Expr): Expr{
+    override fun toString(): String =
+        "($left - $right)"
+
+    override fun evalPartial(env: Map<String, Expr>): Expr =
+        left.evalPartial(env).sub(right.evalPartial(env))
+}
+
+class Mul(private val left: Expr, private val  right: Expr): Expr{
+    override fun toString(): String =
+        "($left * $right)"
+
+    override fun evalPartial(env: Map<String, Expr>): Expr =
+        left.evalPartial(env).mul(right.evalPartial(env))
+}
+
+class Div(private val left: Expr, private val  right: Expr): Expr{
+    override fun toString(): String{
+        return "($left/$right)"
+    }
+
+    override fun evalPartial(env: Map<String, Expr>): Expr =
+        left.evalPartial(env).div(right.evalPartial(env))
+}
+
+class Pow(private val left: Expr, private val  right: Expr): Expr{
+    override fun toString(): String{
+        return "$left^$right"
+    }
+
+    override fun evalPartial(env: Map<String, Expr>): Expr{
+        return this
+    }
+}
+
+class UnaryPlus(private val value: Expr): Expr{
+    override fun toString(): String{
+        return "+$value"
+    }
+
+    override fun evalPartial(env: Map<String, Expr>): Expr{
+        return value.unaryPlus()
+    }
+}
+
+class UnaryMinus(private val value: Expr): Expr{
+    override fun toString(): String{
+        return "-$value"
+    }
+
+    override fun evalPartial(env: Map<String, Expr>): Expr{
+        return value.unaryMinus()
+    }
+}
+
+class Var(private val name: String): Expr {
+    override fun toString(): String =
+        when(name[0]){
+           '-'->"-const$name"
+           else->name
+        }
+
+    override fun evalPartial(env: Map<String, Expr>): Expr =
+        if(env.contains(name) || env.contains("-const$name")){
+            if(env.contains(name)){
+                env[name]!!
+            }else{
+                env["-const$name"]!!
+            }
+        }else{
+            throw UndefinedException(name)
+        }
+}
+
+class Num(var value: Double): Expr {
+    override fun toString(): String =
+        value.toString()
+
+    override fun evalPartial(env: Map<String, Expr>): Expr =
+        this
+
+    override fun add(other: Expr): Expr =
+        when(other) {
+            is Num -> Num(value + other.value)
+            else -> throw TypeException
+        }
+
+    override fun sub(other: Expr): Expr =
+        when(other) {
+            is Num -> Num(value - other.value)
+            else -> throw TypeException
+        }
+
+    override fun mul(other: Expr): Expr =
+        when(other) {
+            is Num -> Num(value * other.value)
+            else -> throw TypeException
+        }
+
+    override fun div(other: Expr): Expr =
+        when(other) {
+            is Num -> Num(value / other.value)
+            else -> throw TypeException
+        }
+
+    override fun unaryMinus(): Expr =
+        Num(-value)
+
+    override fun unaryPlus(): Expr =
+        this
+
+    override fun toGeoJSON(): String =
+        value.toString()
+}
+
+interface Stmt {
+    var next: Stmt
+
+    fun evalPartial(env: Map<String, Expr>): Stmt
+
+    fun toGeoJSON(): String =
+        throw TypeException
+}
+
+class Line(private val from: Expr, private val to: Expr, private val width: Expr, override var next: Stmt): Stmt {
+    override fun toString(): String =
+        "\tline($from,$to, $width)\n$next"
+
+    override fun evalPartial(env: Map<String, Expr>): Stmt =
+        Line(from.evalPartial(env), to.evalPartial(env), width.evalPartial(env), next.evalPartial(env))
+
+    override fun toGeoJSON(): String {
+        when {
+            from is Point && to is Point && width is Num -> {
+                if (from.longitude == to.longitude && from.latitude == to.latitude) {
+                    throw LineException()
+                }else{
+                    return  "    {\n" +
+                            "      \"type\": \"Feature\",\n" +
+                            "      \"properties\": {\n" +
+                            "        \"stroke-width\": ${width.toGeoJSON()},\n" +
+                            "        \"stroke\": \"${blockColor[currentBlock]}\",\n"+
+                            "        \"class\": \"${currentBlock}\"\n"+
+                            "      },\n" +
+                            "      \"geometry\": {\n" +
+                            "        \"type\": \"LineString\",\n" +
+                            "        \"coordinates\": [\n" +
+                            "          ${from.toGeoJSON()},\n" +
+                            "          ${to.toGeoJSON()}\n" +
+                            "        ]\n" +
+                            "      }\n" +
+                            "    },\n${next.toGeoJSON()}"
+                }
+            }
+            else -> throw TypeException
+        }
+    }
+}
+
+//popravi bend
+class Bend(private val from: Expr, private val to: Expr, private var angle: Expr, override var next: Stmt): Stmt {
+    override fun toString(): String =
+        "\tbend($from,$to, $angle)\n$next"
+
+    override fun evalPartial(env: Map<String, Expr>): Stmt =
+        Bend(from.evalPartial(env), to.evalPartial(env), angle.evalPartial(env), next.evalPartial(env))
+
+    override fun toGeoJSON(): String {
+        when {
+            from is Point && to is Point && angle is Num -> {
+                if (from.longitude == to.longitude && from.latitude == to.latitude) {
+                    throw LineException()
+                } else {
+                    return "    {\n" +
+                            "      \"type\": \"Feature\",\n" +
+                            "      \"properties\": {\n" +
+                            "        \"stroke-angle\": ${angle.toGeoJSON()},\n" +
+                            "        \"stroke\": \"${blockColor[currentBlock]}\",\n"+
+                            "        \"class\": \"${currentBlock}\"\n"+
+                            "      },\n" +
+                            "      \"geometry\": {\n" +
+                            "        \"type\": \"LineString\",\n" +
+                            "        \"coordinates\": [\n" +
+                            "          ${from.toGeoJSON()},\n" +
+                            "          ${to.toGeoJSON()}\n" +
+                            "        ]\n" +
+                            "      }\n" +
+                            "    },\n${next.toGeoJSON()}"
+                }
+            }
+            else -> throw TypeException
+        }
+    }
+}
+
+class Box(private val first: Expr, private val second: Expr, override var next: Stmt): Stmt {
+    override fun toString(): String =
+        "\tbox($first,$second)\n$next"
+
+    override fun evalPartial(env: Map<String, Expr>): Stmt =
+        Box(first.evalPartial(env), second.evalPartial(env), next.evalPartial(env))
+
+    override fun toGeoJSON(): String {
+        when {
+            first is Point && second is Point -> {
+                if(first.longitude == second.longitude || first.latitude == second.latitude){
+                    throw BoxException()
+                }else{
+                    return  "    {\n" +
+                            "      \"type\": \"Feature\",\n" +
+                            "      \"properties\": {\n" +
+                            "        \"fill\": \"${blockColor[currentBlock]}\",\n"+
+                            "        \"class\": \"${currentBlock}\"\n"+
+                            "      },\n" +
+                            "      \"geometry\": {\n" +
+                            "        \"type\": \"Polygon\",\n" +
+                            "        \"coordinates\": [\n" +
+                            "          [\n" +
+                            "            [\n" +
+                            "              ${first.longitude},\n" +
+                            "              ${first.latitude}\n" +
+                            "            ],\n" +
+                            "            [\n" +
+                            "              ${second.longitude},\n" +
+                            "              ${first.latitude}\n" +
+                            "            ],\n" +
+                            "            [\n" +
+                            "              ${second.longitude},\n" +
+                            "              ${second.latitude}\n" +
+                            "            ],\n" +
+                            "            [\n" +
+                            "              ${first.longitude},\n" +
+                            "              ${second.latitude}\n" +
+                            "            ],\n" +
+                            "            [\n" +
+                            "              ${first.longitude},\n" +
+                            "              ${first.latitude}\n" +
+                            "            ]\n" +
+                            "          ]\n" +
+                            "        ]\n" +
+                            "      }\n" +
+                            "    },\n${next.toGeoJSON()}"
+                }
+            }
+            else -> throw TypeException
+        }
+    }
+}
+
+// Konstrukt, ki predstavlja dodelitev
+class DefineVar(private var name: String, private var expr: Expr, override var next: Stmt): Stmt {
+
+    override fun toString(): String =
+        "\tvar $name = $expr\n$next"
+
+    // Ustvarimo novo konstanto, pod ime shranimo vrednost izjave
+    override fun evalPartial(env: Map<String, Expr>): Stmt {
+        if(env.contains(name) || env.contains("-const$name")){
+            throw AlreadyDefinedException(name)
+        }
+        return next.evalPartial(env + (name to expr.evalPartial(env)))
+    }
+}
+
+class DefineConst(private var name: String, private var expr: Expr, override var next: Stmt): Stmt {
+
+    override fun toString(): String =
+        "\tconst $name = $expr\n$next"
+
+    // Ustvarimo novo konstanto, pod ime shranimo vrednost izjave
+    override fun evalPartial(env: Map<String, Expr>): Stmt {
+        if(env.contains(name) || env.contains("-const$name")){
+            throw AlreadyDefinedException(name)
+        }
+        return next.evalPartial(env + ("-const$name" to expr.evalPartial(env)))
+    }
+}
+
+class Assignment(private val name: String, private val value: Expr, override var next: Stmt): Stmt{
+    override fun toString(): String{
+        return "\t$name=$value\n$next"
+    }
+
+    override fun evalPartial(env: Map<String, Expr>): Stmt {
+        if(env.contains(name)){
+            return next.evalPartial(env + (name to value.evalPartial(env)))
+        }else if(env.contains("-const$name")){
+            throw CantAssignException(name)
+        }else {
+            throw UndefinedException(name)
+        }
+    }
+}
+
+class RentBike(private val name: String, private val point: Point, override var next: Stmt): Stmt{
+    override fun toString(): String{
+        return "rentBike $name { $point }\n$next"
+    }
+
+    override fun evalPartial(env: Map<String, Expr>): Stmt {
+        currentBlock="rentBike"
+        return this
+    }
+
+    override fun toGeoJSON(): String {
+        currentBlock="rentBike"
+        return  "    {\n" +
+                "      \"type\": \"Feature\",\n" +
+                "      \"properties\": {\n" +
+                "        \"marker-color\": \"${blockColor[currentBlock]}\",\n" +
+                "        \"class\": \"${currentBlock}\"\n"+
+                "      },\n" +
+                "      \"geometry\": {\n" +
+                "        \"type\": \"Point\",\n" +
+                "        \"coordinates\": [\n" +
+                "          ${point.longitude},\n" +
+                "          ${point.latitude}\n" +
+                "        ]\n" +
+                "      }\n" +
+                "    },\n${next.toGeoJSON()}"
+    }
+}
+
+class BikeShed(private val name: String, private val point: Point, override var next: Stmt): Stmt{
+    override fun toString(): String{
+        return "bikeShed $name { $point }\n$next"
+    }
+
+    override fun evalPartial(env: Map<String, Expr>): Stmt {
+        currentBlock="bikeShed"
+        return BikeShed(name, point.evalPartial(env) as Point, next.evalPartial(mutableMapOf()))
+    }
+
+    override fun toGeoJSON(): String {
+        currentBlock="bikeShed"
+        return  "    {\n" +
+                "      \"type\": \"Feature\",\n" +
+                "      \"properties\": {\n" +
+                "        \"marker-color\": \"${blockColor[currentBlock]}\",\n" +
+                "        \"class\": \"${currentBlock}\"\n"+
+                "      },\n" +
+                "      \"geometry\": {\n" +
+                "        \"type\": \"Point\",\n" +
+                "        \"coordinates\": [\n" +
+                "          ${point.longitude},\n" +
+                "          ${point.latitude}\n" +
+                "        ]\n" +
+                "      }\n" +
+                "    },\n${next.toGeoJSON()}"
+    }
+}
+
+class MBajk(private val name: String, private val point: Point, override var next: Stmt): Stmt{
+    override fun toString(): String{
+        return "mBajk $name { $point }\n$next"
+    }
+
+    override fun evalPartial(env: Map<String, Expr>): Stmt {
+        currentBlock="mBajk"
+        return MBajk(name, point.evalPartial(env) as Point, next.evalPartial(mutableMapOf()))
+    }
+
+    override fun toGeoJSON(): String {
+        currentBlock="mBajk"
+        return  "    {\n" +
+                "      \"type\": \"Feature\",\n" +
+                "      \"properties\": {\n" +
+                "        \"marker-color\": \"${blockColor[currentBlock]}\",\n" +
+                "        \"class\": \"${currentBlock}\"\n"+
+                "      },\n" +
+                "      \"geometry\": {\n" +
+                "        \"type\": \"Point\",\n" +
+                "        \"coordinates\": [\n" +
+                "          ${point.longitude},\n" +
+                "          ${point.latitude}\n" +
+                "        ]\n" +
+                "      }\n" +
+                "    },\n${next.toGeoJSON()}"
+    }
+}
+
+class BikeStand(private val name: String, private val integer: Expr, private val point: Expr, override var next: Stmt): Stmt{
+    override fun toString(): String{
+        return "bikeStand($integer) $name { $point }\n$next"
+    }
+
+    override fun evalPartial(env: Map<String, Expr>): Stmt {
+        currentBlock="bikeStand"
+        return BikeStand(name, integer.evalPartial(env), point.evalPartial(env), next.evalPartial(env))
+    }
+
+    override fun toGeoJSON(): String {
+        currentBlock="bikeStand"
+        when {
+            point is Point && integer is Num -> {
+                return "    {\n" +
+                        "      \"type\": \"Feature\",\n" +
+                        "      \"properties\": {\n" +
+                        "        \"marker-color\": \"${blockColor[currentBlock]}\",\n" +
+                        "        \"class\": \"${currentBlock}\",\n" +
+                        "        \"capacity\": \"${integer.toString().substring(0, integer.toString().length - 2)}\"" +
+                        "      },\n" +
+                        "      \"geometry\": {\n" +
+                        "        \"type\": \"Point\",\n" +
+                        "        \"coordinates\": [\n" +
+                        "          ${point.longitude},\n" +
+                        "          ${point.latitude}\n" +
+                        "        ]\n" +
+                        "      }\n" +
+                        "    },\n${next.toGeoJSON()}"
+            }
+            else -> throw TypeException
+        }
+    }
+}
+
+class Park(private val name: String, private val body: Stmt, private var closureEnv: Map<String, Expr> = emptyMap(), override var next: Stmt): Stmt{
+    override fun toString(): String {
+        return "park $name{\n$body\n}\n$next"
+    }
+
+    override fun evalPartial(env: Map<String, Expr>): Stmt {
+        currentBlock="park"
+        return Park(name, body.evalPartial(closureEnv), closureEnv, next.evalPartial(mutableMapOf()))
+    }
+
+    override fun toGeoJSON(): String {
+        currentBlock="park"
+        return body.toGeoJSON() + next.toGeoJSON()
+    }
+}
+
+class River(private val name: String, private val body: Stmt, private var closureEnv: Map<String, Expr> = emptyMap(), override var next: Stmt): Stmt{
+    override fun toString(): String {
+        return "river $name{\n$body\n}\n$next"
+    }
+
+    override fun evalPartial(env: Map<String, Expr>): Stmt {
+        currentBlock="river"
+        return River(name, body.evalPartial(closureEnv), closureEnv, next.evalPartial(mutableMapOf()))
+    }
+
+    override fun toGeoJSON(): String {
+        currentBlock="river"
+        return body.toGeoJSON() + next.toGeoJSON()
+    }
+}
+
+class Building(private val name: String, private val body: Stmt, private var closureEnv: Map<String, Expr> = emptyMap(), override var next: Stmt): Stmt{
+    override fun toString(): String {
+        return "building $name{\n$body\n}\n$next"
+    }
+
+    override fun evalPartial(env: Map<String, Expr>): Stmt {
+        currentBlock="building"
+        return Building(name, body.evalPartial(closureEnv), closureEnv, next.evalPartial(mutableMapOf()))
+    }
+
+    override fun toGeoJSON(): String {
+        currentBlock="building"
+        return body.toGeoJSON() + next.toGeoJSON()
+    }
+}
+
+class Corridor(private val name: String, private val body: Stmt, private var closureEnv: Map<String, Expr> = emptyMap(), override var next: Stmt): Stmt{
+    override fun toString(): String {
+        return "corridor $name{\n$body\n}\n$next"
+    }
+
+    override fun evalPartial(env: Map<String, Expr>): Stmt {
+        currentBlock="corridor"
+        return Corridor(name, body.evalPartial(closureEnv), closureEnv, next.evalPartial(mutableMapOf()))
+    }
+
+    override fun toGeoJSON(): String {
+        currentBlock="corridor"
+        return body.toGeoJSON() + next.toGeoJSON()
+    }
+}
+
+class TourPath(private val name: String, private val body: Stmt, private var closureEnv: Map<String, Expr> = emptyMap(), override var next: Stmt): Stmt{
+
+    override fun toString(): String {
+        return "bikeTourPath $name{\n$body\n}\n$next"
+    }
+
+    override fun evalPartial(env: Map<String, Expr>): Stmt {
+        currentBlock="tourPath"
+        return TourPath(name, body.evalPartial(closureEnv), closureEnv, next.evalPartial(mutableMapOf()))
+    }
+
+    override fun toGeoJSON(): String {
+        currentBlock="tourPath"
+        return body.toGeoJSON() + next.toGeoJSON()
+    }
+}
+
+class BikePath(private val name: String, private val body: Stmt, private var closureEnv: Map<String, Expr> = emptyMap(), override var next: Stmt): Stmt{
+    override fun toString(): String {
+        return "bikePath $name{\n$body\n}\n$next"
+    }
+
+    override fun evalPartial(env: Map<String, Expr>): Stmt {
+        currentBlock="bikePath"
+        return BikePath(name, body.evalPartial(closureEnv), closureEnv, next.evalPartial(mutableMapOf()))
+    }
+
+    override fun toGeoJSON(): String {
+        currentBlock="bikePath"
+        return body.toGeoJSON() + next.toGeoJSON()
+    }
+}
+
+class Road(private val name: String, private val body: Stmt, private var closureEnv: Map<String, Expr> = emptyMap(), override var next: Stmt): Stmt{
+    override fun toString(): String {
+        return "\troad $name{\n$body\n}\n$next"
+    }
+
+    override fun evalPartial(env: Map<String, Expr>): Stmt {
+        currentBlock="road"
+        return Road(name, body.evalPartial(closureEnv), closureEnv, next.evalPartial(mutableMapOf()))
+    }
+
+    override fun toGeoJSON(): String {
+        currentBlock="road"
+        return body.toGeoJSON() + next.toGeoJSON()
+    }
+}
+
+class City(private val name: String, private val body: Stmt, override var next: Stmt=End): Stmt {
+    override fun toString(): String{
+        return "city $name {\n$body\n}"
+    }
+
+    override fun evalPartial(env: Map<String, Expr>): Stmt {
+        return City(name, body.evalPartial(mutableMapOf()))
+    }
+
+    override fun toGeoJSON(): String {
+        return  "{\n" +
+                "  \"type\": \"FeatureCollection\",\n" +
+                "  \"features\": [\n" +
+                "   ${body.toGeoJSON().dropLast(2)}\n" +
+                "" +
+                "  ]\n" +
+                "}"
+    }
+}
+
+class Return(val value: Expr, override var next: Stmt): Stmt{
+    override fun toString(): String{
+        return "return $value\n"
+    }
+
+    override fun evalPartial(env: Map<String, Expr>): Stmt {
+        return Return(value.evalPartial(env), next)
+    }
+}
+
+class For(private val spr1: Expr, private val spr2: Expr, private val body: Stmt, override var next: Stmt): Stmt{
+    override fun toString(): String{
+        return "for ($spr1 to $spr2){\n$body\n}\n$next\n"
+    }
+
+    override fun evalPartial(env: Map<String, Expr>): Stmt {
+        return For(spr1.evalPartial(env), spr2.evalPartial(env), body.evalPartial(env), next.evalPartial(env))
+    }
+
+    override fun toGeoJSON(): String {
+        when {
+            spr1 is Num && spr2 is Num -> {
+                var returnString=""
+                while(spr1.value < spr2.value){
+                    returnString+=body.toGeoJSON()
+                    spr1.value++
+                }
+                returnString+=next.toGeoJSON()
+                return returnString
+            }
+            else -> throw TypeException
+        }
+    }
+}
+
+class If(private val spr1: Expr, private val spr2: Expr, private val operator: String, private val body: Stmt, override var next: Stmt): Stmt{
+    override fun toString(): String{
+        return "if ($spr1 $operator $spr2){\n$body\n}\n$next"
+    }
+
+    override fun evalPartial(env: Map<String, Expr>): Stmt {
+        return If(spr1.evalPartial(env), spr2.evalPartial(env), operator, body.evalPartial(env), next.evalPartial(env))
+    }
+
+    override fun toGeoJSON(): String {
+        when {
+            spr1 is Num && spr2 is Num -> {
+                when(operator){
+                    "<"->{
+                        return if(spr1.value < spr2.value){
+                            if(next is ElseIf){
+                                (next as ElseIf).setSkip()
+                            }
+                            if(next is Else){
+                                (next as Else).setSkip()
+                            }
+                            body.toGeoJSON() + next.toGeoJSON()
+                        }else{
+                            next.toGeoJSON()
+                        }
+                    }
+                    ">"->{
+                        return if(spr1.value > spr2.value){
+                            if(next is ElseIf){
+                                (next as ElseIf).setSkip()
+                            }
+                            if(next is Else){
+                                (next as Else).setSkip()
+                            }
+                            body.toGeoJSON() + next.toGeoJSON()
+                        }else{
+                            next.toGeoJSON()
+                        }
+                    }
+                    "=="->{
+                        return if(spr1.value == spr2.value){
+                            if(next is ElseIf){
+                                (next as ElseIf).setSkip()
+                            }
+                            if(next is Else){
+                                (next as Else).setSkip()
+                            }
+                            body.toGeoJSON() + next.toGeoJSON()
+                        }else{
+                            next.toGeoJSON()
+                        }
+                    }
+                    "<="->{
+                        return if(spr1.value <= spr2.value){
+                            if(next is ElseIf){
+                                (next as ElseIf).setSkip()
+                            }
+                            if(next is Else){
+                                (next as Else).setSkip()
+                            }
+                            body.toGeoJSON() + next.toGeoJSON()
+                        }else{
+                            next.toGeoJSON()
+                        }
+                    }
+                    "=>"->{
+                        return if(spr1.value >= spr2.value){
+                            if(next is ElseIf){
+                                (next as ElseIf).setSkip()
+                            }
+                            if(next is Else){
+                                (next as Else).setSkip()
+                            }
+                            body.toGeoJSON() + next.toGeoJSON()
+                        }else{
+                            next.toGeoJSON()
+                        }
+                    }
+                    "!="->{
+                        return if(spr1.value != spr2.value){
+                            if(next is ElseIf){
+                                (next as ElseIf).setSkip()
+                            }
+                            if(next is Else){
+                                (next as Else).setSkip()
+                            }
+                            body.toGeoJSON() + next.toGeoJSON()
+                        }else{
+                            next.toGeoJSON()
+                        }
+                    }
+                    else->throw TypeException
+                }
+            }
+            else -> throw TypeException
+        }
+    }
+}
+
+class ElseIf(private val spr1: Expr, private val spr2: Expr, private val operator: String, private val body: Stmt, override var next: Stmt, private var skip: Boolean=false): Stmt{
+    fun setSkip(){
+        skip=true
+    }
+
+    override fun toString(): String{
+        return "elseif ($spr1 $operator $spr2){\n$body\n}\n$next"
+    }
+
+    override fun evalPartial(env: Map<String, Expr>): Stmt {
+        return ElseIf(spr1.evalPartial(env), spr2.evalPartial(env), operator, body.evalPartial(env), next.evalPartial(env), skip)
+    }
+
+    override fun toGeoJSON(): String {
+        if (skip) {
+            if(next is ElseIf){
+                (next as ElseIf).setSkip()
+            }
+            if(next is Else){
+                (next as Else).setSkip()
+            }
+            return next.toGeoJSON()
+        }
+        when {
+            spr1 is Num && spr2 is Num -> {
+                when(operator){
+                    "<"->{
+                        return if(spr1.value < spr2.value){
+                            if(next is ElseIf){
+                                (next as ElseIf).setSkip()
+                            }
+                            if(next is Else){
+                                (next as Else).setSkip()
+                            }
+                            body.toGeoJSON() + next.toGeoJSON()
+                        }else{
+                            next.toGeoJSON()
+                        }
+                    }
+                    ">"->{
+                        return if(spr1.value > spr2.value){
+                            if(next is ElseIf){
+                                (next as ElseIf).setSkip()
+                            }
+                            if(next is Else){
+                                (next as Else).setSkip()
+                            }
+                            body.toGeoJSON() + next.toGeoJSON()
+                        }else{
+                            next.toGeoJSON()
+                        }
+                    }
+                    "=="->{
+                        return if(spr1.value == spr2.value){
+                            if(next is ElseIf){
+                                (next as ElseIf).setSkip()
+                            }
+                            if(next is Else){
+                                (next as Else).setSkip()
+                            }
+                            body.toGeoJSON() + next.toGeoJSON()
+                        }else{
+                            next.toGeoJSON()
+                        }
+                    }
+                    "<="->{
+                        return if(spr1.value <= spr2.value){
+                            if(next is ElseIf){
+                                (next as ElseIf).setSkip()
+                            }
+                            if(next is Else){
+                                (next as Else).setSkip()
+                            }
+                            body.toGeoJSON() + next.toGeoJSON()
+                        }else{
+                            next.toGeoJSON()
+                        }
+                    }
+                    "=>"->{
+                        return if(spr1.value >= spr2.value){
+                            if(next is ElseIf){
+                                (next as ElseIf).setSkip()
+                            }
+                            if(next is Else){
+                                (next as Else).setSkip()
+                            }
+                            body.toGeoJSON() + next.toGeoJSON()
+                        }else{
+                            next.toGeoJSON()
+                        }
+                    }
+                    "!="->{
+                        return if(spr1.value != spr2.value){
+                            if(next is ElseIf){
+                                (next as ElseIf).setSkip()
+                            }
+                            if(next is Else){
+                                (next as Else).setSkip()
+                            }
+                            body.toGeoJSON() + next.toGeoJSON()
+                        }else{
+                            next.toGeoJSON()
+                        }
+                    }
+                    else->throw TypeException
+                }
+            }
+            else -> throw TypeException
+        }
+    }
+}
+
+class Else(private val body: Stmt, override var next: Stmt, private var skip: Boolean=false): Stmt{
+    fun setSkip(){
+        skip=true
+    }
+
+    override fun toString(): String{
+        return "else{\n$body\n}\n$next"
+    }
+
+    override fun evalPartial(env: Map<String, Expr>): Stmt {
+        return Else(body.evalPartial(env), next.evalPartial(env), skip)
+    }
+
+    override fun toGeoJSON(): String {
+        return if (skip) {
+            next.toGeoJSON()
+        } else {
+            body.toGeoJSON() + next.toGeoJSON()
+        }
+    }
+}
+
+// Konstrukt, ki predstavlja nevtralen element (ne dela nič)
+object End: Stmt {
+    override fun toString(): String =
+        "end"
+
+    override var next:Stmt=this
+
+    override fun evalPartial(env: Map<String, Expr>): Stmt =
+        this
+
+    override fun toGeoJSON(): String =
+        ""
+}
+
+// Konstrukt, ki predstavlja null element (ne dela nič)
+object Null: Stmt {
+    override fun toString(): String =
+        "null"
+
+    override var next:Stmt=this
+
+    override fun evalPartial(env: Map<String, Expr>): Stmt =
+        this
+}
+
+class ParseException(row: Int, column: Int) : Exception("Error at $row : $column")
+object TypeException: Exception("TYPE ERROR")
+class AlreadyDefinedException(name: String): Exception("Variable $name is already defined")
+class CantAssignException(name: String): Exception("Constant variable $name can't be assigned to another value")
+class UndefinedException(name: String): Exception("Variable '$name' is undefined")
+class BoxException: Exception("Box vertices must have different longitudes and latitudes")
+class LineException: Exception("Line/Bend points must be different")
+
 class TaskParser(private val scanner: Scanner) {
     private var last: Token? = null
 
-    fun recognize(): Boolean {
-        last = scanner.getToken()
-        val status = recognizePROGRAM()
-        return if (last!!.value == EOF_VALUE) status
-        else false
+    private fun error(): Nothing{
+        throw ParseException(last!!.startRow , last!!.startColumn)
     }
 
-    private fun recognizePROGRAM() = recognizeFUNCTIONS() && recognizeCITY()
+    fun parse(): Stmt {
+        last = scanner.getToken()
+        val result = parsePROGRAM()
+        return if (last!!.value == EOF_VALUE) result
+        else error()
+    }
 
-    private fun recognizeFUNCTIONS(): Boolean =
-        when (last!!.value) {
-            FUNC -> recognizeFUNCTION() && recognizeFUNCTIONS()
-            CITY -> true
-            else -> false
+    private fun parsePROGRAM(): Stmt {
+        val functionsEnv: MutableMap<String, Function> = parseFUNCTIONS(mutableMapOf())
+        return parseCITY(functionsEnv)
+    }
+
+        private fun parseFUNCTIONS(functionsEnv: MutableMap<String, Function>): MutableMap<String, Function> {
+            return when (last!!.value) {
+                FUNC -> {
+                    val function: Pair<String, Function> = parseFUNCTION(functionsEnv)
+                    functionsEnv[function.first] = function.second
+                    parseFUNCTIONS(functionsEnv)
+                }
+                CITY -> {
+                    functionsEnv
+                }
+                else -> error()
+            }
         }
 
-    private fun recognizeCITY() =
-        recognizeTerminal(CITY) && recognizeTerminal(IDENTIFIER) && recognizeTerminal(LB_PAREN)
-                && recognizeBLOCKS() && recognizeTerminal(RB_PAREN)
-
-    private fun recognizeBLOCKS() = recognizeBLOCK() && recognizeMOREBLOCKS()
-
-    private fun recognizeMOREBLOCKS(): Boolean =
-        when (last!!.value) {
-            ROAD, BIKE_PATH, BIKE_TOUR_PATH, BIKE_CORRIDOR, BUILDING, RIVER, PARK, BIKE_STAND, BIKE_SHED, M_BAJK, RENT_BIKE -> recognizeBLOCK() && recognizeMOREBLOCKS()
-            RB_PAREN -> true
-            else -> false
+        private fun parseCITY(functionsEnv: MutableMap<String, Function>) : Stmt{
+            parseTerminal(CITY)
+            val cityName=parseTerminal(IDENTIFIER)
+            parseTerminal(LB_PAREN)
+            val body = parseBLOCKS(functionsEnv)
+            parseTerminal(RB_PAREN)
+            return City(cityName, body)
         }
 
-    private fun recognizeBLOCK(): Boolean =
-        when (last!!.value) {
-            ROAD -> recognizeROAD()
-            BIKE_PATH -> recognizeBIKEPATH()
-            BIKE_TOUR_PATH -> recognizeTOURPATH()
-            BIKE_CORRIDOR -> recognizeCORRIDOR()
-            BUILDING -> recognizeBUILDING()
-            RIVER -> recognizeRIVER()
-            PARK -> recognizePARK()
-            BIKE_STAND, BIKE_SHED, M_BAJK, RENT_BIKE -> recognizeMARKPOINT()
-            else -> false
+        private fun parseBLOCKS(functionEnv: MutableMap<String, Function>): Stmt{
+            val block = parseBLOCK(functionEnv)
+            return parseMOREBLOCKS(block, block, functionEnv)
         }
 
-    private fun recognizeROAD() =
-        recognizeTerminal(ROAD) && recognizeTerminal(IDENTIFIER) && recognizeTerminal(LB_PAREN)
-                && recognizeCOMMANDS() && recognizeTerminal(RB_PAREN)
+        private fun parseMOREBLOCKS(firstBlock: Stmt, lastBlock: Stmt, functionEnv: MutableMap<String, Function>):  Stmt =
+            when (last!!.value) {
+                ROAD, BIKE_PATH, BIKE_TOUR_PATH, BIKE_CORRIDOR, BUILDING, RIVER, PARK, BIKE_STAND, BIKE_SHED, M_BAJK, RENT_BIKE -> {
+                    val nextBlock = parseBLOCK(functionEnv)
+                    lastBlock.next = nextBlock
+                    parseMOREBLOCKS(firstBlock, nextBlock, functionEnv)
+                }
+                RB_PAREN -> {
+                    lastBlock.next=End
+                    firstBlock
+                }
+                else -> error()
+            }
 
-    private fun recognizeBIKEPATH() =
-        recognizeTerminal(BIKE_PATH) && recognizeTerminal(IDENTIFIER) && recognizeTerminal(LB_PAREN)
-                && recognizeCOMMANDS() && recognizeTerminal(RB_PAREN)
+        private fun parseBLOCK(functionEnv: MutableMap<String, Function>): Stmt =
+            when (last!!.value) {
+                ROAD -> parseROAD(functionEnv)
+                BIKE_PATH -> parseBIKEPATH(functionEnv)
+                BIKE_TOUR_PATH -> parseTOURPATH(functionEnv)
+                BIKE_CORRIDOR -> parseCORRIDOR(functionEnv)
+                BUILDING -> parseBUILDING(functionEnv)
+                RIVER -> parseRIVER(functionEnv)
+                PARK -> parsePARK(functionEnv)
+                BIKE_STAND, BIKE_SHED, M_BAJK, RENT_BIKE -> parseMARKPOINT()
+                else -> error()
+            }
 
-    private fun recognizeTOURPATH() =
-        recognizeTerminal(BIKE_TOUR_PATH) && recognizeTerminal(IDENTIFIER) && recognizeTerminal(LB_PAREN)
-                && recognizeCOMMANDS() && recognizeTerminal(RB_PAREN)
-
-    private fun recognizeCORRIDOR() =
-        recognizeTerminal(BIKE_CORRIDOR) && recognizeTerminal(IDENTIFIER) && recognizeTerminal(LB_PAREN)
-                && recognizeCOMMANDS() && recognizeTerminal(RB_PAREN)
-
-    private fun recognizeBUILDING() =
-        recognizeTerminal(BUILDING) && recognizeTerminal(IDENTIFIER) && recognizeTerminal(LB_PAREN)
-                && recognizeCOMMANDS() && recognizeTerminal(RB_PAREN)
-
-    private fun recognizeRIVER() =
-        recognizeTerminal(RIVER) && recognizeTerminal(IDENTIFIER) && recognizeTerminal(LB_PAREN) && recognizeCOMMANDS()
-                && recognizeTerminal(RB_PAREN)
-
-    private fun recognizePARK() =
-        recognizeTerminal(PARK) && recognizeTerminal(IDENTIFIER) && recognizeTerminal(LB_PAREN) && recognizeCOMMANDS()
-                && recognizeTerminal(RB_PAREN)
-
-    private fun recognizeMARKPOINT(): Boolean =
-        when (last!!.value) {
-            BIKE_STAND -> recognizeBIKESTAND()
-            BIKE_SHED -> recognizeBIKESHED()
-            M_BAJK -> recognizeMBAJK()
-            RENT_BIKE -> recognizeRENTBIKE()
-            else -> false
+        private fun parseROAD(functionEnv: MutableMap<String, Function>): Road {
+            parseTerminal(ROAD)
+            val roadName=parseTerminal(IDENTIFIER)
+            parseTerminal(LB_PAREN)
+            val body = parseCOMMANDS(functionEnv)
+            parseTerminal(RB_PAREN)
+            return Road(roadName, body, mapOf(), End)
         }
 
-    private fun recognizeBIKESTAND() =
-        recognizeTerminal(BIKE_STAND) && recognizeTerminal(L_PAREN) && recognizeTerminal(INT)
-                && recognizeTerminal(R_PAREN) && recognizeTerminal(IDENTIFIER) && recognizeTerminal(LB_PAREN)
-                && recognizePOINTORVAR() && recognizeTerminal(RB_PAREN)
-
-    private fun recognizeBIKESHED() =
-        recognizeTerminal(BIKE_SHED) && recognizeTerminal(IDENTIFIER) && recognizeTerminal(LB_PAREN)
-                && recognizePOINTORVAR() && recognizeTerminal(RB_PAREN)
-
-    private fun recognizeMBAJK() =
-        recognizeTerminal(M_BAJK) && recognizeTerminal(IDENTIFIER) && recognizeTerminal(LB_PAREN)
-                && recognizePOINTORVAR() && recognizeTerminal(RB_PAREN)
-
-    private fun recognizeRENTBIKE() =
-        recognizeTerminal(RENT_BIKE) && recognizeTerminal(IDENTIFIER) && recognizeTerminal(LB_PAREN)
-                && recognizePOINTORVAR() && recognizeTerminal(RB_PAREN)
-
-    private fun recognizeCOMMANDS() = recognizeCOMMAND() && recognizeMORECOMMANDS()
-
-    private fun recognizeMORECOMMANDS(): Boolean =
-        when (last!!.value) {
-            LINE, BEND, BOX, FOR, IF, VAR, CONST, ASSIGN -> recognizeCOMMAND()
-            RB_PAREN, RETURN -> true
-            else -> false
+        private fun parseBIKEPATH(functionEnv: MutableMap<String, Function>) : BikePath {
+            parseTerminal(BIKE_PATH)
+            val bikePathName=parseTerminal(IDENTIFIER)
+            parseTerminal(LB_PAREN)
+            val body = parseCOMMANDS(functionEnv)
+            parseTerminal(RB_PAREN)
+            return BikePath(bikePathName, body, mutableMapOf(), End)
         }
 
-    private fun recognizeCOMMAND(): Boolean =
-        when (last!!.value) {
-            LINE -> recognizeLINE()
-            BEND -> recognizeBEND()
-            BOX -> recognizeBOX()
-            FOR -> recognizeFOR()
-            IF -> recognizeIF()
-            VAR -> recognizeVARIABLE()
-            CONST -> recognizeCONST()
-            ASSIGN -> recognizeASSIGNMENT()
-            else -> false
+        private fun parseTOURPATH(functionEnv: MutableMap<String, Function>): TourPath {
+            parseTerminal(BIKE_TOUR_PATH)
+            val tourPathName=parseTerminal(IDENTIFIER)
+            parseTerminal(LB_PAREN)
+            val body=parseCOMMANDS(functionEnv)
+            parseTerminal(RB_PAREN)
+            return TourPath(tourPathName, body, mutableMapOf(), End)
         }
 
-    private fun recognizeLINE(): Boolean =
-        recognizeTerminal(LINE) && recognizeTerminal(L_PAREN) && recognizePOINTORVAR() && recognizeTerminal(COMMA)
-                && recognizePOINTORVAR() && recognizeTerminal(COMMA) && recognizeWIDTH() && recognizeTerminal(R_PAREN)
-
-    private fun recognizeBEND(): Boolean =
-        recognizeTerminal(BEND) && recognizeTerminal(L_PAREN) && recognizePOINTORVAR() && recognizeTerminal(COMMA)
-                && recognizePOINTORVAR() && recognizeTerminal(COMMA) && recognizeANGLE() && recognizeTerminal(R_PAREN)
-
-    private fun recognizeANGLE(): Boolean =
-        when (last!!.value) {
-            INT -> recognizeTerminal(INT)
-            IDENTIFIER -> recognizeTerminal(IDENTIFIER)
-            else -> false
+        private fun parseCORRIDOR(functionEnv: MutableMap<String, Function>): Corridor {
+            parseTerminal(BIKE_CORRIDOR)
+            val corridorName=parseTerminal(IDENTIFIER)
+            parseTerminal(LB_PAREN)
+            val body=parseCOMMANDS(functionEnv)
+            parseTerminal(RB_PAREN)
+            return Corridor(corridorName, body, mutableMapOf(), End)
         }
 
-    private fun recognizeWIDTH(): Boolean =
-        when (last!!.value) {
-            INT -> recognizeTerminal(INT)
-            IDENTIFIER -> recognizeTerminal(IDENTIFIER)
-            else -> false
+        private fun parseBUILDING(functionEnv: MutableMap<String, Function>): Building {
+            parseTerminal(BUILDING)
+            val buildingName=parseTerminal(IDENTIFIER)
+            parseTerminal(LB_PAREN)
+            val body=parseCOMMANDS(functionEnv)
+            parseTerminal(RB_PAREN)
+            return Building(buildingName, body, mutableMapOf(), End)
         }
 
-    private fun recognizeBOX(): Boolean =
-        recognizeTerminal(BOX) && recognizeTerminal(L_PAREN) && recognizePOINTORVAR() && recognizeTerminal(COMMA)
-                && recognizePOINTORVAR() && recognizeTerminal(R_PAREN)
-
-    private fun recognizePOINTORVAR(): Boolean =
-        when (last!!.value) {
-            L_PAREN -> recognizePOINT()
-            IDENTIFIER -> recognizeTerminal(IDENTIFIER)
-            else -> false
+        private fun parseRIVER(functionEnv: MutableMap<String, Function>): River {
+            parseTerminal(RIVER)
+            val riverName=parseTerminal(IDENTIFIER)
+            parseTerminal(LB_PAREN)
+            val body=parseCOMMANDS(functionEnv)
+            parseTerminal(RB_PAREN)
+            return River(riverName, body, mutableMapOf(), End)
         }
 
-    private fun recognizeFOR(): Boolean =
-        recognizeTerminal(FOR) && recognizeTerminal(L_PAREN) && recognizeSPR() && recognizeTerminal(TO)
-                && recognizeSPR() && recognizeTerminal(R_PAREN) && recognizeTerminal(LB_PAREN) && recognizeCOMMANDS()
-                && recognizeTerminal(RB_PAREN)
-
-    private fun recognizeIF(): Boolean =
-        recognizeTerminal(IF) && recognizeTerminal(L_PAREN) && recognizeSPR() && recognizeOPERATOR() && recognizeSPR()
-                && recognizeTerminal(R_PAREN) && recognizeTerminal(LB_PAREN) && recognizeCOMMANDS()
-                && recognizeTerminal(RB_PAREN) && recognizeELSEORELSEIFSELSE()
-
-    private fun recognizeELSEORELSEIFSELSE(): Boolean =
-        when (last!!.value) {
-            ELSE -> recognizeELSE()
-            ELSE_IF -> recognizeELSEIFSELSE()
-            LINE, BEND, BOX, FOR, IF, VAR, CONST, IDENTIFIER, RB_PAREN, RETURN -> true
-            else -> false
+        private fun parsePARK(functionEnv: MutableMap<String, Function>): Park {
+            parseTerminal(PARK)
+            val parkName=parseTerminal(IDENTIFIER)
+            parseTerminal(LB_PAREN)
+            val body=parseCOMMANDS(functionEnv)
+            parseTerminal(RB_PAREN)
+            return Park(parkName, body, mutableMapOf(), End)
         }
 
-    private fun recognizeELSEIFSELSE(): Boolean = recognizeELSEIFS() && recognizeELSE()
+        private fun parseMARKPOINT(): Stmt =
+            when (last!!.value) {
+                BIKE_STAND -> parseBIKESTAND()
+                BIKE_SHED -> parseBIKESHED()
+                M_BAJK -> parseMBAJK()
+                RENT_BIKE -> parseRENTBIKE()
+                else -> error()
+            }
 
-    private fun recognizeELSEIFS(): Boolean = recognizeELSEIF() && recognizeMOREELSEIFS()
-
-    private fun recognizeMOREELSEIFS(): Boolean =
-        when (last!!.value) {
-            ELSE_IF -> recognizeELSEIF() && recognizeMOREELSEIFS()
-            ELSE -> true
-            else -> false
+        private fun parseBIKESTAND(): BikeStand {
+            parseTerminal(BIKE_STAND)
+            parseTerminal(L_PAREN)
+            val capacity=parseInt()
+            parseTerminal(R_PAREN)
+            val bikeStandName=parseTerminal(IDENTIFIER)
+            parseTerminal(LB_PAREN)
+            val point=parsePOINT()
+            parseTerminal(RB_PAREN)
+            return BikeStand(bikeStandName, capacity, point, End)
         }
 
-    private fun recognizeELSEIF(): Boolean =
-        recognizeTerminal(ELSE_IF) && recognizeTerminal(L_PAREN) && recognizeSPR() && recognizeOPERATOR() && recognizeSPR()
-                && recognizeTerminal(R_PAREN) && recognizeTerminal(LB_PAREN) && recognizeCOMMANDS() && recognizeTerminal(
-            RB_PAREN
-        )
-
-    private fun recognizeELSE(): Boolean =
-        recognizeTerminal(ELSE) && recognizeTerminal(LB_PAREN) && recognizeCOMMANDS() && recognizeTerminal(RB_PAREN)
-
-    private fun recognizeOPERATOR(): Boolean =
-        when (last!!.value) {
-            LESS -> recognizeTerminal(LESS)
-            LESS_OR_EQUAL -> recognizeTerminal(LESS_OR_EQUAL)
-            MORE_OR_EQUAL -> recognizeTerminal(MORE_OR_EQUAL)
-            MORE -> recognizeTerminal(MORE)
-            EQUAL -> recognizeTerminal(EQUAL)
-            NOT_EQUAL -> recognizeTerminal(NOT_EQUAL)
-            else -> false
+        private fun parseBIKESHED(): BikeShed {
+            parseTerminal(BIKE_SHED)
+            val bikeShedName=parseTerminal(IDENTIFIER)
+            parseTerminal(LB_PAREN)
+            val point=parsePOINT()
+            parseTerminal(RB_PAREN)
+            return BikeShed(bikeShedName, point, End)
         }
 
-    private fun recognizeSPR(): Boolean =
-        when (last!!.value) {
-            FLOAT -> recognizeTerminal(FLOAT)
-            INT -> recognizeTerminal(INT)
-            IDENTIFIER -> recognizeTerminal(IDENTIFIER)
-            else -> false
+        private fun parseMBAJK(): MBajk {
+            parseTerminal(M_BAJK)
+            val mBajkName=parseTerminal(IDENTIFIER)
+            parseTerminal(LB_PAREN)
+            val point=parsePOINT()
+            parseTerminal(RB_PAREN)
+            return MBajk(mBajkName, point, End)
         }
 
-    private fun recognizePOINT(): Boolean =
-        recognizeTerminal(L_PAREN) && recognizeEXPR() && recognizeTerminal(COMMA) && recognizeEXPR()
-                && recognizeTerminal(R_PAREN)
-
-    private fun recognizeVARIABLE(): Boolean =
-        recognizeTerminal(VAR) && recognizeTerminal(IDENTIFIER) && recognizeTerminal(ASSIGN) && recognizeVALUE()
-
-    private fun recognizeCONST(): Boolean =
-        recognizeTerminal(CONST) && recognizeTerminal(IDENTIFIER) && recognizeTerminal(ASSIGN) && recognizeVALUE()
-
-    private fun recognizeASSIGNMENT(): Boolean =
-        recognizeTerminal(IDENTIFIER) && recognizeTerminal(ASSIGN) && recognizeVALUE()
-
-    private fun recognizeVALUE(): Boolean =
-        when (last!!.value) {
-            FLOAT -> recognizeTerminal(FLOAT)
-            INT -> recognizeTerminal(INT)
-            IDENTIFIER -> recognizeTerminal(IDENTIFIER)
-            L_PAREN -> recognizePOINT()
-            CALL -> recognizeCALL()
-            else -> false
+        private fun parseRENTBIKE(): RentBike {
+            parseTerminal(RENT_BIKE)
+            val rentBikeName=parseTerminal(IDENTIFIER)
+            parseTerminal(LB_PAREN)
+            val point=parsePOINT()
+            parseTerminal(RB_PAREN)
+            return RentBike(rentBikeName, point, End)
         }
 
-    private fun recognizeCALL(): Boolean =
-        recognizeTerminal(CALL) && recognizeTerminal(IDENTIFIER) && recognizeTerminal(L_PAREN) && recognizeCALLARGS()
-                && recognizeTerminal(R_PAREN)
-
-    private fun recognizeCALLARGS(): Boolean = recognizeVARIABLENAMEORNUMBER() && recognizeMOREVORN()
-
-    private fun recognizeMOREVORN(): Boolean =
-        when (last!!.value) {
-            COMMA -> recognizeTerminal(COMMA) && recognizeVARIABLENAMEORNUMBER() && recognizeMOREVORN()
-            R_PAREN -> true
-            else -> false
+        private fun parseCOMMANDS(functionEnv: MutableMap<String, Function>): Stmt{
+            val command=parseCOMMAND(functionEnv)
+            return parseMORECOMMANDS(command, command, functionEnv)
         }
 
-    private fun recognizeVARIABLENAMEORNUMBER(): Boolean =
-        when (last!!.value) {
-            FLOAT -> recognizeTerminal(FLOAT)
-            INT -> recognizeTerminal(INT)
-            IDENTIFIER -> recognizeTerminal(IDENTIFIER)
-            else -> false
+        private fun parseMORECOMMANDS(fullCommand: Stmt, lastCommand: Stmt, functionEnv: MutableMap<String, Function>): Stmt {
+            when (last!!.value) {
+                LINE, BEND, BOX, FOR, IF, VAR, CONST, IDENTIFIER -> {
+                    val nextCommand = parseCOMMAND(functionEnv)
+                    return if (lastCommand is If) {
+                        var command = lastCommand
+                        while (command.next != End && command.next != Null) {
+                            command = command.next
+                        }
+                        command.next = nextCommand
+                        parseMORECOMMANDS(fullCommand, nextCommand, functionEnv)
+                    }else {
+                        lastCommand.next = nextCommand
+                        parseMORECOMMANDS(fullCommand, nextCommand, functionEnv)
+                    }
+                }
+                RB_PAREN, RETURN -> {
+                    lastCommand.next = End
+                    return fullCommand
+                }
+                else -> error()
+            }
         }
 
-    private fun recognizeFUNCTION(): Boolean =
-        recognizeTerminal(FUNC) && recognizeTerminal(IDENTIFIER) && recognizeTerminal(L_PAREN) && recognizeARGS() &&
-                recognizeTerminal(R_PAREN) && recognizeTerminal(LB_PAREN) && recognizeCOMMANDS() && recognizeRETURN()
-                && recognizeTerminal(RB_PAREN)
+        private fun parseCOMMAND(functionEnv: MutableMap<String, Function>): Stmt =
+            when (last!!.value) {
+                LINE -> parseLINE()
+                BEND -> parseBEND()
+                BOX -> parseBOX()
+                FOR -> parseFOR(functionEnv)
+                IF -> parseIF(functionEnv)
+                VAR -> parseVARIABLE(functionEnv)
+                CONST -> parseCONST(functionEnv)
+                IDENTIFIER -> parseASSIGNMENT()
+                else -> error()
+            }
 
-    private fun recognizeARGS(): Boolean =
-        when (last!!.value) {
-            IDENTIFIER -> recognizeTerminal(IDENTIFIER) && recognizeMOREVARS()
-            R_PAREN -> true
-            else -> false
+        private fun parseLINE(): Line {
+            parseTerminal(LINE)
+            parseTerminal(L_PAREN)
+            val point1=parsePOINTORVAR()
+            parseTerminal(COMMA)
+            val point2=parsePOINTORVAR()
+            parseTerminal(COMMA)
+            val width=parseWIDTH()
+            parseTerminal(R_PAREN)
+            return Line(point1, point2, width, Null)
         }
 
-    private fun recognizeMOREVARS(): Boolean =
-        when (last!!.value) {
-            COMMA -> recognizeTerminal(COMMA) && recognizeTerminal(IDENTIFIER) && recognizeMOREVARS()
-            R_PAREN -> true
-            else -> false
+        private fun parseBEND(): Bend {
+            parseTerminal(BEND)
+            parseTerminal(L_PAREN)
+            val point1=parsePOINTORVAR()
+            parseTerminal(COMMA)
+            val point2=parsePOINTORVAR()
+            parseTerminal(COMMA)
+            val angle=parseANGLE()
+            parseTerminal(R_PAREN)
+            return Bend(point1, point2, angle, Null)
         }
 
-    private fun recognizeRETURN(): Boolean = recognizeTerminal(RETURN) && recognizeRETURNVALUE()
+        private fun parseANGLE(): Expr =
+            when (last!!.value) {
+                INT -> parseInt()
+                IDENTIFIER -> parseVar()
+                else -> error()
+            }
 
-    private fun recognizeRETURNVALUE(): Boolean =
-        when (last!!.value) {
-            L_PAREN -> recognizePOINT()
-            FLOAT -> recognizeTerminal(FLOAT)
-            IDENTIFIER -> recognizeTerminal(IDENTIFIER)
-            INT -> recognizeTerminal(INT)
-            else -> false
+        private fun parseWIDTH(): Expr =
+            when (last!!.value) {
+                INT -> parseInt()
+                IDENTIFIER -> parseVar()
+                else -> error()
+            }
+
+        private fun parseBOX(): Box {
+            parseTerminal(BOX)
+            parseTerminal(L_PAREN)
+            val point1=parsePOINTORVAR()
+            parseTerminal(COMMA)
+            val point2=parsePOINTORVAR()
+            parseTerminal(R_PAREN)
+            return Box(point1, point2, Null)
         }
 
-    private fun recognizeEXPR(): Boolean = recognizeE()
+        private fun parsePOINTORVAR(): Expr =
+            when (last!!.value) {
+                L_PAREN -> parsePOINT()
+                IDENTIFIER -> parseVar()
+                else -> error()
+            }
 
-    private fun recognizeE(): Boolean = recognizeT() && recognizeEE()
-
-    private fun recognizeEE(): Boolean =
-        when (last!!.value) {
-            PLUS -> recognizeTerminal(PLUS) && recognizeT() && recognizeEE()
-            MINUS -> recognizeTerminal(MINUS) && recognizeT() && recognizeEE()
-            R_PAREN, COMMA -> true
-            else -> false
+        private fun parseFOR(functionEnv: MutableMap<String, Function>): For {
+            parseTerminal(FOR)
+            parseTerminal(L_PAREN)
+            val spr1=parseSPR()
+            parseTerminal(TO)
+            val spr2=parseSPR()
+            parseTerminal(R_PAREN)
+            parseTerminal(LB_PAREN)
+            val body=parseCOMMANDS(functionEnv)
+            parseTerminal(RB_PAREN)
+            return For(spr1, spr2, body, Null)
         }
 
-    private fun recognizeT(): Boolean = recognizeX() && recognizeTT()
-
-    private fun recognizeTT(): Boolean =
-        when (last!!.value) {
-            TIMES -> recognizeTerminal(TIMES) && recognizeX() && recognizeTT()
-            DIVIDE -> recognizeTerminal(DIVIDE) && recognizeX() && recognizeTT()
-            R_PAREN, COMMA, PLUS, MINUS -> true
-            else -> false
+        private fun parseIF(functionEnv: MutableMap<String, Function>): If {
+            parseTerminal(IF)
+            parseTerminal(L_PAREN)
+            val spr1=parseSPR()
+            val operator=parseOPERATOR()
+            val spr2=parseSPR()
+            parseTerminal(R_PAREN)
+            parseTerminal(LB_PAREN)
+            val body=parseCOMMANDS(functionEnv)
+            parseTerminal(RB_PAREN)
+            val next=parseELSEORELSEIFSELSE(functionEnv)
+            return If(spr1, spr2, operator, body, next)
         }
 
-    private fun recognizeX(): Boolean = recognizeY() && recognizeXX()
+        private fun parseELSEORELSEIFSELSE(functionEnv: MutableMap<String, Function>): Stmt =
+            when (last!!.value) {
+                ELSE -> parseELSE(functionEnv)
+                ELSE_IF -> parseELSEIFSELSE(functionEnv)
+                LINE, BEND, BOX, FOR, IF, VAR, CONST, IDENTIFIER, RB_PAREN, RETURN -> End
+                else -> error()
+            }
 
-    private fun recognizeXX(): Boolean =
-        when (last!!.value) {
-            POW -> recognizeTerminal(POW) && recognizeX()
-            R_PAREN, COMMA, PLUS, MINUS, TIMES, DIVIDE -> true
-            else -> false
+        private fun parseELSEIFSELSE(functionEnv: MutableMap<String, Function>): Stmt {
+            val elseifs=parseELSEIFS(functionEnv)
+            var itElseIfs=elseifs
+            while(itElseIfs.next!=End && itElseIfs.next!=Null){
+                itElseIfs=itElseIfs.next
+            }
+            val elsee=parseELSE(functionEnv)
+            itElseIfs.next=elsee
+            return elseifs
         }
 
-    private fun recognizeY(): Boolean =
-        when (last!!.value) {
-            MINUS -> recognizeTerminal(MINUS) && recognizeF()
-            PLUS -> recognizeTerminal(PLUS) && recognizeF()
-            L_PAREN, FLOAT, INT, IDENTIFIER -> recognizeF()
-            else -> false
+        private fun parseELSEIFS(functionEnv: MutableMap<String, Function>): Stmt {
+            val elseif=parseELSEIF(functionEnv)
+            val moreEleseIfs=parseMOREELSEIFS(functionEnv)
+            elseif.next = moreEleseIfs
+            return elseif
         }
 
-    private fun recognizeF(): Boolean =
-        when (last!!.value) {
-            L_PAREN -> recognizeTerminal(L_PAREN) && recognizeE() && recognizeTerminal(R_PAREN)
-            FLOAT -> recognizeTerminal(FLOAT)
-            IDENTIFIER -> recognizeTerminal(IDENTIFIER)
-            INT -> recognizeTerminal(INT)
-            else -> false
+        private fun parseMOREELSEIFS(functionEnv: MutableMap<String, Function>): Stmt {
+            return when (last!!.value) {
+                ELSE_IF -> {
+                    val elseif = parseELSEIF(functionEnv)
+                    val moreElseIfs = parseMOREELSEIFS(functionEnv)
+                    elseif.next = moreElseIfs
+                    elseif
+                }
+                ELSE -> {
+                    End
+                }
+                else -> error()
+            }
         }
 
+        private fun parseELSEIF(functionEnv: MutableMap<String, Function>): ElseIf {
+            parseTerminal(ELSE_IF)
+            parseTerminal(L_PAREN)
+            val spr1=parseSPR()
+            val operator=parseOPERATOR()
+            val spr2=parseSPR()
+            parseTerminal(R_PAREN)
+            parseTerminal(LB_PAREN)
+            val body=parseCOMMANDS(functionEnv)
+            parseTerminal(RB_PAREN)
+            return ElseIf(spr1, spr2, operator, body, End)
+        }
 
-    private fun recognizeTerminal(value: Int) =
-        if (last?.value == value) {
-            last = scanner.getToken()
-            true
-        } else false
+        private fun parseELSE(functionEnv: MutableMap<String, Function>): Else {
+            parseTerminal(ELSE)
+            parseTerminal(LB_PAREN)
+            val body=parseCOMMANDS(functionEnv)
+            parseTerminal(RB_PAREN)
+            return Else(body, End)
+        }
+
+        private fun parseOPERATOR(): String =
+            when (last!!.value) {
+                LESS -> parseTerminal(LESS)
+                LESS_OR_EQUAL -> parseTerminal(LESS_OR_EQUAL)
+                MORE_OR_EQUAL -> parseTerminal(MORE_OR_EQUAL)
+                MORE -> parseTerminal(MORE)
+                EQUAL -> parseTerminal(EQUAL)
+                NOT_EQUAL -> parseTerminal(NOT_EQUAL)
+                else -> error()
+            }
+
+        private fun parseSPR(): Expr =
+            when (last!!.value) {
+                FLOAT -> parseFloat()
+                INT -> parseInt()
+                IDENTIFIER -> parseVar()
+                else -> error()
+            }
+
+        private fun parsePOINT(): Point {
+            parseTerminal(L_PAREN)
+            val longitude = parseEXPR()
+            parseTerminal(COMMA)
+            val latitude = parseEXPR()
+            parseTerminal(R_PAREN)
+            return Point(longitude, latitude)
+        }
+
+        private fun parseVARIABLE(functionEnv: MutableMap<String, Function>): DefineVar {
+            parseTerminal(VAR)
+            val name=parseTerminal(IDENTIFIER)
+            parseTerminal(ASSIGN)
+            val value=parseVALUE(functionEnv)
+            return DefineVar(name, value, Null)
+        }
+
+        private fun parseCONST(functionEnv: MutableMap<String, Function>): DefineConst {
+            parseTerminal(CONST)
+            val name=parseTerminal(IDENTIFIER)
+            parseTerminal(ASSIGN)
+            val value=parseVALUE(functionEnv)
+            return DefineConst(name, value, Null)
+        }
+
+        private fun parseASSIGNMENT(): Assignment {
+            val name=parseTerminal(IDENTIFIER)
+            parseTerminal(ASSIGN)
+            val value=parseEXPR()
+            return Assignment(name, value, Null)
+        }
+
+        private fun parseVALUE(functionEnv: MutableMap<String, Function>): Expr =
+            when (last!!.value) {
+                FLOAT -> parseFloat()
+                INT -> parseInt()
+                IDENTIFIER -> parseVar()
+                L_PAREN -> parsePOINT()
+                CALL -> parseCALL(functionEnv)
+                else -> error()
+            }
+
+        private fun parseCALL(functionEnv: MutableMap<String, Function>): Expr{
+            parseTerminal(CALL)
+            val funcName=parseTerminal(IDENTIFIER)
+            parseTerminal(L_PAREN)
+            val callArgs: MutableList<Expr> = parseCALLARGS()
+            parseTerminal(R_PAREN)
+            if(functionEnv.contains(funcName)){
+                val function=functionEnv[funcName]
+                return Call(function!!, callArgs)
+            }else{
+                throw Exception("Function with name: $funcName doesn't exist")
+            }
+        }
+
+        private fun parseCALLARGS(): MutableList<Expr> {
+            var list = mutableListOf<Expr>()
+            list.add(parseVARIABLENAMEORNUMBER())
+            list = parseMOREVORN(list)
+            return list
+        }
+
+        private fun parseMOREVORN(list: MutableList<Expr>): MutableList<Expr> {
+            return when (last!!.value) {
+                COMMA -> {
+                    parseTerminal(COMMA)
+                    list.add(parseVARIABLENAMEORNUMBER())
+                    parseMOREVORN(list)
+                }
+                R_PAREN -> list
+                else -> error()
+            }
+        }
+
+        private fun parseVARIABLENAMEORNUMBER(): Expr =
+            when (last!!.value) {
+                FLOAT -> parseFloat()
+                INT -> parseInt()
+                IDENTIFIER -> parseVar()
+                else -> error()
+            }
+
+        private fun parseFUNCTION(functionEnv: MutableMap<String, Function>): Pair<String, Function> {
+            parseTerminal(FUNC)
+            val functionName: String = parseTerminal(IDENTIFIER)
+            parseTerminal(L_PAREN)
+            val params: MutableList<String> = parsePARAMS(mutableListOf())
+            parseTerminal(R_PAREN)
+            parseTerminal(LB_PAREN)
+            val body = parseCOMMANDS(functionEnv)
+            var itBody=body
+            while(itBody.next!=End && itBody.next!=Null){
+                itBody=itBody.next
+            }
+            val returnSt = parseRETURN()
+            itBody.next=returnSt
+            parseTerminal(RB_PAREN)
+            val function = Function(params, body, emptyMap(), End)
+            return Pair(functionName, function)
+        }
+
+        private fun parsePARAMS(params: MutableList<String>): MutableList<String> {
+            return when (last!!.value) {
+                IDENTIFIER -> {
+                    params.add(parseTerminal(IDENTIFIER))
+                    parseMOREPARAMS(params)
+                }
+                R_PAREN -> {
+                    params
+                }
+                else -> error()
+            }
+        }
+
+        private fun parseMOREPARAMS(params: MutableList<String>): MutableList<String> {
+            return when (last!!.value) {
+                COMMA -> {
+                    parseTerminal(COMMA)
+                    params.add(parseTerminal(IDENTIFIER))
+                    parseMOREPARAMS(params)
+                }
+                R_PAREN -> {
+                    params
+                }
+                else -> error()
+            }
+        }
+
+        private fun parseRETURN(): Return {
+            parseTerminal(RETURN)
+            val returnValue=parseRETURNVALUE()
+            return Return(returnValue, End)
+        }
+
+        private fun parseRETURNVALUE(): Expr {
+            return when (last!!.value) {
+                L_PAREN -> {
+                    parsePOINT()
+                }
+                FLOAT -> {
+                    parseFloat()
+                }
+                IDENTIFIER -> {
+                    parseVar()
+                }
+                INT -> {
+                    parseInt()
+                }
+                else -> error()
+            }
+        }
+
+        private fun parseEXPR(): Expr = parseE()
+
+        private fun parseE(): Expr {
+            val value = parseT()
+            return parseEE(value)
+        }
+
+        private fun parseEE(accumulator: Expr): Expr {
+            when (last!!.value) {
+                PLUS -> {
+                    parseTerminal(PLUS)
+                    val value = parseT()
+                    return parseEE(Add(accumulator, value))
+                }
+                MINUS -> {
+                    parseTerminal(MINUS)
+                    val value = parseT()
+                    return parseEE(Sub(accumulator, value))
+                }
+                R_PAREN, COMMA, LINE, BEND, BOX, FOR, IF, VAR, CONST, IDENTIFIER, RB_PAREN, RETURN -> {
+                    return accumulator
+                }
+                else -> error()
+            }
+        }
+
+        private fun parseT(): Expr{
+            val value = parseX()
+            return parseTT(value)
+        }
+
+        private fun parseTT(accumulator: Expr): Expr =
+            when (last!!.value) {
+                TIMES -> {
+                    parseTerminal(TIMES)
+                    val value = parseX()
+                    parseTT(Mul(accumulator, value))
+                }
+                DIVIDE -> {
+                    parseTerminal(DIVIDE)
+                    val value = parseX()
+                    parseTT(Div(accumulator, value))
+                }
+                R_PAREN, COMMA, PLUS, MINUS, LINE, BEND, BOX, FOR, IF, VAR, CONST, IDENTIFIER, RB_PAREN, RETURN -> accumulator
+                else -> error()
+            }
+
+        private fun parseX(): Expr{
+            val value = parseY()
+            return parseXX(value)
+        }
+
+        private fun parseXX(accumulator: Expr): Expr {
+            return when (last!!.value) {
+                POW -> {
+                    parseTerminal(POW)
+                    val value = parseX()
+                    Pow(accumulator, value)
+                }
+                R_PAREN, COMMA, PLUS, MINUS, TIMES, DIVIDE, LINE, BEND, BOX, FOR, IF, VAR, CONST, IDENTIFIER, RB_PAREN, RETURN -> {
+                    accumulator
+                }
+                else -> {
+                    error()
+                }
+            }
+        }
+
+        private fun parseY(): Expr {
+            when (last!!.value) {
+                MINUS -> {
+                    parseTerminal(MINUS)
+                    val value = parseF()
+                    return UnaryMinus(value)
+                }
+                PLUS -> {
+                    parseTerminal(PLUS)
+                    val value = parseF()
+                    return UnaryPlus(value)
+                }
+                L_PAREN, FLOAT, INT, IDENTIFIER, LINE, BEND, BOX, FOR, IF, VAR, CONST, RB_PAREN, RETURN -> {
+                    return parseF()
+                }
+                else -> {
+                    error()
+                }
+            }
+        }
+
+        private fun parseF(): Expr {
+            when (last!!.value) {
+                L_PAREN -> {
+                    parseTerminal(L_PAREN)
+                    val result = parseE()
+                    parseTerminal(R_PAREN)
+                    return result
+                }
+                FLOAT -> {
+                    return parseFloat()
+                }
+                IDENTIFIER -> {
+                    return parseVar()
+                }
+                INT -> {
+                    return parseInt()
+                }
+                else -> error()
+            }
+        }
+
+        private fun parseTerminal(value: Int): String =
+            if (last?.value == value) {
+                val lexeme = last!!.lexeme
+                last = scanner.getToken()
+                lexeme
+            }
+            else error()
+
+        private fun parseFloat() = Num(parseTerminal(FLOAT).toDouble())
+
+        private fun parseVar() = Var(parseTerminal(IDENTIFIER))
+
+        private fun parseInt() = Num(parseTerminal(INT).toDouble())
 }
 
-fun main() {
-    if (TaskParser(StreamScanner(Example, "city Velenje{bikeTourPath turpot{bend((2,2), (3,2), 4)}}".byteInputStream())).recognize()) {
-        print("accept")
-    } else {
-        print("reject")
-    }
+fun main(args: Array<String>) {
+    val program = TaskParser(StreamScanner(Example, File(args[0]).inputStream())).parse()
+    println(program.evalPartial(mutableMapOf()).toGeoJSON())
 }

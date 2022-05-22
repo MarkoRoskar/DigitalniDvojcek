@@ -14,10 +14,10 @@ RIVER ::= river name { COMMANDS }
 PARK ::= park name { COMMANDS }
 
 MARKPOINT ::= BIKESTAND | BIKESHED | MBAJK | RENTBIKE
-BIKESTAND ::= bikeStand(integer) name { POINTORVAR }
-BIKESHED ::= bikeShed name { POINTORVAR }
-MBAJK ::= mBajk name { POINTORVAR }
-RENTBIKE ::= rentBike name { POINTORVAR }
+BIKESTAND ::= bikeStand(integer) name { POINT }
+BIKESHED ::= bikeShed name { POINT }
+MBAJK ::= mBajk name { POINT }
+RENTBIKE ::= rentBike name { POINT }
 
 
 COMMANDS ::= COMMAND MORECOMMANDS
@@ -42,15 +42,15 @@ SPR ::= float | variable_name | integer
 POINT ::= ( EXPR , EXPR )
 VARIABLE ::= var variable_name = VALUE  //variable_name = [a-zA-Z]+
 CONST ::= const variable_name = VALUE
-ASSIGNMENT ::= variable_name = VALUE
+ASSIGNMENT ::= variable_name = EXPR
 VALUE ::= float | integer | variable_name | POINT | CALL
 CALL ::= call name ( CALLARGS )
 CALLARGS ::= VARIABLENAMEORNUMBER MOREVORN
 MOREVORN ::= , VARIABLENAMEORNUMBER MOREVORN | epsilon
 VARIABLENAMEORNUMBER ::= variable_name | integer | float
 FUNCTION ::= func name ( ARGS ) { COMMANDS RETURN }
-ARGS ::= variable_name MOREVARS | epsilon
-MOREVARS ::= , variable_name MOREVARS | epsilon
+ARGS ::= variable_name MOREARGS | epsilon
+MOREARGS ::= , variable_name MOREARGS | epsilon
 RETURN ::= return RETURNVALUE
 RETURNVALUE ::= POINT | float | variable_name | integer
 EXPR ::= E
