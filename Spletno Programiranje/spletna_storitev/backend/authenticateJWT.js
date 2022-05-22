@@ -8,6 +8,8 @@ module.exports = {
      * @param res HTTP response
      * @param next next function call
      * 
+     * middleware function
+     * 
      * retrieves JWT token from the authorization header from the HTTP request
      * authorization header structure: Bearer token (split on first space)
      * if token is not null the user to whom the JWT belongs is queried

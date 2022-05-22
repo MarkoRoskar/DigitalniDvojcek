@@ -15,7 +15,10 @@ module.exports = {
                     error: err
                 });
             }
-            return res.json({success: true, auth: "jwt", "Mbajks": MBajks});
+            res.append('Content-Range', `mbajks 0-${MBajks.length}/${MBajks.length}`);
+            res.append('Access-Control-Expose-Headers', 'Content-Range');
+            //return res.json({success: true, auth: "jwt", "Mbajks": MBajks});
+            return res.json(MBajks);
             //return res.json(MBajks.filter(mbajk => mbajk.number === req.body.number));
         });
     },
@@ -62,7 +65,8 @@ module.exports = {
      */
     show: function (req, res) {
         var id = req.params.id;
-        MbajkModel.findOne({_id: id}, function (err, MBajk) {
+        console.log(id);
+        MbajkModel.findOne({id: id}, function (err, MBajk) {
             if (err) {
                 return res.status(500).json({
                     success: false,
@@ -78,7 +82,7 @@ module.exports = {
                 });
             }
 
-            return res.json({success:true, "Mbajk": MBajk});
+            return res.json(MBajk);
         });
     },
 
@@ -145,6 +149,8 @@ module.exports = {
                 ]
                 
                 var MBajk = new MbajkModel({
+                    // random ID generated, required by the admin interface
+                    id : require("crypto").randomBytes(64).toString('hex'),
                     number : parseInt(req.body.number),
                     name : req.body.name,
                     address : req.body.address,

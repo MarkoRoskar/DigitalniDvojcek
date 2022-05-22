@@ -53,7 +53,7 @@ function Graphs() {
 
 
             // drawing the graph
-            const margin = { top: 100, right: 30, bottom: 100, left: 50 };
+            const margin = { top: 100, right: 30, bottom: 100, left: 30 };
             const width = parseInt(D3.select("#d3-graph").style("width")) - margin.left - margin.right;
             const height = parseInt(D3.select("#d3-graph").style("height")) - margin.top - margin.bottom;
             
@@ -141,17 +141,17 @@ function Graphs() {
                 .attr("x", (width/2))
                 .attr("y", (margin.top/10 - 50))
                 .attr("text-anchor", "middle")
-                .attr("font-size", "25px")
-                .attr("stroke", "black")
+                .attr("font-size", "30px")
+                .attr("font-weight", "bold")
                 .text("ŠTEVILO KOLES NA POSAMEZNIH MBAJK POSTAJALIŠČ")
 
             // x-axis text
             svg.append("text")
-                .attr("x", (width/2-100))
+                .attr("x", (width/2-140))
                 .attr("y", 650)
                 .attr("text-ancor", "middle")
-                .attr("font-size", "20px")
-                .attr("stroke", "black")
+                .attr("font-size", "25px")
+                .attr("font-weight", "bold")
                 .text("ŠTEVILKE POSTAJALIŠČ")
 
         })
@@ -164,7 +164,7 @@ function Graphs() {
                 <svg ref={d3Graph}></svg>
             </div>
             <hr/>
-            <div>
+            <div id="legend">
                 <h1 id="legend-title">LEGENDA</h1>
                 <div id="color-legend">
                     <div id="legend-1">

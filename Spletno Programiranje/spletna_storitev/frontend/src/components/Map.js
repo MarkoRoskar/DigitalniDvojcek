@@ -10,10 +10,8 @@ import { Icon } from 'leaflet';
 import MBajkLocations from '../data/mbajk_locations.json';
 import bikePathLocations from '../data/bikepaths.json';
 //import bikeStandLocations from '../data/bikestand_locations.json';
-// displaying remote json
-import useSwr from 'swr';
-import { Button } from 'antd';
-import MapButton from './MapButton';
+
+import useSwr from 'swr';	// displaying remote json (web scraping)
 
 
 const mbajkIcon = new Icon({
@@ -43,6 +41,37 @@ function Map() {
 	const { data, error } = useSwr(url, { fetcher });
 
 	const mbajk_locations = data && !error ? data : [];
+	console.log(mbajk_locations);
+
+	/*const saveMBajkLocations = async function() {
+		for (var i in mbajk_locations) {
+			console.log(mbajk_locations[i])
+			const res = await fetch("http://localhost:3001/mbajk", {
+				method: "POST",
+				credentials: "include",
+				body: JSON.stringify ({
+					number: mbajk_locations[i].number,
+					name: mbajk_locations[i].name,
+					address: mbajk_locations[i].address,
+					geometry: {
+						type: "Point",
+						coordinates: [ mbajk_locations[i].position.latitude, mbajk_locations[i].position.longitude ]
+					},
+					currentStatus: mbajk_locations[i].status,
+					currentAvailabilities: {
+						bikesAvailable: mbajk_locations[i].totalStands.availabilities.bikes,
+						parkSpots: mbajk_locations[i].totalStands.availabilities.stands
+					},
+					historyAvailabilities: [],
+					lastUpdateSensor: mbajk_locations[i].lastUpdate
+				})
+			});
+			const d = await res.json();
+			console.log(d)
+		}
+	}
+	saveMBajkLocations();*/
+
 
 	const center = [51.505, -0.09];
 
@@ -127,7 +156,7 @@ function Map() {
 	return (
 
 		<div>
-		<form id="filter-form">
+		<form className="card" id="filter-form">
 			<table>
 			<tr>
 				<td><input type="checkbox" id="mbajk" name="mbajk" value="mbajk" checked={MBajkChecked} onChange={MBajkFilter}></input></td>
@@ -163,15 +192,6 @@ function Map() {
 			attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 			/>
 
-
-			<LayersControl position="topright">
-			<LayersControl.Overlay name="mbajk locations">
-				<Marker position={center}>
-				</Marker>
-			</LayersControl.Overlay>
-			</LayersControl>
-
-
 			{MBajkChecked ?
 				mbajk_locations.map(location => (
 					<Marker
@@ -185,7 +205,7 @@ function Map() {
 							<h3>št. stojal: {location.totalStands.availabilities.stands}</h3>
 							<h3>{location.status}</h3>
 						</Popup>
-					</Marker>				
+					</Marker>		
 				))
 			:
 				<></>

@@ -31,6 +31,7 @@ var cors = require('cors');
 var allowedOrigins = ['http://localhost:3000', 'http://localhost:3001'];
 app.use(cors({
   credentials: true,
+  //exposedHeaders: "X-Total-Count",
   origin: function(origin, callback) {
     // allow requests with no origin (mobile apps, curl)
     if (!origin) return callback(null, true);

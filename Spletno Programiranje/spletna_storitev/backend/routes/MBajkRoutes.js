@@ -9,7 +9,7 @@ const jwtAuth = require('../authenticateJWT.js');
 /**
  * GET
  */
-router.get('/', jwtAuth.authenticateToken, MBajkController.list);
+router.get('/', MBajkController.list);
 router.get('/closeTo', MBajkController.near);
 router.get('/:id', MBajkController.show);
 

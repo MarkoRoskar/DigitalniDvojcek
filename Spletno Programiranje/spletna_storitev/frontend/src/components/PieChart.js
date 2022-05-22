@@ -8,6 +8,8 @@ function PieChart() {
     // pie chart hook
     const pieChart = useRef();
 
+    const [ streets, setStreets ] = useState([]);
+
     useEffect(() => {
         fetch("https://api.jcdecaux.com/vls/v3/stations?apiKey=frifk0jbxfefqqniqez09tw4jvk37wyf823b5j1i&contract=maribor")
         .then(res => res.json())
@@ -45,6 +47,9 @@ function PieChart() {
                 CountsByStreet.push({street: street, count: count, bikes: bikeCount, stands: standCount});
             });
             console.log(CountsByStreet);
+
+            // for later use in the return statement with JSX
+            setStreets(CountsByStreet);
 
 
             const pieData = D3.pie().value(d => d.count)(CountsByStreet);
@@ -96,11 +101,25 @@ function PieChart() {
         })
     }, [])
 
+    // first sort on mbajk locations count, then on available stands, lastly on available bikes
+    streets.sort((a, b) => b.count - a.count || b.stands - a.stands || b.bikes - a.bikes);
+
+    // split array in half
+    const halfWayIndex = Math.floor(streets.length / 2);
+    const firstStreets = streets.slice(0, halfWayIndex);
+    const lastStreets = streets.slice(halfWayIndex);
+
     return (
         <div>
             <h1 id="title">ŠTEVILO MBAJK POSTAJALIŠČ PO POSAMEZNIH ULICAH</h1>
             <div id="d3-pie-chart">
                 <svg ref={pieChart}></svg>
+            </div>
+            <div id="streets-list-2">
+                {lastStreets.map(street => <h4 id="street">{street.street} - {street.count} postajališč<br/>{street.bikes} koles in {street.stands} parkirnih mest</h4>)}
+            </div>
+            <div id="streets-list-1">
+                {firstStreets.map(street => <h4 id="street">{street.street} - {street.count} postajališč<br/>{street.bikes} koles in {street.stands} parkirnih mest</h4>)}
             </div>
         </div>
     );

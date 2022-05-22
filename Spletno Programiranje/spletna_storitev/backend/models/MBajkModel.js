@@ -5,6 +5,10 @@ var Schema   = mongoose.Schema;
  * definition of MBajkSchema attributes
  */
 var MBajkSchema = new Schema({
+	'id': {
+		type: String,
+		required: true
+	},
 	'number' : {
 		type : Number,
 		required : true
