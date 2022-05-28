@@ -23,7 +23,7 @@ park: 'park ' name '{' commands '}';
 marked: bikestand | bikeshed | mbajk;
 bikestand: 'bikeStand ' name point;
 bikeshed: 'bikeShed ' name point;
-mbajk: 'mbajk ' name point;
+mbajk: 'mBajk ' name point;
 
 commands: command+;
 command: line | bend | box | circ | for | if | variable | const;
@@ -42,9 +42,9 @@ for: 'for ' spr ' to ' spr '{' commands '}';
 
 if: 'if ' spr operator spr '{' commands '}' elseif* else?;
 
-elseif: 'else if ' spr operator spr '{' commands '}';
+elseif: 'elseif ' spr operator spr '{' commands '}';
 
-else: '{' commands '}';
+else: 'else {' commands '}';
 
 operator: '>'|'=>'|'<='|'<'|'=='|'!=';
 

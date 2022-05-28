@@ -25,6 +25,7 @@ Razdelitev obveznosti po predmetih:
 - vzpostavitev okolja Docker za zagon aplikacije
 - vzpostavitev podatkovne baze
 - namestitev Docker aplikacije na spletno storitev Heroku
+- Ukazi za pregled in upravljanje aplikacije na storitvi Heroku
 <br/><br/>
 
 **PROJEKTNI PRAKTIKUM**
