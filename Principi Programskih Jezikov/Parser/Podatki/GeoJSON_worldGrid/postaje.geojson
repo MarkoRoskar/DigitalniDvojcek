@@ -1,0 +1,1646 @@
+{
+  "type": "FeatureCollection",
+  "totalFeatures": 56,
+  "numberMatched": 56,
+  "numberReturned": 56,
+  "timeStamp": "2022-05-03T15:35:52.904Z",
+  "name": "postaje",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "bbox": [
+    15.6367578760428,
+    46.55153948729,
+    15.6533757012674,
+    46.5605260113789
+  ],
+  "features": [
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.55",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": null,
+        "zapst": null,
+        "vsebina": "53- Železniška postaja Tabor",
+        "opomba": null,
+        "stnaslonov": 6,
+        "id_uvoza": null,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/07/11 22:00:00+00",
+        "featureid": 55
+      },
+      "bbox": [
+        15.64577618045837,
+        46.55169014946587,
+        15.64577618045837,
+        46.55169014946587
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.64577618045837,
+          46.55169014946587
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.56",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": null,
+        "zapst": null,
+        "vsebina": "53- Železniška postaja Tabor",
+        "opomba": null,
+        "stnaslonov": 6,
+        "id_uvoza": null,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/07/11 22:00:00+00",
+        "featureid": 56
+      },
+      "bbox": [
+        15.6459554291449,
+        46.55153948728998,
+        15.6459554291449,
+        46.55153948728998
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.6459554291449,
+          46.55153948728998
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.1",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "4",
+        "zapst": 28,
+        "vsebina": "28- Trg Leona Štuklja",
+        "opomba": null,
+        "stnaslonov": 3,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 1
+      },
+      "bbox": [
+        15.648152440083422,
+        46.55925299049638,
+        15.648152440083422,
+        46.55925299049638
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.648152440083422,
+          46.55925299049638
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.2",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "5",
+        "zapst": 23,
+        "vsebina": "23- Peš cona Partizanska cesta",
+        "opomba": null,
+        "stnaslonov": 3,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 2
+      },
+      "bbox": [
+        15.649875211730185,
+        46.56049461027217,
+        15.649875211730185,
+        46.56049461027217
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.649875211730185,
+          46.56049461027217
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.3",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "6",
+        "zapst": 19,
+        "vsebina": "? 19- Peš cona Partizanska cesta pred TIC-em",
+        "opomba": null,
+        "stnaslonov": 5,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 3
+      },
+      "bbox": [
+        15.650741091660317,
+        46.560202213435524,
+        15.650741091660317,
+        46.560202213435524
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.650741091660317,
+          46.560202213435524
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.4",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "7",
+        "zapst": 6,
+        "vsebina": "6- Trg Leona Štuklja",
+        "opomba": null,
+        "stnaslonov": 6,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 4
+      },
+      "bbox": [
+        15.649267054053933,
+        46.55980092585561,
+        15.649267054053933,
+        46.55980092585561
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.649267054053933,
+          46.55980092585561
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.5",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "8",
+        "zapst": 13,
+        "vsebina": "13- Heroja Bračiča",
+        "opomba": null,
+        "stnaslonov": 3,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 5
+      },
+      "bbox": [
+        15.650177977144264,
+        46.55802924104,
+        15.650177977144264,
+        46.55802924104
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.650177977144264,
+          46.55802924104
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.6",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "9",
+        "zapst": 7,
+        "vsebina": "7-  Trg Leona Štuklja",
+        "opomba": null,
+        "stnaslonov": 11,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 6
+      },
+      "bbox": [
+        15.649358946781954,
+        46.55923436129803,
+        15.649358946781954,
+        46.55923436129803
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.649358946781954,
+          46.55923436129803
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.7",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "10",
+        "zapst": 8,
+        "vsebina": "8-  Trg Leona Štuklja",
+        "opomba": null,
+        "stnaslonov": 10,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 7
+      },
+      "bbox": [
+        15.649164720872202,
+        46.559194614649,
+        15.649164720872202,
+        46.559194614649
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.649164720872202,
+          46.559194614649
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.8",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "11",
+        "zapst": 14,
+        "vsebina": "14- Heroja Bračiča",
+        "opomba": null,
+        "stnaslonov": 4,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 8
+      },
+      "bbox": [
+        15.650557447556285,
+        46.55799685166054,
+        15.650557447556285,
+        46.55799685166054
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.650557447556285,
+          46.55799685166054
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.9",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "12",
+        "zapst": 9.1,
+        "vsebina": "9-  Trg Leona Štuklja",
+        "opomba": "9-1",
+        "stnaslonov": 11,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 9
+      },
+      "bbox": [
+        15.649096070019274,
+        46.55865208475577,
+        15.649096070019274,
+        46.55865208475577
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.649096070019274,
+          46.55865208475577
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.10",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "13",
+        "zapst": 9.2,
+        "vsebina": "9-  Trg Leona Štuklja",
+        "opomba": "9-2",
+        "stnaslonov": 11,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 10
+      },
+      "bbox": [
+        15.649081258503482,
+        46.55855580416453,
+        15.649081258503482,
+        46.55855580416453
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.649081258503482,
+          46.55855580416453
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.11",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "14",
+        "zapst": 15,
+        "vsebina": "15- Heroja Bračiča",
+        "opomba": null,
+        "stnaslonov": 5,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 11
+      },
+      "bbox": [
+        15.650236433422707,
+        46.558140839668155,
+        15.650236433422707,
+        46.558140839668155
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.650236433422707,
+          46.558140839668155
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.12",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "15",
+        "zapst": 22,
+        "vsebina": "22- Peš cona Partizanska cesta",
+        "opomba": null,
+        "stnaslonov": 3,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 12
+      },
+      "bbox": [
+        15.650406300431724,
+        46.56050868756533,
+        15.650406300431724,
+        46.56050868756533
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.650406300431724,
+          46.56050868756533
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.13",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "16",
+        "zapst": 10,
+        "vsebina": "10 - Heroja Bračiča",
+        "opomba": null,
+        "stnaslonov": 2,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 13
+      },
+      "bbox": [
+        15.649268007876566,
+        46.558239466179984,
+        15.649268007876566,
+        46.558239466179984
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.649268007876566,
+          46.558239466179984
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.14",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "17",
+        "zapst": 11,
+        "vsebina": "11 - Heroja Bračiča",
+        "opomba": null,
+        "stnaslonov": 2,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 14
+      },
+      "bbox": [
+        15.649835009838263,
+        46.55820871368723,
+        15.649835009838263,
+        46.55820871368723
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.649835009838263,
+          46.55820871368723
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.15",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "18",
+        "zapst": 24,
+        "vsebina": "24- Peš cona Partizanska cesta",
+        "opomba": null,
+        "stnaslonov": 3,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 15
+      },
+      "bbox": [
+        15.649482002807973,
+        46.56043206118106,
+        15.649482002807973,
+        46.56043206118106
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.649482002807973,
+          46.56043206118106
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.16",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "19",
+        "zapst": 12,
+        "vsebina": "12 - Heroja Bračiča",
+        "opomba": null,
+        "stnaslonov": 3,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 16
+      },
+      "bbox": [
+        15.64961658087343,
+        46.55806977080468,
+        15.64961658087343,
+        46.55806977080468
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.64961658087343,
+          46.55806977080468
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.17",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "20",
+        "zapst": 17,
+        "vsebina": "17- Ul. Vita Kraigherja",
+        "opomba": null,
+        "stnaslonov": 4,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 17
+      },
+      "bbox": [
+        15.650235318505679,
+        46.55912815932772,
+        15.650235318505679,
+        46.55912815932772
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.650235318505679,
+          46.55912815932772
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.18",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "21",
+        "zapst": 25,
+        "vsebina": "25- Grajski trg",
+        "opomba": null,
+        "stnaslonov": 4,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 18
+      },
+      "bbox": [
+        15.64868978256845,
+        46.560343430641815,
+        15.64868978256845,
+        46.560343430641815
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.64868978256845,
+          46.560343430641815
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.19",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "22",
+        "zapst": 26,
+        "vsebina": "26- Grajski trg",
+        "opomba": null,
+        "stnaslonov": 5,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 19
+      },
+      "bbox": [
+        15.648459029119813,
+        46.56035328590259,
+        15.648459029119813,
+        46.56035328590259
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.648459029119813,
+          46.56035328590259
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.21",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "24",
+        "zapst": 29,
+        "vsebina": "29- Trg Leona Štuklja",
+        "opomba": null,
+        "stnaslonov": 6,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 21
+      },
+      "bbox": [
+        15.648035002533591,
+        46.559147843689985,
+        15.648035002533591,
+        46.559147843689985
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.648035002533591,
+          46.559147843689985
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.20",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "23",
+        "zapst": 18,
+        "vsebina": "18- Peš cona Partizanska cesta pred TIC-em",
+        "opomba": null,
+        "stnaslonov": 5,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 20
+      },
+      "bbox": [
+        15.650490425634707,
+        46.56007623198648,
+        15.650490425634707,
+        46.56007623198648
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.650490425634707,
+          46.56007623198648
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.22",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "25",
+        "zapst": 4,
+        "vsebina": "4-Slovenska u.",
+        "opomba": null,
+        "stnaslonov": 2,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 22
+      },
+      "bbox": [
+        15.647157091306951,
+        46.56038261368795,
+        15.647157091306951,
+        46.56038261368795
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.647157091306951,
+          46.56038261368795
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.23",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "26",
+        "zapst": 5,
+        "vsebina": "5- Slovenska u.",
+        "opomba": null,
+        "stnaslonov": 5,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 23
+      },
+      "bbox": [
+        15.647780542671041,
+        46.56039258099196,
+        15.647780542671041,
+        46.56039258099196
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.647780542671041,
+          46.56039258099196
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.24",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "27",
+        "zapst": 27,
+        "vsebina": "27- Grajski trg",
+        "opomba": null,
+        "stnaslonov": 9,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 24
+      },
+      "bbox": [
+        15.647956624290552,
+        46.56002852821638,
+        15.647956624290552,
+        46.56002852821638
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.647956624290552,
+          46.56002852821638
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.25",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "28",
+        "zapst": 30,
+        "vsebina": "30- Židovska ul.",
+        "opomba": null,
+        "stnaslonov": 3,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 25
+      },
+      "bbox": [
+        15.647512556528985,
+        46.55710104499683,
+        15.647512556528985,
+        46.55710104499683
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.647512556528985,
+          46.55710104499683
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.26",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "29",
+        "zapst": 31,
+        "vsebina": "31- Glavni trg",
+        "opomba": null,
+        "stnaslonov": 4,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 26
+      },
+      "bbox": [
+        15.647307298400342,
+        46.55734505352668,
+        15.647307298400342,
+        46.55734505352668
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.647307298400342,
+          46.55734505352668
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.27",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "30",
+        "zapst": 32,
+        "vsebina": "32- Glavni trg",
+        "opomba": null,
+        "stnaslonov": 4,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 27
+      },
+      "bbox": [
+        15.646997342805932,
+        46.55720689341564,
+        15.646997342805932,
+        46.55720689341564
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.646997342805932,
+          46.55720689341564
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.28",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "31",
+        "zapst": 33,
+        "vsebina": "33- Glavni trg",
+        "opomba": null,
+        "stnaslonov": 4,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 28
+      },
+      "bbox": [
+        15.646367478711513,
+        46.55725184303235,
+        15.646367478711513,
+        46.55725184303235
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.646367478711513,
+          46.55725184303235
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.29",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "32",
+        "zapst": 34,
+        "vsebina": "? 34. glavni trg - Rotovž",
+        "opomba": null,
+        "stnaslonov": 18,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 29
+      },
+      "bbox": [
+        15.646221562846826,
+        46.55761068492354,
+        15.646221562846826,
+        46.55761068492354
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.646221562846826,
+          46.55761068492354
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.30",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "33",
+        "zapst": 39,
+        "vsebina": "39- Slomškov trg",
+        "opomba": null,
+        "stnaslonov": 2,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 30
+      },
+      "bbox": [
+        15.645809769291459,
+        46.55954300847401,
+        15.645809769291459,
+        46.55954300847401
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.645809769291459,
+          46.55954300847401
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.31",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "34",
+        "zapst": 52,
+        "vsebina": "52- Tyrseva ul.",
+        "opomba": null,
+        "stnaslonov": 4,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 31
+      },
+      "bbox": [
+        15.646662473779665,
+        46.5604771870811,
+        15.646662473779665,
+        46.5604771870811
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.646662473779665,
+          46.5604771870811
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.32",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "35",
+        "zapst": 40,
+        "vsebina": "40- Slomškov trg",
+        "opomba": null,
+        "stnaslonov": 2,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 32
+      },
+      "bbox": [
+        15.645465642574633,
+        46.55896451202687,
+        15.645465642574633,
+        46.55896451202687
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.645465642574633,
+          46.55896451202687
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.33",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "36",
+        "zapst": 41,
+        "vsebina": "41- Slomškov trg",
+        "opomba": null,
+        "stnaslonov": 4,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 33
+      },
+      "bbox": [
+        15.64514601806225,
+        46.55880975562987,
+        15.64514601806225,
+        46.55880975562987
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.64514601806225,
+          46.55880975562987
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.34",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "37",
+        "zapst": 42,
+        "vsebina": "42- Slomškov trg",
+        "opomba": null,
+        "stnaslonov": 4,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 34
+      },
+      "bbox": [
+        15.643497874596717,
+        46.55883487417593,
+        15.643497874596717,
+        46.55883487417593
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.643497874596717,
+          46.55883487417593
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.35",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "38",
+        "zapst": 50,
+        "vsebina": "50- lent",
+        "opomba": null,
+        "stnaslonov": 3,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 35
+      },
+      "bbox": [
+        15.64394813756157,
+        46.55661063825052,
+        15.64394813756157,
+        46.55661063825052
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.64394813756157,
+          46.55661063825052
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.36",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "39",
+        "zapst": 1,
+        "vsebina": "1-Slovenska u.",
+        "opomba": null,
+        "stnaslonov": 5,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 36
+      },
+      "bbox": [
+        15.642503267585239,
+        46.560262815032075,
+        15.642503267585239,
+        46.560262815032075
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.642503267585239,
+          46.560262815032075
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.37",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "40",
+        "zapst": 2,
+        "vsebina": "2- Slovenska u.",
+        "opomba": null,
+        "stnaslonov": 4,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 37
+      },
+      "bbox": [
+        15.641928487688805,
+        46.56036591617823,
+        15.641928487688805,
+        46.56036591617823
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.641928487688805,
+          46.56036591617823
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.38",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "41",
+        "zapst": 3,
+        "vsebina": "3-Slovenska u.",
+        "opomba": null,
+        "stnaslonov": 2,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 38
+      },
+      "bbox": [
+        15.643133878847634,
+        46.560214192955385,
+        15.643133878847634,
+        46.560214192955385
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.643133878847634,
+          46.560214192955385
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.39",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "42",
+        "zapst": 51.1,
+        "vsebina": "51- Lent",
+        "opomba": "51-1",
+        "stnaslonov": 9,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 39
+      },
+      "bbox": [
+        15.644537412618874,
+        46.55658149600774,
+        15.644537412618874,
+        46.55658149600774
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.644537412618874,
+          46.55658149600774
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.40",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "43",
+        "zapst": 51.2,
+        "vsebina": "51- Lent",
+        "opomba": "51-2",
+        "stnaslonov": 9,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 40
+      },
+      "bbox": [
+        15.644641098748238,
+        46.55658010203122,
+        15.644641098748238,
+        46.55658010203122
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.644641098748238,
+          46.55658010203122
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.41",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "44",
+        "zapst": 35,
+        "vsebina": "? 35- Koroška cesta",
+        "opomba": null,
+        "stnaslonov": 12,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 41
+      },
+      "bbox": [
+        15.644852999329329,
+        46.557459059525236,
+        15.644852999329329,
+        46.557459059525236
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.644852999329329,
+          46.557459059525236
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.42",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "45",
+        "zapst": 36,
+        "vsebina": "36- Slomškov trg",
+        "opomba": null,
+        "stnaslonov": 4,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 42
+      },
+      "bbox": [
+        15.64352970088069,
+        46.55957043374693,
+        15.64352970088069,
+        46.55957043374693
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.64352970088069,
+          46.55957043374693
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.43",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "46",
+        "zapst": 37,
+        "vsebina": "37- Slomškov trg",
+        "opomba": null,
+        "stnaslonov": 2,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 43
+      },
+      "bbox": [
+        15.644061718851837,
+        46.55952749022199,
+        15.644061718851837,
+        46.55952749022199
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.644061718851837,
+          46.55952749022199
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.44",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "47",
+        "zapst": 38,
+        "vsebina": "38- Slomškov trg",
+        "opomba": null,
+        "stnaslonov": 3,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 44
+      },
+      "bbox": [
+        15.64443086151518,
+        46.559375780233744,
+        15.64443086151518,
+        46.559375780233744
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.64443086151518,
+          46.559375780233744
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.45",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "48",
+        "zapst": 43,
+        "vsebina": "43- Orožnova ulica",
+        "opomba": null,
+        "stnaslonov": 2,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 45
+      },
+      "bbox": [
+        15.642113886862962,
+        46.5590282730303,
+        15.642113886862962,
+        46.5590282730303
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.642113886862962,
+          46.5590282730303
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.46",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "49",
+        "zapst": 44,
+        "vsebina": "44- Orožnova ulica",
+        "opomba": null,
+        "stnaslonov": 3,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 46
+      },
+      "bbox": [
+        15.641945449965164,
+        46.559049373897444,
+        15.641945449965164,
+        46.559049373897444
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.641945449965164,
+          46.559049373897444
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.47",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "50",
+        "zapst": 45,
+        "vsebina": "?45- Lent",
+        "opomba": null,
+        "stnaslonov": 2,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 47
+      },
+      "bbox": [
+        15.63675787604276,
+        46.557480113140535,
+        15.63675787604276,
+        46.557480113140535
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.63675787604276,
+          46.557480113140535
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.48",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "51",
+        "zapst": 46,
+        "vsebina": "?46- Lent",
+        "opomba": null,
+        "stnaslonov": 1,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 48
+      },
+      "bbox": [
+        15.63750108408788,
+        46.55729296093377,
+        15.63750108408788,
+        46.55729296093377
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.63750108408788,
+          46.55729296093377
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.49",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "52",
+        "zapst": 48,
+        "vsebina": "? 48- Lent",
+        "opomba": null,
+        "stnaslonov": 1,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 49
+      },
+      "bbox": [
+        15.638992935077331,
+        46.556988974667824,
+        15.638992935077331,
+        46.556988974667824
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.638992935077331,
+          46.556988974667824
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.50",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "53",
+        "zapst": 49,
+        "vsebina": "? 49- Lent",
+        "opomba": null,
+        "stnaslonov": 1,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 50
+      },
+      "bbox": [
+        15.639758302578374,
+        46.55685782937551,
+        15.639758302578374,
+        46.55685782937551
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.639758302578374,
+          46.55685782937551
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.51",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "54",
+        "zapst": 47,
+        "vsebina": "47- Lent",
+        "opomba": null,
+        "stnaslonov": 2,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 51
+      },
+      "bbox": [
+        15.637776676105746,
+        46.55733731287873,
+        15.637776676105746,
+        46.55733731287873
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.637776676105746,
+          46.55733731287873
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.52",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "1",
+        "zapst": 20,
+        "vsebina": "20- Peš cona Partizanska cesta",
+        "opomba": null,
+        "stnaslonov": 2,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 52
+      },
+      "bbox": [
+        15.651009529176585,
+        46.56013185342873,
+        15.651009529176585,
+        46.56013185342873
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.651009529176585,
+          46.56013185342873
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.53",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "3",
+        "zapst": 16,
+        "vsebina": "16- Heroja Bračiča",
+        "opomba": null,
+        "stnaslonov": 3,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 53
+      },
+      "bbox": [
+        15.653375701267393,
+        46.55791924488552,
+        15.653375701267393,
+        46.55791924488552
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.653375701267393,
+          46.55791924488552
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_kol_stojala.54",
+      "geometry_name": "geometry",
+      "properties": {
+        "id": "2",
+        "zapst": 21,
+        "vsebina": "21- Peš cona Partizanska cesta",
+        "opomba": null,
+        "stnaslonov": 3,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021/01/24 23:00:00+00",
+        "featureid": 54
+      },
+      "bbox": [
+        15.651488898285397,
+        46.56052601137886,
+        15.651488898285397,
+        46.56052601137886
+      ],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.651488898285397,
+          46.56052601137886
+        ]
+      }
+    }
+  ]
+}
