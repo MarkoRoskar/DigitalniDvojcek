@@ -22,8 +22,9 @@ class Kolesarnice {
         val kolesarnice = Json.decodeFromString<KolesarniceGEOJSON>(a)
         for (i in kolesarnice.features.indices) {
             val temp = KolesarniceFormat(kolesarnice.features[i].properties.naziv_ponudnik, kolesarnice.features[i].properties.povezava_ponudnik, kolesarnice.features[i].properties.lokacija, kolesarnice.features[i].properties.kapaciteta, kolesarnice.features[i].geometry.coordinates[0], kolesarnice.features[i].geometry.coordinates[1])
-            val temp2 = gson.toJson(temp)
-            println(temp2)
+            val temp2 = gson.toJson(temp).toString()
+            postBikeShed(temp2)
+            //println(temp2)
         }
     }
 

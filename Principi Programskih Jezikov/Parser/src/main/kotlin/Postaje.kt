@@ -19,8 +19,9 @@ class Postaje {
         val postaje = Json.decodeFromString<PostajeGEOJSON>(a)
         for (i in postaje.features.indices) {
             val temp = PostajeFormat(postaje.features[i].properties.vsebina, postaje.features[i].properties.stnaslonov, postaje.features[i].geometry.coordinates[0], postaje.features[i].geometry.coordinates[1])
-            val temp2 = gson.toJson(temp)
-            println(temp2)
+            val temp2 = gson.toJson(temp).toString()
+            postStand(temp2)
+            //println(temp2)
         }
     }
 }
