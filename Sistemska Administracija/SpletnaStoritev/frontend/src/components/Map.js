@@ -25,7 +25,7 @@ const bikestandIcon = new Icon({
 });
 
 const bikeShedIcon = new Icon({
-	iconUrl: "/bike_shed_icon.jpg",
+	iconUrl: "/bike_shed_icon.png",
 	iconSize: [45, 45]
 });
 
