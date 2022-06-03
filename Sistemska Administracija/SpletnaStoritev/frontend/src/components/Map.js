@@ -82,7 +82,7 @@ function Map() {
 	// getting bike stands from database
 	useEffect(function() {
 		const getBikeStands = async function() {
-			const res = await fetch("http://localhost:3001/stand");
+			const res = await fetch("https://digitalni-dvojcek-backend.herokuapp.com/stand");
 			const data = await res.json();
 			setBikeStands(data);
 		}
@@ -101,7 +101,7 @@ function Map() {
 	// getting bike sheds from database
 	useEffect(function() {
 		const getBikeSheds = async function() {
-			const res = await fetch("http://localhost:3001/bikeshed");
+			const res = await fetch("https://digitalni-dvojcek-backend.herokuapp.com/bikeshed");
 			const data = await res.json();
 			setBikeSheds(data);
 		}
@@ -119,7 +119,7 @@ function Map() {
 	// getting bike path from database
 	useEffect(function() {
 		const getBikePath = async function() {
-			const res = await fetch("http://localhost:3001/bikepath");
+			const res = await fetch("https://digitalni-dvojcek-backend.herokuapp.com/bikepath");
 			const data = await res.json();
 			setBikePath(data);
 		}

@@ -9,7 +9,7 @@ function Logout() {
         // sets user context to null and fetches functions from userController which destroys the session
         const logout = async function() {
             userContext.setUserContext(null);
-            const res = await fetch("http://localhost:3001/users/logout/"+username);
+            const res = await fetch("https://digitalni-dvojcek-backend.herokuapp.com/users/logout/"+username);
         }
         logout();
     }, []);

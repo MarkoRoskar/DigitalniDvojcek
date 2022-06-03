@@ -9,7 +9,7 @@ function Register() {
 
     async function Register(e) {
         e.preventDefault();
-        const res = await fetch("http://localhost:3001/users", {
+        const res = await fetch("https://digitalni-dvojcek-backend.herokuapp.com/users", {
             method: "POST",
             credentials: "include",
             headers: { "Content-Type": "application/json" },

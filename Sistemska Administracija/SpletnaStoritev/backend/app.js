@@ -6,7 +6,7 @@ var logger = require('morgan');
 
 // connection to the database
 var mongoose = require("mongoose");
-var mongoDB = "mongodb+srv://eriklasic:O9zI3m70JhVt53JP@kolesa.3xx3b.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+var mongoDB = (process.env.MongoDBURL || "mongodb+srv://eriklasic:O9zI3m70JhVt53JP@kolesa.3xx3b.mongodb.net/myFirstDatabase?retryWrites=true&w=majority");
 mongoose.connect(mongoDB);
 // mongoose is using global promise library
 mongoose.Promise = global.Promise;
@@ -29,12 +29,14 @@ var app = express();
 // include CORS
 var cors = require('cors');
 
+/*
 app.use(cors({
   origin: '*',
   credentials: true,
-}));
+})); 
+*/
 
-/*var allowedOrigins = ['http://localhost:3000', 'http://localhost:3001'];
+var allowedOrigins = ['http://localhost:3000', 'http://localhost:3001', 'https://digitalni-dvojcek-backend.herokuapp.com', 'https://digitalni-dvojcek-frontend.herokuapp.com'];
 app.use(cors({
   credentials: true,
   //exposedHeaders: "X-Total-Count",
@@ -47,7 +49,7 @@ app.use(cors({
     }
     return callback(null, true);
   }
-})); */
+}));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

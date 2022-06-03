@@ -16,7 +16,7 @@ function AdminInterface() {
     //window.location.href = "http://localhost:3001/admin/mbajk";
 
     return(
-      <Admin dataProvider={restProvider("http://localhost:3001")}>
+      <Admin dataProvider={restProvider("https://digitalni-dvojcek-backend.herokuapp.com")}>
         <Resource
             name="/admin/mbajk"
             list={MBajkList}
