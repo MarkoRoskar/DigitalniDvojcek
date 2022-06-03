@@ -16,8 +16,9 @@ class Koridorji {
         val koridorji = Json.decodeFromString<KoridorjiGEOJSON>(a)
         for (i in koridorji.features.indices) {
             val temp = KoridorjiFormat(koridorji.features[i].geometry.coordinates)
-            val temp2 = gson.toJson(temp)
-            println(temp2)
+            val temp2 = gson.toJson(temp).toString()
+            postCoridor(temp2)
+            //println(temp2)
         }
     }
 }

@@ -16,8 +16,9 @@ class TuristicnePoti {
         val turisticnePoti = Json.decodeFromString<TuristicnePotiGEOJSON>(a)
         for (i in turisticnePoti.features.indices) {
             val temp = TuristicnePotiFormat(turisticnePoti.features[i].geometry.coordinates)
-            val temp2 = gson.toJson(temp)
-            println(temp2)
+            val temp2 = gson.toJson(temp).toString()
+            postTourPath(temp2)
+            //println(temp2)
         }
     }
 }

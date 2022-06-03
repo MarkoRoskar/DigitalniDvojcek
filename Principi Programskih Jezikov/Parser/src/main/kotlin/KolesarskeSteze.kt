@@ -16,8 +16,9 @@ class KolesarskeSteze {
         val kolesarskeSteze = Json.decodeFromString<KolesarskeStezeGEOJSON>(a)
         for (i in kolesarskeSteze.features.indices) {
             val temp = KolesarskeStezeFormat(kolesarskeSteze.features[i].geometry.coordinates)
-            val temp2 = gson.toJson(temp)
-            println(temp2)
+            val temp2 = gson.toJson(temp).toString()
+            postBikePath(temp2)
+            //println(temp2)
         }
     }
 
