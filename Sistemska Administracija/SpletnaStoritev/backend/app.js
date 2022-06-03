@@ -29,12 +29,14 @@ var app = express();
 // include CORS
 var cors = require('cors');
 
+/*
 app.use(cors({
   origin: '*',
   credentials: true,
-}));
+})); 
+*/
 
-/*var allowedOrigins = ['http://localhost:3000', 'http://localhost:3001'];
+var allowedOrigins = ['http://localhost:3000', 'http://localhost:3001', 'https://digitalni-dvojcek-backend.herokuapp.com', 'https://digitalni-dvojcek-frontend.herokuapp.com'];
 app.use(cors({
   credentials: true,
   //exposedHeaders: "X-Total-Count",
@@ -47,7 +49,7 @@ app.use(cors({
     }
     return callback(null, true);
   }
-})); */
+}));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
