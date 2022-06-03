@@ -6,7 +6,7 @@ var logger = require('morgan');
 
 // connection to the database
 var mongoose = require("mongoose");
-var mongoDB = "mongodb+srv://eriklasic:O9zI3m70JhVt53JP@kolesa.3xx3b.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+var mongoDB = (process.env.MongoDBURL || "mongodb+srv://eriklasic:O9zI3m70JhVt53JP@kolesa.3xx3b.mongodb.net/myFirstDatabase?retryWrites=true&w=majority");
 mongoose.connect(mongoDB);
 // mongoose is using global promise library
 mongoose.Promise = global.Promise;
