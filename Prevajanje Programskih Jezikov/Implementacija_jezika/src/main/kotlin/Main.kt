@@ -1,6 +1,8 @@
 import java.io.InputStream
 import java.util.*
 import java.io.File
+import java.lang.Math.*
+import kotlin.math.pow
 
 const val EOF_SYMBOL = -1
 const val ERROR_STATE = 0
@@ -604,6 +606,70 @@ class Line(private val from: Expr, private val to: Expr, private val width: Expr
     }
 }
 
+data class Pt(val x: Double, val y: Double) {
+    fun toGeoJson(): String {
+        return "[$x, $y]"
+    }
+
+    operator fun plus(other: Pt) =
+        Pt(x + other.x, y + other.y)
+
+    operator fun times(s: Double) =
+        Pt(s * x, s * y) // Število je lahko samo na desni strani
+
+    fun angle(other: Pt) =
+        atan2(other.y - y, other.x - x)
+
+    fun dist(other: Pt) =
+        hypot(other.x - x, other.y - y)
+
+    fun offset(s: Double, angle: Double) =
+        this + Pt(cos(angle), sin(angle)) * s
+}
+
+class Bezier(private val p0: Pt, private val p1: Pt, private val p2: Pt, private val p3: Pt) {
+
+    // Enačba za krivuljo, https://en.wikipedia.org/wiki/B%C3%A9zier_curve
+    fun at(t: Double) =
+        p0 * (1.0 - t).pow(3.0) + p1 * 3.0 * (1.0 - t).pow(2.0) * t + p2 * 3.0 * (1.0 - t) * t.pow(2.0) + p3 * t.pow(3.0)
+
+    // Vrne seznam točk na krivulji (polyline)
+    fun flatten(segmentsCount: Int): List<Pt> {
+        val ps = mutableListOf<Pt>()
+        for (i in 0 .. segmentsCount) {
+            val t = i / segmentsCount.toDouble()
+            ps.add(at(t))
+        }
+        return ps
+    }
+
+    // Približna dolžina krivulje
+    fun approxLength(): Double {
+        val midpoint = at(0.5)
+        return p0.dist(midpoint) + midpoint.dist(p3)
+    }
+
+    // Število segmentov na enoto (daljša krivulja naj ima več segmentov)
+    fun resolutionToSegmentsCount(resolution: Double) = // Resolucija je število segmentov na enoto
+        (resolution * approxLength()).coerceAtLeast(2.0).toInt()
+
+    companion object {
+        fun bend(t0: Pt, t1: Pt, relativeAngle: Double): Bezier {
+            val relativeAngle = Math.toRadians(relativeAngle)
+            val oppositeRelativeAngle = PI - relativeAngle // Na drugi strani uporabimo enak odmik
+
+            val angle = t0.angle(t1) // Kot med točkama
+            val constant = (4 / 3) * tan(Math.PI / 8) // Magična konstanta, izbrana tako, da dobimo četrtino kroga če sta točki pod 45 stopinjskim kotom
+
+            // Kontrolne točke
+            val c0 = t0.offset(constant, angle + relativeAngle)
+            val c1 = t1.offset(constant, angle + oppositeRelativeAngle)
+
+            return Bezier(t0, c0, c1, t1)
+        }
+    }
+}
+
 //popravi bend
 class Bend(private val from: Expr, private val to: Expr, private var angle: Expr, override var next: Stmt): Stmt {
     override fun toString(): String =
@@ -618,6 +684,19 @@ class Bend(private val from: Expr, private val to: Expr, private var angle: Expr
                 if (from.longitude == to.longitude && from.latitude == to.latitude) {
                     throw LineException()
                 } else {
+                    val x1 = from.longitude as Num
+                    val y1 = from.latitude as Num
+                    val x2 = to.longitude as Num
+                    val y2 = to.latitude as Num
+                    val angle2 = angle as Num
+                    val bezier = Bezier.bend(Pt(x1.value, y1.value), Pt(x2.value, y2.value), angle2.value/100)
+                    val list = bezier.flatten(bezier.resolutionToSegmentsCount(bezier.approxLength()))
+                    var geoJsonPoints = ""
+                    for(point in list){
+                        geoJsonPoints += point.toGeoJson() + ", "
+                    }
+                    geoJsonPoints = geoJsonPoints.dropLast(2)
+                    geoJsonPoints += '\n'
                     return "    {\n" +
                             "      \"type\": \"Feature\",\n" +
                             "      \"properties\": {\n" +
@@ -628,8 +707,7 @@ class Bend(private val from: Expr, private val to: Expr, private var angle: Expr
                             "      \"geometry\": {\n" +
                             "        \"type\": \"LineString\",\n" +
                             "        \"coordinates\": [\n" +
-                            "          ${from.toGeoJSON()},\n" +
-                            "          ${to.toGeoJSON()}\n" +
+                            "          $geoJsonPoints" +
                             "        ]\n" +
                             "      }\n" +
                             "    },\n${next.toGeoJSON()}"
