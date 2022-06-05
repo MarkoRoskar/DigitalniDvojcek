@@ -1,0 +1,51 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "int_mob_kolesarnice.1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          550403.35,
+          158276.01
+        ]
+      },
+      "geometry_name": "geometry",
+      "properties": {
+        "id": 0,
+        "naziv": "Kolesodvor_1",
+        "lokacija": "Partizanska cesta 50, 2000 Maribor",
+        "kapaciteta": 20,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021-01-24T23:00:00Z",
+        "featureid": 1,
+        "povezava_ponudnik": "<a href=\"https://mobilnost.si/storitve/kolesodvor/\" target=\"_blank\">Center mobilnosti Maribor</a>",
+        "naziv_ponudnik": "Center mobilnosti Maribor"
+      },
+      "bbox": [
+        550403.35,
+        158276.01,
+        550403.35,
+        158276.01
+      ]
+    }
+  ],
+  "totalFeatures": 1,
+  "numberMatched": 1,
+  "numberReturned": 1,
+  "timeStamp": "2022-05-03T15:58:09.716Z",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:EPSG::3794"
+    }
+  },
+  "bbox": [
+    550403.35,
+    158276.01,
+    550403.35,
+    158276.01
+  ]
+}

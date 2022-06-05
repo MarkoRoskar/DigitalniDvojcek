@@ -8,14 +8,14 @@ const app = express();
 var PORT = process.env.PORT || 3000;
 const HOST = '0.0.0.0';
 
-const url = `mongodb+srv://eriklasic:O9zI3m70JhVt53JP@kolesa.3xx3b.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+var mongoDB= (process.env.MongoDBURL || "mongodb+srv://eriklasic:O9zI3m70JhVt53JP@kolesa.3xx3b.mongodb.net/myFirstDatabase?retryWrites=true&w=majority");
 
 const connectionParams={
     //useNewUrlParser: true,
     //useCreateIndex: true,
     //useUnifiedTopology: true
 }
-mongoose.connect(url,connectionParams)
+mongoose.connect(mongoDB,connectionParams)
     .then( () => {
         console.log('Connected to the database ')
     })

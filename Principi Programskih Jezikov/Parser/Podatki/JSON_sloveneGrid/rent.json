@@ -1,0 +1,114 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "int_mob_izposoja_koles.3",
+      "geometry": {
+        "type": "MultiPoint",
+        "coordinates": [
+          [
+            545979.5705,
+            155009.3697
+          ]
+        ]
+      },
+      "geometry_name": "geometry",
+      "properties": {
+        "id": 3,
+        "ponudnik": "Probike Rent&Service, Pohorska ulica 60",
+        "kapaciteta": null,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021-03-05T12:06:10.687Z",
+        "featureid": 3,
+        "povezava_ponudnik": "<a href=\"https://www.facebook.com/Probike-RentService-674865839579118/\" target=\"_blank\">Probike Rent&Service</a>",
+        "naziv_ponudnik": "Probike Rent&Service"
+      },
+      "bbox": [
+        545979.5705,
+        155009.3697,
+        545979.5705,
+        155009.3697
+      ]
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_izposoja_koles.2",
+      "geometry": {
+        "type": "MultiPoint",
+        "coordinates": [
+          [
+            550145.8037,
+            158100.5114
+          ]
+        ]
+      },
+      "geometry_name": "geometry",
+      "properties": {
+        "id": 2,
+        "ponudnik": "Center mobilnosti Maribor, Partizanska cesta 21",
+        "kapaciteta": null,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021-03-05T12:06:10.687Z",
+        "featureid": 2,
+        "povezava_ponudnik": "<a href=\"https://mobilnost.si/\" target=\"_blank\">Center mobilnosti Maribor</a>",
+        "naziv_ponudnik": "Center mobilnosti Maribor"
+      },
+      "bbox": [
+        550145.8037,
+        158100.5114,
+        550145.8037,
+        158100.5114
+      ]
+    },
+    {
+      "type": "Feature",
+      "id": "int_mob_izposoja_koles.1",
+      "geometry": {
+        "type": "MultiPoint",
+        "coordinates": [
+          [
+            547766.9915,
+            157220.4963
+          ]
+        ]
+      },
+      "geometry_name": "geometry",
+      "properties": {
+        "id": 1,
+        "ponudnik": "Bike center Maribor, Erjavčeva 5",
+        "kapaciteta": 20,
+        "id_uvoza": 1,
+        "status_podatka": "A",
+        "datum_prip_podatkov": "2021-03-05T12:06:10.687Z",
+        "featureid": 1,
+        "povezava_ponudnik": "<a href=\"https://bike-center.si/\" target=\"_blank\">Bike center Maribor</a>",
+        "naziv_ponudnik": "Bike center Maribor"
+      },
+      "bbox": [
+        547766.9915,
+        157220.4963,
+        547766.9915,
+        157220.4963
+      ]
+    }
+  ],
+  "totalFeatures": 3,
+  "numberMatched": 3,
+  "numberReturned": 3,
+  "timeStamp": "2022-05-03T16:23:22.940Z",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:EPSG::3794"
+    }
+  },
+  "bbox": [
+    545979.5705,
+    155009.3697,
+    550145.8037,
+    158100.5114
+  ]
+}
