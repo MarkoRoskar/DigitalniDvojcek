@@ -60,19 +60,24 @@ function App() {
         </UserContext.Provider>
       </BrowserRouter>
       
-      <Admin dataProvider={restProvider("http://localhost:3001")}>
-        <Resource
-            name="mbajk"
-            list={MBajkList}
-            create={MBajkCreate}
-            edit={MBajkEdit}/>
-        </Admin>
+
     </div>
   );
 
 }
 
 export default App;
+
+// admin interface
+/*
+<Admin dataProvider={restProvider("http://localhost:3001")}>
+<Resource
+    name="mbajk"
+    list={MBajkList}
+    create={MBajkCreate}
+    edit={MBajkEdit}/>
+</Admin>
+*/
 
 /*
       {MBajkLocations.locations.map(mbajk => (
