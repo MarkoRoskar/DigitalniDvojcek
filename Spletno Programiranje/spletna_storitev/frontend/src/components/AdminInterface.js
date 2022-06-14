@@ -16,12 +16,12 @@ function AdminInterface() {
     //window.location.href = "http://localhost:3001/admin/mbajk";
 
     return(
-      <Admin dataProvider={restProvider("http://localhost:3001")}>
-        <Resource
-            name="/admin/mbajk"
-            list={MBajkList}
-            create={MBajkCreate}
-            edit={MBajkEdit}/>
+        <Admin dataProvider={restProvider("http://localhost:3001")}>
+            <Resource
+                name="/admin/mbajk"
+                list={MBajkList}
+                create={MBajkCreate}
+                edit={MBajkEdit}/>
         </Admin>
     );
 }
