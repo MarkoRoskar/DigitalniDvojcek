@@ -36,7 +36,7 @@ app.use(cors({
 })); 
 */
 
-var allowedOrigins = ['http://localhost:3000', 'http://localhost:3001', 'https://digitalni-dvojcek-backend.herokuapp.com', 'https://digitalni-dvojcek-frontend.herokuapp.com'];
+var allowedOrigins = ['http://localhost:3000', 'http://localhost:3001', 'https://digitalni-dvojcek-feri.herokuapp.com', 'https://digitalni-dvojcek-frontend.herokuapp.com'];
 app.use(cors({
   credentials: true,
   //exposedHeaders: "X-Total-Count",

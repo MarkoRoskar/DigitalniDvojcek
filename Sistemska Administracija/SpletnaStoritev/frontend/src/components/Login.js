@@ -11,7 +11,7 @@ function Login() {
 
     async function Login(e) {
         e.preventDefault();
-        const res = await fetch("https://digitalni-dvojcek-backend.herokuapp.com/users/login", {
+        const res = await fetch("https://digitalni-dvojcek-feri.herokuapp.com/users/login", {
             method: "POST",
             credentials: "include",
             headers: { 'Content-Type': 'application/json' },
