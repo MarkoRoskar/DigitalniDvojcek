@@ -87,7 +87,7 @@ app.use('/bikeshed', bikeShedRouter);
 app.use('/bikepath', bikePathRouter);
 app.use('/tourpath', tourPathRouter);
 app.use('/coridor', coridorRouter);
-app.use('sensordata', sensorDataRouter);
+app.use('/sensordata', sensorDataRouter);
 
 
 // catch 404 and forward to error handler
