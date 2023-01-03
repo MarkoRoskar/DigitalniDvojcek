@@ -23,6 +23,7 @@ var bikeShedRouter = require('./routes/bikeShedRoutes');
 var bikePathRouter = require('./routes/bikePathRoutes');
 var tourPathRouter = require('./routes/tourPathRoutes');
 var coridorRouter = require('./routes/coridorRoutes');
+var sensorDataRouter = require('./routes/sensorDataRoutes');
 
 var app = express();
 
@@ -78,7 +79,7 @@ app.use('/bikeshed', bikeShedRouter);
 app.use('/bikepath', bikePathRouter);
 app.use('/tourpath', tourPathRouter);
 app.use('/coridor', coridorRouter);
-
+app.use('sensordata', sensorDataRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
