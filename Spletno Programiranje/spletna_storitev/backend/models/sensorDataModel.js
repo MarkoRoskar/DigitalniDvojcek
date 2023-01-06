@@ -5,7 +5,7 @@ var Schema   = mongoose.Schema;
  * definition of attributes for our sensor data (camera)
  */
 var sensorDataSchema = new Schema({
-	'id': {
+	'id' : {
 		type : String,
 		required : true
 	},

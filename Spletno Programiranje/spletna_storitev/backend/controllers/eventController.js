@@ -1,57 +1,57 @@
-var SensordataModel = require('../models/sensorDataModel.js');
+var EventModel = require('../models/eventModel.js');
 
 /**
- * sensorDataController.js
+ * eventController.js
  *
- * @description :: Server-side logic for managing sensorDatas.
+ * @description :: Server-side logic for managing events.
  */
 module.exports = {
 
     /**
-     * sensorDataController.list()
+     * eventController.list()
      */
     list: function (req, res) {
-        SensordataModel.find(function (err, sensorData) {
+        EventModel.find(function (err, events) {
             if (err) {
                 return res.status(500).json({
-                    message: 'Error when getting sensorData.',
+                    message: 'Error when getting event.',
                     error: err
                 });
             }
 
-            return res.json(sensorData);
+            return res.json(events);
         });
     },
 
     /**
-     * sensorDataController.show()
+     * eventController.show()
      */
     show: function (req, res) {
         var id = req.params.id;
 
-        SensordataModel.findOne({_id: id}, function (err, sensorData) {
+        EventModel.findOne({_id: id}, function (err, event) {
             if (err) {
                 return res.status(500).json({
-                    message: 'Error when getting sensorData.',
+                    message: 'Error when getting event.',
                     error: err
                 });
             }
 
-            if (!sensorData) {
+            if (!event) {
                 return res.status(404).json({
-                    message: 'No such sensorData'
+                    message: 'No such event'
                 });
             }
 
-            return res.json(sensorData);
+            return res.json(event);
         });
     },
 
     /**
-     * sensorDataController.create()
+     * eventController.create()
      */
     insert: function (req, res) {
-        SensordataModel.findOne({bikes: parseInt(req.body.bikes)}, function (err, data) {
+        EventModel.findOne({description: req.body.description}, function (err, data) {
             if (err) {
                 return res.status(500).json({
                     success: false,
@@ -66,101 +66,99 @@ module.exports = {
                 });
             }
             else {
-                // location
+                // event location
                 var objGeometry = {
                     type: 'Point',
                     coordinates: [parseFloat(req.body.longitude), parseFloat(req.body.latitude)]
                 }
-                // create new data
-                var data = new SensordataModel({
+                // create new event
+                var event = new EventModel({
                     id : require("crypto").randomBytes(64).toString('hex'),
-                    bikes : req.body.bikes,
-                    people : req.body.people,
-                    geometry: objGeometry,
-                    frequency : req.body.frequency
+                    category : req.body.category,
+                    description : req.body.description,
+                    geometry : objGeometry,
                 });
-                // save data
-                data.save(function (err, data) {
+                // save event
+                event.save(function (err, data) {
                     if (err) {
                         return res.status(500).json({
                             success: false,
-                            message: "Error saving sensor data",
+                            message: "Error saving event",
                             error: err
                         });
                     }
                     return res.json({
                         success: true,
                         inserted: true,
-                        data: data
+                        event: data
                     })
                 });
             }
+        })
+
+        /*var event = new EventModel({
+			category : req.body.category,
+			description : req.body.description
         });
 
-        /*var sensorData = new SensordataModel({
-			bikes : req.body.bikes,
-			people : req.body.people,
-			time : req.body.time
-        });
-
-        sensorData.save(function (err, sensorData) {
+        event.save(function (err, event) {
             if (err) {
                 return res.status(500).json({
-                    message: 'Error when creating sensorData',
+                    message: 'Error when creating event',
                     error: err
                 });
             }
 
-            return res.status(201).json(sensorData);
+            return res.status(201).json(event);
         });*/
     },
 
     /**
-     * sensorDataController.update()
+     * eventController.update()
      */
     update: function (req, res) {
         var id = req.params.id;
 
-        SensordataModel.findOne({_id: id}, function (err, sensorData) {
+        EventModel.findOne({_id: id}, function (err, event) {
             if (err) {
                 return res.status(500).json({
-                    message: 'Error when getting sensorData',
+                    message: 'Error when getting event',
                     error: err
                 });
             }
 
-            if (!sensorData) {
+            if (!event) {
                 return res.status(404).json({
-                    message: 'No such sensorData'
+                    message: 'No such event'
                 });
             }
 
-            sensorData.bikes = req.body.bikes ? req.body.bikes : sensorData.bikes;
-			sensorData.people = req.body.people ? req.body.people : sensorData.people;
-
-            sensorData.save(function (err, sensorData) {
+            event.category = req.body.category ? req.body.category : event.category;
+			event.description = req.body.description ? req.body.description : event.description;
+			
+            event.save(function (err, event) {
                 if (err) {
                     return res.status(500).json({
-                        message: 'Error when updating sensorData.',
+                        message: 'Error when updating event.',
                         error: err
                     });
                 }
 
-                return res.json(sensorData);
+                return res.json(event);
             });
         });
     },
 
     /**
-     * sensorDataController.remove()
+     * eventController.remove()
      */
     remove: function (req, res) {
         var id = req.params.id;
 
-        SensordataModel.findByIdAndRemove(id, function (err, sensorData) {
+        EventModel.findByIdAndRemove(id, function (err, event) {
             if (err) {
                 return res.status(500).json({
-                    message: 'Error when deleting the sensorData.',
+                    message: 'Error when deleting the event.',
                     error: err
                 });
             }
