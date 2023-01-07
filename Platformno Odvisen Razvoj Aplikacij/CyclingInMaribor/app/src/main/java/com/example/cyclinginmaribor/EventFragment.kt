@@ -1,0 +1,134 @@
+package com.example.cyclinginmaribor
+
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationListener
+import android.os.Bundle
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import com.example.cyclinginmaribor.databinding.FragmentEventBinding
+import android.location.LocationManager;
+import android.os.Build
+import android.text.Editable
+import android.util.Log
+import android.widget.EditText
+import android.widget.TextView
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
+import androidx.navigation.fragment.findNavController
+import com.example.cyclinginmaribor.utils.Event
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.HashMap
+import com.google.gson.Gson
+import okhttp3.*
+import okhttp3.Request
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.IOException
+
+lateinit var selectedEventCategory: String
+lateinit var eventDescription: String
+
+private val client = OkHttpClient()
+
+class EventFragment : Fragment(), AdapterView.OnItemSelectedListener, LocationListener  {
+
+    private lateinit var binding: FragmentEventBinding
+
+    private lateinit var locationManager: LocationManager
+    private lateinit var locationListener: LocationListener
+    private lateinit var locationTextView: TextView
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentEventBinding.inflate(inflater, container, false)
+
+        //locationManager = context?.getSystemService(Context.LOCALE_SERVICE) as LocationManager
+        //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this)
+
+        /*if (activity?.let {
+                ContextCompat.checkSelfPermission(
+                    it,
+                    Manifest.permission
+                        .ACCESS_FINE_LOCATION)
+            }
+            == PackageManager
+                .PERMISSION_GRANTED
+            && ContextCompat.checkSelfPermission(
+                requireActivity(),
+                Manifest.permission
+                    .ACCESS_COARSE_LOCATION)
+            == PackageManager
+                .PERMISSION_GRANTED) {
+            // When permission is granted
+            // Call method
+            //getCurrentLocation();*/
+
+        val categorySpinner = binding.eventCategoryPicker
+        val adapter: ArrayAdapter<CharSequence> =
+            context?.let { ArrayAdapter.createFromResource(it, R.array.event_categories, android.R.layout.simple_spinner_dropdown_item) } as ArrayAdapter<CharSequence>
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        categorySpinner.adapter = adapter
+        categorySpinner.onItemSelectedListener = this
+
+        val currentDate = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(Date())
+        val currentTime = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())
+
+
+        val input = binding.descriptionInputBox
+        val locationButton = binding.locationSelectionButton
+        locationButton.setOnClickListener {
+            eventDescription = input.text.toString()
+            //findNavController().navigate(R.id.mapFragment)
+        }
+
+        // get location sent from MapFragment
+        val location = arguments?.getString("location")
+
+
+        val confirmButton = binding.confirmButton
+        confirmButton.setOnClickListener {
+            findNavController().navigate(R.id.homeFragment)
+        }
+
+
+        val backButton = binding.backButton
+        backButton.setOnClickListener {
+            findNavController().navigate(R.id.homeFragment)     // navigate to home screen/fragment
+        }
+
+        return binding.root
+    }
+
+    /*private fun postToServer(request: Request) {
+        client.newCall(request).execute().use { response ->
+            if (!response.isSuccessful) throw IOException("Unexpected code $response")
+
+            println(response.body!!.string())
+        }
+    }*/
+
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        selectedEventCategory = parent?.getItemAtPosition(position) as String
+    }
+
+    override fun onNothingSelected(parent: AdapterView<*>?) {
+        TODO("Not yet implemented")
+    }
+
+    @SuppressLint("SetTextI18n")
+    override fun onLocationChanged(location: Location) {
+        locationTextView.text = "Latitude: ${location.latitude}, Longitude: ${location.longitude}"
+    }
+}
