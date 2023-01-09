@@ -99,6 +99,53 @@ class EventFragment : Fragment(), AdapterView.OnItemSelectedListener, LocationLi
 
         val confirmButton = binding.confirmButton
         confirmButton.setOnClickListener {
+            eventDescription = input.text.toString()
+
+            Log.i("category", selectedEventCategory)
+            Log.i("description", eventDescription)
+            Log.i("time", "$currentDate $currentTime")
+            Log.i("location", location.toString())
+
+            if (location != null) {
+                val coordinates = location.split(",")
+                val latitude = coordinates[0].toDouble()
+                val longitude = coordinates[1].toDouble()
+
+                val gson = Gson()
+                val event = Event(selectedEventCategory, eventDescription, latitude, longitude)
+                val eventJson = gson.toJson(event).toString()
+
+                Log.i("event json", eventJson)
+
+                // post event to heroku server
+                val requestBody = eventJson.toRequestBody("application/json".toMediaTypeOrNull())
+                val request = Request.Builder()
+                    //.header("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpha29iIiwicGFzc3dvcmQiOiJqYWtvYjEyMyIsImlhdCI6MTY3MzEwMDM4NH0.6qikZPH1p-EE35pXwJ1EX0p_ZE5SuJ8AUAwEzv42S94")
+                    .url("https://digitalni-dvojcek-feri.herokuapp.com/event")
+                    .post(requestBody)
+                    .build()
+
+                client.newCall(request).enqueue(object: Callback {
+                    override fun onFailure(call: Call, e: IOException) {
+                        e.printStackTrace()
+                    }
+
+                    override fun onResponse(call: Call, response: Response) {
+                        response.use {
+                            if (!response.isSuccessful) throw IOException("Unexpected code $response")
+
+                            for ((name, value) in response.headers) {
+                                println("$name: $value")
+                            }
+
+                            println(response.body!!.string())
+                        }
+                    }
+                })
+
+                //postToServer(request)
+            }
+
             findNavController().navigate(R.id.homeFragment)
         }
 
