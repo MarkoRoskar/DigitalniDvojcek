@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
         android:fontFamily="@font/montserrat"
-        android:text="Objavite poljuben dogodek\nna vaÅ¡i ali izbrani lokaciji.\nIzberite temo dogodka\nin dodajte kratek opis"
+        android:text="Objavite poljuben dogodek\nna vaši ali izbrani lokaciji.\nIzberite temo dogodka\nin dodajte kratek opis"
         android:textAlignment="center"
         android:textSize="19dp"
         app:layout_constraintEnd_toEndOf="parent"

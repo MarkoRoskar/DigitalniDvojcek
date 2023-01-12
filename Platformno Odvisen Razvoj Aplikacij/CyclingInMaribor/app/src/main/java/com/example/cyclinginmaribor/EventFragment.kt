@@ -90,7 +90,7 @@ class EventFragment : Fragment(), AdapterView.OnItemSelectedListener, LocationLi
         val locationButton = binding.locationSelectionButton
         locationButton.setOnClickListener {
             eventDescription = input.text.toString()
-            //findNavController().navigate(R.id.mapFragment)
+            findNavController().navigate(R.id.mapFragment)
         }
 
         // get location sent from MapFragment

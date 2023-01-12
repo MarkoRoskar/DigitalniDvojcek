@@ -36,6 +36,10 @@ class HomeFragment : Fragment() {
             exitProcess(0)
         }
 
+        val customEventButton = binding.customEventButton
+        customEventButton.setOnClickListener {
+            findNavController().navigate(R.id.eventFragment)
+        }
 
         return binding.root
     }
