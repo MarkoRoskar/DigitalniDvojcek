@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -20,18 +21,33 @@ import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.JsonWriter;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mygdx.game.utils.Bikeshed;
+import com.mygdx.game.utils.BikeshedRoot;
+import com.mygdx.game.utils.Event;
 import com.mygdx.game.utils.Geolocation;
 import com.mygdx.game.utils.MapRasterTiles;
+import com.mygdx.game.utils.Mbajk;
 import com.mygdx.game.utils.PixelPosition;
+import com.mygdx.game.utils.Stand;
+import com.mygdx.game.utils.StandRoot;
 import com.mygdx.game.utils.ZoomXY;
+import com.badlogic.gdx.Net;
+import com.badlogic.gdx.Net.HttpResponse;
+import com.badlogic.gdx.Net.HttpResponseListener;
+import com.badlogic.gdx.net.HttpRequestBuilder;
+import com.badlogic.gdx.utils.Json;
 
 import java.io.IOException;
 
 public class CyclingInMaribor extends ApplicationAdapter implements GestureDetector.GestureListener {
-
-	private ShapeRenderer shapeRenderer;
 	private Vector3 touchPosition;
+	private SpriteBatch batch;
+	private SpriteBatch hudBatch;
+	private BitmapFont font;
 
 	private TiledMap tiledMap;
 	private TiledMapRenderer tiledMapRenderer;
@@ -40,16 +56,42 @@ public class CyclingInMaribor extends ApplicationAdapter implements GestureDetec
 	private Texture[] mapTiles;
 	private ZoomXY beginTile;   // top left tile
 
-	private final int NUM_TILES = 3;
+	private final int NUM_TILES = 4;
 	private final int ZOOM = 15;
 	private final Geolocation CENTER_GEOLOCATION = new Geolocation(46.557314, 15.637771);
-	private final Geolocation MARKER_GEOLOCATION = new Geolocation(46.559070, 15.638100);
 	private final int WIDTH = MapRasterTiles.TILE_SIZE * NUM_TILES;
 	private final int HEIGHT = MapRasterTiles.TILE_SIZE * NUM_TILES;
 
+	ObjectMapper om = new ObjectMapper();
+
+	private Texture mbajkIcon;
+	private Texture bikeshedIcon;
+	private Texture eventIcon;
+	private Texture standIcon;
+	private Texture legend;
+
+	Event[] events;
+	Mbajk[] mbajks;
+	StandRoot standRoot;
+	BikeshedRoot bikeshedRoot;
+
+	boolean legendOn = false;
+	boolean mbajkOn = true;
+	boolean eventOn = true;
+	boolean bikeshedOn = true;
+	boolean standOn = true;
+
 	@Override
 	public void create() {
-		shapeRenderer = new ShapeRenderer();
+
+		mbajkIcon = new Texture(Gdx.files.internal("bike.png"));
+		bikeshedIcon = new Texture(Gdx.files.internal("bikeshed.png"));
+		eventIcon = new Texture(Gdx.files.internal("event.png"));
+		standIcon = new Texture(Gdx.files.internal("stand.png"));
+		legend = new Texture(Gdx.files.internal("legend.png"));
+
+		batch = new SpriteBatch();
+		hudBatch = new SpriteBatch();
 
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, WIDTH, HEIGHT);
@@ -61,6 +103,123 @@ public class CyclingInMaribor extends ApplicationAdapter implements GestureDetec
 
 		touchPosition = new Vector3();
 		Gdx.input.setInputProcessor(new GestureDetector(this));
+
+		font = new BitmapFont();
+		font.getData().setScale(2);
+
+		HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
+
+		Net.HttpRequest eventRequest = requestBuilder.newRequest().method("GET").url("https://digitalni-dvojcek-feri.herokuapp.com/event").build();
+		Gdx.net.sendHttpRequest (eventRequest, new HttpResponseListener() {
+			@Override
+			public void handleHttpResponse(HttpResponse httpResponse) {
+				Json json = new Json();
+				String text = httpResponse.getResultAsString();
+				json.setOutputType(JsonWriter.OutputType.minimal);
+				//System.out.println("response: " + json.prettyPrint(text));
+				events = json.fromJson(Event[].class, text);
+                /*
+                for (Event event : events) {
+                    System.out.println("y: " + event.geometry.coordinates.get(0));
+                    System.out.println("x: " + event.geometry.coordinates.get(1));
+                }
+                 */
+			}
+			@Override
+			public void failed(Throwable t) {
+				System.out.println("Request failed : " + t.getMessage());
+			}
+			@Override
+			public void cancelled() {
+				System.out.println("Request cancelled");
+			}
+		});
+
+		Net.HttpRequest mbajkRequest = requestBuilder.newRequest().method("GET").url("https://digitalni-dvojcek-feri.herokuapp.com/mbajk").build();
+		Gdx.net.sendHttpRequest (mbajkRequest, new HttpResponseListener() {
+			@Override
+			public void handleHttpResponse(HttpResponse httpResponse) {
+				Json json = new Json();
+				String text = httpResponse.getResultAsString();
+				json.setOutputType(JsonWriter.OutputType.minimal);
+				//System.out.println("response: " + json.prettyPrint(text));
+				mbajks = json.fromJson(Mbajk[].class, text);
+                /*
+                for (Mbajk mbajk: mbajks) {
+                    System.out.println(mbajk.name);
+                }
+
+                 */
+			}
+			@Override
+			public void failed(Throwable t) {
+				System.out.println("Request failed : " + t.getMessage());
+			}
+			@Override
+			public void cancelled() {
+				System.out.println("Request cancelled");
+			}
+		});
+
+		Net.HttpRequest bikeshedRequest = requestBuilder.newRequest().method("GET").url("https://digitalni-dvojcek-feri.herokuapp.com/bikeshed").build();
+		Gdx.net.sendHttpRequest (bikeshedRequest, new HttpResponseListener() {
+			@Override
+			public void handleHttpResponse(HttpResponse httpResponse) {
+				Json json = new Json();
+				String text = httpResponse.getResultAsString();
+				json.setOutputType(JsonWriter.OutputType.minimal);
+				//System.out.println("response: " + json.prettyPrint(text));
+				try {
+					bikeshedRoot = om.readValue(text, BikeshedRoot.class);
+				} catch (JsonProcessingException e) {
+					e.printStackTrace();
+				}
+                /*
+                for (Bikeshed bikeshed : bikeshedRoot.bikeSheds) {
+                    System.out.println(bikeshed.providerLink);
+                }
+
+                 */
+			}
+			@Override
+			public void failed(Throwable t) {
+				System.out.println("Request failed : " + t.getMessage());
+			}
+			@Override
+			public void cancelled() {
+				System.out.println("Request cancelled");
+			}
+		});
+
+		final Net.HttpRequest standRequest = requestBuilder.newRequest().method("GET").url("https://digitalni-dvojcek-feri.herokuapp.com/stand").build();
+		Gdx.net.sendHttpRequest (standRequest, new HttpResponseListener() {
+			@Override
+			public void handleHttpResponse(HttpResponse httpResponse) {
+				Json json = new Json();
+				String text = httpResponse.getResultAsString();
+				json.setOutputType(JsonWriter.OutputType.minimal);
+				//System.out.println("response: " + json.prettyPrint(text));
+				try {
+					standRoot = om.readValue(text, StandRoot.class);
+				} catch (JsonProcessingException e) {
+					e.printStackTrace();
+				}
+                /*
+                for (Stand stand : standRoot.stands) {
+                    System.out.println(stand.geometry.coordinates.get(1));
+                }
+
+                 */
+			}
+			@Override
+			public void failed(Throwable t) {
+				System.out.println("Request failed : " + t.getMessage());
+			}
+			@Override
+			public void cancelled() {
+				System.out.println("Request cancelled");
+			}
+		});
 
 		try {
 			//in most cases, geolocation won't be in the center of the tile because tile borders are predetermined (geolocation can be at the corner of a tile)
