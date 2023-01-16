@@ -252,6 +252,7 @@ public class CyclingInMaribor extends ApplicationAdapter implements GestureDetec
 	@Override
 	public void render() {
 		ScreenUtils.clear(0, 0, 0, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		handleInput();
 
@@ -260,22 +261,81 @@ public class CyclingInMaribor extends ApplicationAdapter implements GestureDetec
 		tiledMapRenderer.setView(camera);
 		tiledMapRenderer.render();
 
-		drawMarkers();
+		batch.setProjectionMatrix(camera.combined);
+		batch.begin();
+		if (eventOn) {
+			drawEvents();
+		}
+		if (mbajkOn) {
+			drawMbajks();
+		}
+		if (bikeshedOn) {
+			drawBikesheds();
+		}
+		if (standOn) {
+			drawStands();
+		}
+		batch.end();
+
+		if (legendOn) {
+			hudBatch.begin();
+			hudBatch.draw(legend, Gdx.graphics.getWidth() -150, Gdx.graphics.getHeight() -900);
+			if (standOn) {
+				font.draw(hudBatch, "Number below stands shows available park spots", Gdx.graphics.getWidth()-900, Gdx.graphics.getHeight()-860);
+			}
+			hudBatch.end();
+		}
 	}
 
-	private void drawMarkers() {
-		PixelPosition marker = MapRasterTiles.getPixelPosition(MARKER_GEOLOCATION.lat, MARKER_GEOLOCATION.lng, MapRasterTiles.TILE_SIZE, ZOOM, beginTile.x, beginTile.y, HEIGHT);
+	private void drawEvents() {
+		for (Event event : events) {
+			PixelPosition marker = MapRasterTiles.getPixelPosition(event.geometry.coordinates.get(1), event.geometry.coordinates.get(0), MapRasterTiles.TILE_SIZE, ZOOM, beginTile.x, beginTile.y, HEIGHT);
+			batch.draw(eventIcon, marker.x, marker.y);
+			if (legendOn) {
+				font.setColor(Color.BLACK);
+				font.draw(batch, event.description, marker.x - 120, marker.y - 10);
+			}
+		}
+	}
 
-		shapeRenderer.setProjectionMatrix(camera.combined);
-		shapeRenderer.setColor(Color.RED);
-		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-		shapeRenderer.circle(marker.x, marker.y, 10);
-		shapeRenderer.end();
+	private void drawMbajks() {
+		for (Mbajk mbajk : mbajks) {
+			PixelPosition marker = MapRasterTiles.getPixelPosition(mbajk.geometry.coordinates.get(1), mbajk.geometry.coordinates.get(0), MapRasterTiles.TILE_SIZE, ZOOM, beginTile.x, beginTile.y, HEIGHT);
+			batch.draw(mbajkIcon, marker.x, marker.y);
+			if (legendOn) {
+				font.setColor(Color.BLACK);
+				font.draw(batch, mbajk.name, marker.x - 120, marker.y - 10);
+			}
+		}
+	}
+
+	private void drawBikesheds() {
+		for (Bikeshed bikeshed : bikeshedRoot.bikeSheds) {
+			PixelPosition marker = MapRasterTiles.getPixelPosition(bikeshed.geometry.coordinates.get(1), bikeshed.geometry.coordinates.get(0), MapRasterTiles.TILE_SIZE, ZOOM, beginTile.x, beginTile.y, HEIGHT);
+			batch.draw(bikeshedIcon, marker.x, marker.y);
+			if (legendOn) {
+				font.setColor(Color.BLACK);
+				font.draw(batch, bikeshed.address, marker.x - 120, marker.y - 10);
+			}
+		}
+	}
+
+	private void drawStands() {
+		for (Stand stand : standRoot.stands) {
+			PixelPosition marker = MapRasterTiles.getPixelPosition(stand.geometry.coordinates.get(1), stand.geometry.coordinates.get(0), MapRasterTiles.TILE_SIZE, ZOOM, beginTile.x, beginTile.y, HEIGHT);
+			batch.draw(standIcon, marker.x, marker.y);
+			if (legendOn) {
+				font.setColor(Color.BLACK);
+				font.draw(batch, String.valueOf(stand.parkSpots), marker.x - 10, marker.y - 10);
+			}
+		}
 	}
 
 	@Override
 	public void dispose() {
-		shapeRenderer.dispose();
+		batch.dispose();
+		hudBatch.dispose();
+		font.dispose();
 	}
 
 	@Override
@@ -348,6 +408,21 @@ public class CyclingInMaribor extends ApplicationAdapter implements GestureDetec
 		}
 		if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
 			camera.translate(0, 3, 0);
+		}
+		if (Gdx.input.isKeyJustPressed(Input.Keys.I)) {
+			legendOn = !legendOn;
+		}
+		if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
+			mbajkOn = !mbajkOn;
+		}
+		if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
+			bikeshedOn = !bikeshedOn;
+		}
+		if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
+			eventOn = !eventOn;
+		}
+		if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_4)) {
+			standOn = !standOn;
 		}
 
 		camera.zoom = MathUtils.clamp(camera.zoom, 0.5f, 2f);
