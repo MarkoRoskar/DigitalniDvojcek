@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Blockchain</title>
+    <style>
+      body {
+            background: #000;
+            background-size: cover;
+            height: 100vh !important;
+            padding: 0;
+            margin: 0 !important;
+
+        }
+
+        #message-container {
+            overflow: auto;
+            height: 550px !important;
+            display: flex;
+            flex-direction: column-reverse;
+        }
+
+        #port-input {
+            padding: 1rem;
+            margin-top: 5px;
+        }
+
+        #blockchain-container {
+            overflow: auto;
+            height: 550px !important;
+            display: flex;
+            flex-direction: column-reverse;
+        }
+
+        p {
+            font-family: Consolas, monaco, monospace;
+            font-size: 14px;
+            font-style: normal;
+            font-variant: normal;
+            font-weight: bold;
+            line-height: 20px;
+        }
+
+        .smallbox {
+            color: rgb(135, 182, 119);
+            background: rgb(92, 92, 94);
+            font-weight: bold;
+        }
+
+        .box {
+            margin-top: 30px !important;
+            background: rgba(110, 45, 45, 0.6);
+            padding: 30px;
+        }
+    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.js"></script>
+  </head>
+  <body>
+    <div class="container box">
+        <div class="row">
+            <div class="col-sm-6">
+                <div id="message-container" class="overflow-auto smallbox">
+                    <ul id="messages" class="snallbox">
+
+                    </ul>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div id="blockchain-container" class="overflow-auto smallbox">
+                    <p id="blockchain" class="smallbox p-2">
+
+                    </p>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <input id="port-input">
+                <button id="connect">Connect</button>
+                <button id="mine">MINE</button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div id="dowload-link">
+            </div>
+        </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+    var socket = io();
+
+    var input = document.getElementById("port-input");
+    var connect_button=document.getElementById("connect");
+    var mine_button = document.getElementById("mine");
+    var mesages = document.getElementById("messages");
+
+    connect_button.addEventListener('click', function(event) {
+        event.preventDefault();
+        if (input.value) {
+            message=input.value;
+            console.log(message);
+            socket.emit("connect_port", message);
+            input.value = '';
+        }
+    });
+
+    mine_button.addEventListener('click', function(event) {
+        event.preventDefault();
+        socket.emit('mine');
+    });
+
+    socket.on('added', function (msg) {
+        console.log(msg);
+        msg = msg
+        var item = document.createElement('li');
+        text = "<p>" + msg + "</p>";
+        item.innerHTML = text
+        messages.appendChild(item);
+    });
+
+    socket.on('notadded', function (msg) {
+        console.log(msg);
+        msg = msg
+        var item = document.createElement('li');
+        text = "<p color='red'>" + msg + "</p>";
+        item.innerHTML = text
+        messages.appendChild(item);
+    });
+
+    socket.on('blockchain', function (blockchain) {
+        var string = "CURRENT BLOCKCHAIN: <br>";
+        blockchain.chain.forEach(element => {
+            string += "Block: " + element.index + "<br>";
+            string += "Time stamp: " + element.timestamp + "<br>";
+            string += "Data: " + element.data + "<br>";
+            string += "Hash: " + element.hash + "<br>";
+            string += "Previous Hash: " + element.prevHash + "<br>";
+            string += "Nonce: " + element.nonce + "<br>";
+            string += "Difficulty: " + element.difficulty + "<br>";
+            string += "Miner: " + element.miner + "<br>.<br>.<br>";
+        });
+        document.getElementById("blockchain-container").innerHTML = string;
+    });
+
+    socket.on('newblockchain', function () {
+        msg = "Checking new blockchain!";
+        var item = document.createElement('li');
+        text = "<p>" + msg + "</p>";
+        item.innerHTML = text
+        messages.appendChild(item);
+    });
+
+    socket.on('accepted', function () {
+        msg = "New blockchain accepted!";
+        var item = document.createElement('li');
+        text = "<p>" + msg + "</p>";
+        item.innerHTML = text
+        messages.appendChild(item);
+    });
+
+    socket.on('notaccepted', function () {
+        msg = "New blockchain not accepted!";
+        var item = document.createElement('li');
+        text = "<p>" + msg + "</p>";
+        item.innerHTML = text
+        messages.appendChild(item);
+    });
+
+    socket.on('same_length', function () {
+        msg = 'New blockchain not accepted because of same length!';
+        var item = document.createElement('li');
+        text = "<p>" + msg + "</p>";
+        item.innerHTML = text
+        messages.appendChild(item);
+    });
+    </script>
+  </body>
+</html>
