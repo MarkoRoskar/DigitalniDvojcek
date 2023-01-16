@@ -35,3 +35,15 @@ var SensorTempSchema = new Schema({
 });
 
 module.exports = mongoose.model('SensorTemp', SensorTempSchema);
+
+
+/*
+
+{
+    "temperature" : "10",
+    "frequency" : "na 1 minuto",
+    "longitude" : "15.646833",
+    "latitude" : " 46.5577328",
+}
+
+*/
