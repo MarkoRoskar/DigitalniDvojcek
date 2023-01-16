@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var SensorTempController = require('../controllers/SensorTempController.js');
+var SensorTempController = require('../controllers/sensorTempController.js');
 
 // authenticateToken function
 const jwtAuth = require('../authenticateJWT.js');
