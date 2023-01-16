@@ -25,6 +25,7 @@ var tourPathRouter = require('./routes/tourPathRoutes');
 var coridorRouter = require('./routes/coridorRoutes');
 var sensorDataRouter = require('./routes/sensorDataRoutes');
 var eventRouter = require('./routes/eventRoutes');
+var sensorTempRouter = require('./routes/sensorTempRoutes');
 
 var app = express();
 
@@ -90,6 +91,7 @@ app.use('/tourpath', tourPathRouter);
 app.use('/coridor', coridorRouter);
 app.use('/sensordata', sensorDataRouter);
 app.use('/event', eventRouter);
+app.use('/sensortempdata', sensorTempRouter);
 
 
 // catch 404 and forward to error handler
