@@ -3,7 +3,7 @@ var SensorTempModel = require('../models/sensorTempModel.js');
 module.exports = {
 
     list: function (req, res) {
-        sensorTempModel.find(function (err, temps) {
+        SensorTempModel.find(function (err, temps) {
             if (err) {
                 return res.status(500).json({
                     message: 'Error when getting temperature.',
