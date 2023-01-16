@@ -79,7 +79,7 @@ module.exports = {
                         event: data
                     })
                 });
-            }
-        )
+            } 
+        });
     }
 };
