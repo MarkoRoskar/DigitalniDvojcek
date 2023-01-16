@@ -34,7 +34,7 @@ var SensorTempSchema = new Schema({
 	timestamps : true
 });
 
-module.exports = mongoose.model('SensorTemp', SensorTempSchema);
+module.exports = mongoose.model('sensorTemp', SensorTempSchema);
 
 
 /*
