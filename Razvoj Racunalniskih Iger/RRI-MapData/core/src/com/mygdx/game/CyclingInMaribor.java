@@ -34,6 +34,7 @@ import com.mygdx.game.utils.Mbajk;
 import com.mygdx.game.utils.PixelPosition;
 import com.mygdx.game.utils.Stand;
 import com.mygdx.game.utils.StandRoot;
+import com.mygdx.game.utils.Temperature;
 import com.mygdx.game.utils.ZoomXY;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.Net.HttpResponse;
@@ -68,17 +69,20 @@ public class CyclingInMaribor extends ApplicationAdapter implements GestureDetec
 	private Texture bikeshedIcon;
 	private Texture eventIcon;
 	private Texture standIcon;
+	private Texture temperatureIcon;
 	private Texture legend;
 
 	Event[] events;
 	Mbajk[] mbajks;
 	StandRoot standRoot;
 	BikeshedRoot bikeshedRoot;
+	Temperature[] temperatures;
 
 	boolean legendOn = false;
 	boolean mbajkOn = true;
 	boolean eventOn = true;
 	boolean bikeshedOn = true;
+	boolean temperatureOn = true;
 	boolean standOn = true;
 
 	@Override
@@ -89,6 +93,7 @@ public class CyclingInMaribor extends ApplicationAdapter implements GestureDetec
 		eventIcon = new Texture(Gdx.files.internal("event.png"));
 		standIcon = new Texture(Gdx.files.internal("stand.png"));
 		legend = new Texture(Gdx.files.internal("legend.png"));
+		temperatureIcon = new Texture(Gdx.files.internal("temperature.png"));
 
 		batch = new SpriteBatch();
 		hudBatch = new SpriteBatch();
@@ -105,7 +110,7 @@ public class CyclingInMaribor extends ApplicationAdapter implements GestureDetec
 		Gdx.input.setInputProcessor(new GestureDetector(this));
 
 		font = new BitmapFont();
-		font.getData().setScale(2);
+		font.getData().setScale(1.5f);
 
 		HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
 
@@ -221,6 +226,32 @@ public class CyclingInMaribor extends ApplicationAdapter implements GestureDetec
 			}
 		});
 
+		Net.HttpRequest temperatureRequest = requestBuilder.newRequest().method("GET").url("https://digitalni-dvojcek-feri.herokuapp.com/sensortempdata").build();
+		Gdx.net.sendHttpRequest (temperatureRequest, new HttpResponseListener() {
+			@Override
+			public void handleHttpResponse(HttpResponse httpResponse) {
+				Json json = new Json();
+				String text = httpResponse.getResultAsString();
+				json.setOutputType(JsonWriter.OutputType.minimal);
+				//System.out.println("response: " + json.prettyPrint(text));
+				temperatures = json.fromJson(Temperature[].class, text);
+                /*
+                for (Temperature temp: temperatures) {
+                    System.out.println(temp.temperature);
+                }
+
+                 */
+			}
+			@Override
+			public void failed(Throwable t) {
+				System.out.println("Request failed : " + t.getMessage());
+			}
+			@Override
+			public void cancelled() {
+				System.out.println("Request cancelled");
+			}
+		});
+
 		try {
 			//in most cases, geolocation won't be in the center of the tile because tile borders are predetermined (geolocation can be at the corner of a tile)
 			ZoomXY centerTile = MapRasterTiles.getTileNumber(CENTER_GEOLOCATION.lat, CENTER_GEOLOCATION.lng, ZOOM);
@@ -275,12 +306,16 @@ public class CyclingInMaribor extends ApplicationAdapter implements GestureDetec
 		if (standOn) {
 			drawStands();
 		}
+		if (temperatureOn) {
+			drawTemperatures();
+		}
 		batch.end();
 
 		if (legendOn) {
 			hudBatch.begin();
 			hudBatch.draw(legend, Gdx.graphics.getWidth() -150, Gdx.graphics.getHeight() -900);
 			if (standOn) {
+				font.setColor(Color.RED);
 				font.draw(hudBatch, "Number below stands shows available park spots", Gdx.graphics.getWidth()-900, Gdx.graphics.getHeight()-860);
 			}
 			hudBatch.end();
@@ -327,6 +362,17 @@ public class CyclingInMaribor extends ApplicationAdapter implements GestureDetec
 			if (legendOn) {
 				font.setColor(Color.BLACK);
 				font.draw(batch, String.valueOf(stand.parkSpots), marker.x - 10, marker.y - 10);
+			}
+		}
+	}
+
+	private void drawTemperatures() {
+		for (Temperature temp : temperatures) {
+			PixelPosition marker = MapRasterTiles.getPixelPosition(temp.geometry.coordinates.get(1), temp.geometry.coordinates.get(0), MapRasterTiles.TILE_SIZE, ZOOM, beginTile.x, beginTile.y, HEIGHT);
+			batch.draw(temperatureIcon, marker.x, marker.y);
+			if (legendOn) {
+				font.setColor(Color.BLACK);
+				font.draw(batch, temp.temperature + "C", marker.x - 10, marker.y - 10);
 			}
 		}
 	}
@@ -423,6 +469,9 @@ public class CyclingInMaribor extends ApplicationAdapter implements GestureDetec
 		}
 		if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_4)) {
 			standOn = !standOn;
+		}
+		if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_5)) {
+			temperatureOn = !temperatureOn;
 		}
 
 		camera.zoom = MathUtils.clamp(camera.zoom, 0.5f, 2f);
