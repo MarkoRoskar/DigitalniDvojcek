@@ -3,10 +3,18 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string-array name="event_categories">
-        <item>Accident</item>
-        <item>Temperature</item>
-        <item>Social</item>
-        <item>Traffic Jam</item>
-        <item>Construction Work</item>
+        <item>Nesreča</item>
+        <item>Temperatura/wreme</item>
+        <item>Družaben dogodek</item>
+        <item>Prometni zastoj</item>
+        <item>Delo na gradbišču</item>
+    </string-array>
+
+    <string-array name="sensor_frequency">
+        <item>na 30 sekund</item>
+        <item>na 1 minuto</item>
+        <item>na 5 minut</item>
+        <item>na pol ure</item>
+        <item>na 1 uro</item>
     </string-array>
 </resources>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".TempSensorFragment">
+
+    <TextView
+        android:id="@+id/temp_sensor_page_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="70dp"
+        android:fontFamily="@font/montserrat"
+        android:gravity="center"
+        android:text="OBJAVITE TEMPERATURE"
+        android:textSize="32sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/sensor_page_instructions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:fontFamily="@font/montserrat"
+        android:gravity="center"
+        android:text="Objavite višino temperature\nna določeni lokaciji.\nIzberete lahko tudi frekvenco\nzajemanja in objavljanja temperature."
+        android:textSize="19sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/temp_sensor_page_title" />
+
+    <TextView
+        android:id="@+id/frequency_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:fontFamily="@font/montserrat"
+        android:text="IZBIRA FREKVENCE ZAJEMANJA"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sensor_page_instructions" />
+
+    <Spinner
+        android:id="@+id/sensor_frequency_picker"
+        android:layout_width="200dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="15dp"
+        android:backgroundTint="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/frequency_title" />
+
+    <Button
+        android:id="@+id/location_selection_button"
+        android:layout_width="200dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/custom_button"
+        android:backgroundTint="@color/light_red"
+        android:text="IZBIRA LOKACIJE"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sensor_frequency_picker" />
+
+    <TextView
+        android:id="@+id/temp_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:fontFamily="@font/montserrat"
+        android:text="Trenutna temperatura (°C)"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/location_selection_button" />
+
+    <TextView
+        android:id="@+id/temp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/montserrat"
+        android:text="TEMP"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/temp_title" />
+
+    <Button
+        android:id="@+id/confirm_button"
+        android:layout_width="210dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/custom_button"
+        android:backgroundTint="@color/red"
+        android:text="ZAČNI ZAJEMATI TEMPERATURO"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/temp" />
+
+    <ImageView
+        android:id="@+id/back_button"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/back_arrow" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

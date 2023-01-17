@@ -7,7 +7,7 @@
     tools:context=".HomeFragment">
 
     <ImageView
-        android:id="@+id/main_screen_location_logo"
+        android:id="@+id/main_screen_logo"
         android:layout_width="62dp"
         android:layout_height="62dp"
         android:layout_marginTop="5dp"
@@ -15,6 +15,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/main_screen_title"
         app:srcCompat="@drawable/mbajk_logo" />
+
+    <TextView
+        android:id="@+id/temp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat"
+        android:text="TEMP"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/main_screen_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/main_screen_title"
@@ -45,7 +58,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/camera_logo"
-        app:layout_constraintTop_toBottomOf="@+id/main_screen_location_logo" />
+        app:layout_constraintTop_toBottomOf="@+id/main_screen_logo" />
 
     <Button
         android:id="@+id/custom_event_button"
@@ -65,7 +78,7 @@
         app:layout_constraintTop_toBottomOf="@+id/camera_button" />
 
     <Button
-        android:id="@+id/past_events_button"
+        android:id="@+id/temp_sensor_button"
         android:layout_width="220dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
@@ -73,7 +86,7 @@
         android:background="@drawable/custom_button"
         android:backgroundTint="@color/red"
         android:fontFamily="@font/montserrat"
-        android:text="PAST EVENTS"
+        android:text="SENSOR DATA"
         android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -96,7 +109,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/settings_logo"
-        app:layout_constraintTop_toBottomOf="@+id/past_events_button" />
+        app:layout_constraintTop_toBottomOf="@+id/temp_sensor_button" />
 
     <Button
         android:id="@+id/about_button"
@@ -123,7 +136,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.15"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/main_screen_location_logo"
+        app:layout_constraintTop_toBottomOf="@+id/main_screen_logo"
         app:srcCompat="@drawable/camera_logo" />
 
     <ImageView
