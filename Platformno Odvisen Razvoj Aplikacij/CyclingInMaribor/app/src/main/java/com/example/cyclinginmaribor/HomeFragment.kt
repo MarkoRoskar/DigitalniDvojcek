@@ -92,10 +92,6 @@ class HomeFragment: Fragment(), SensorEventListener {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
-        //binding2 = FragmentPictureBinding.inflate(inflater, container, false)
-        tempTextView = binding.temp
-
-        //Log.i("temp", temp.toString())
 
         // open camera with intent
         val camButton = binding.cameraButton

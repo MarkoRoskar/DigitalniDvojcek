@@ -84,7 +84,9 @@ class EventFragment : Fragment(), AdapterView.OnItemSelectedListener, LocationLi
         val locationButton = binding.locationSelectionButton
         locationButton.setOnClickListener {
             eventDescription = input.text.toString()
-            findNavController().navigate(R.id.mapFragment)
+            val bundle = Bundle()
+            bundle.putString("input_type", "event")
+            findNavController().navigate(R.id.mapFragment, bundle)
         }
 
         // get location sent from MapFragment
@@ -138,9 +140,6 @@ class EventFragment : Fragment(), AdapterView.OnItemSelectedListener, LocationLi
                 })
 
                 //postToServer(request)
-
-                val bundle = Bundle()
-                bundle.putString("input_type", "event")
                 findNavController().navigate(R.id.homeFragment)
             }
             else {
